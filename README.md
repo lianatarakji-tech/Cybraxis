@@ -18,6 +18,42 @@ The platform is designed around a staged investigation process:
 
 The backend remains authoritative for scenario truth, allowed actions, scoring, pass/fail decisions, progression, and remediation. The AI mentor provides adaptive guidance without replacing those deterministic controls.
 
+## Platform Screens
+
+### Learner access
+
+![Cybraxis login screen](docs/images/01-login.png)
+
+### Main menu and learner navigation
+
+![Cybraxis main menu](docs/images/02-main-menu.png)
+
+### Scenario briefing
+
+![Cybraxis scenario briefing](docs/images/03-scenario-briefing.png)
+
+### Investigation workspace
+
+The investigation workspace combines campaign progress, alerts, the network map, node details, logs, response actions, and the SOC advisor in one interface.
+
+![Cybraxis investigation workspace with numbered components](docs/images/04-investigation-workspace.png)
+
+### Final scenario report
+
+![Cybraxis final scenario report](docs/images/05-final-report.png)
+
+### Remediation learning module
+
+![Cybraxis remediation learning module](docs/images/06-remediation-learning-module.png)
+
+### Playable remedy scenario
+
+![Cybraxis playable remedy scenario](docs/images/07-playable-remedy-scenario.png)
+
+### Player dashboard
+
+![Cybraxis player dashboard](docs/images/08-player-dashboard.png)
+
 ## Core Features
 
 - Interactive SOC investigation scenarios
@@ -192,22 +228,9 @@ The AI layer can run with the mock provider, and real Mistral access can be enab
 - [Scenario Authoring Template](docs/SCENARIO_AUTHORING_TEMPLATE.md)
 - [Visualization Decision](docs/VISUALIZATION_DECISION.md)
 
-## Screenshots and Demo
+## Demo Video
 
-Repository screenshots and a demonstration video will be added to this section.
-
-Suggested screenshots:
-
-- Login screen
-- Main menu
-- Scenario briefing
-- SOC investigation workspace
-- Network map and node details
-- Stage result
-- Final report
-- Remediation module
-- Playable remedy scenario
-- Learner dashboard
+A demonstration video can be linked here after it is uploaded to a public or unlisted video platform or attached to a GitHub Release.
 
 ## Current Scope
 
