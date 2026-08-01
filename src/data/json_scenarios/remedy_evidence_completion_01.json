@@ -1,0 +1,616 @@
+{
+  "scenario_id": "remedy_evidence_completion_01",
+  "gameplay_name": "Complete the Evidence Set",
+  "name": "Evidence Completion Remedy - Complete the Evidence Set",
+  "description": "A short remedial SOC investigation module focused on correcting incomplete investigation coverage. The learner practices validating source, affected scope, suspicious activity, and response readiness before containment.",
+  "version": "1.0-dev",
+  "timing_profile": "development",
+  "difficulty": "remedy",
+  "scenario_type": "remedy",
+  "primary_weakness": "evidence_completion",
+  "remedy_focus": "complete_required_evidence_before_response",
+  "source_failed_scenario_types": [
+    "external_recon_to_exfiltration_1",
+    "silent_beacon_1"
+  ],
+  "recommended_replay_target": "failed_scenario_or_equivalent_variant",
+  "global_design_notes": {
+    "network_only_boundary": "This remedy uses network/security-monitoring evidence only: firewall logs, DNS logs, proxy logs, IDS alerts, authentication summaries, network flow summaries, and SOC-facing endpoint status summaries.",
+    "remedy_rule": "This remedy does not replace the failed scenario. After completion, the learner should replay the failed scenario or an equivalent controlled variant.",
+    "ai_support_note": "AI may explain backend-approved facts but cannot decide correctness, score, pass/fail, progression, or remedy selection.",
+    "scoring_note": "Scoring should emphasize required evidence coverage, investigation completeness, and matching the response to confirmed evidence."
+  },
+  "variant_design": {
+    "status": "planned_not_active",
+    "seeded_variant_required_later": true,
+    "variant_family": "remedy_evidence_completion",
+    "pools": {
+      "external_indicator": [
+        "198.51.100.41",
+        "203.0.113.19",
+        "telemetry-sync.example.net"
+      ],
+      "affected_asset": [
+        "workstation4",
+        "financeLaptop",
+        "dnsServer"
+      ],
+      "missing_evidence_category": [
+        "ioc_validation",
+        "host_scope_confirmation",
+        "activity_confirmation",
+        "containment_readiness"
+      ]
+    }
+  },
+  "stages": [
+    {
+      "id": "one_clue_is_not_enough",
+      "stage_type": "remedy_practice",
+      "name": "One Clue Is Not Enough",
+      "difficulty": "remedy_easy",
+      "learning_objective": "Confirm that one alert alone is insufficient before choosing a response.",
+      "time_pressure": {
+        "time_limit_seconds": 100,
+        "warning_threshold": 0.75,
+        "timeout_behavior": "continue_with_guidance",
+        "timeout_penalty": 3,
+        "lock_stage_on_timeout": false,
+        "lock_stage_on_success": true,
+        "auto_advance_delay_ms": 2500,
+        "timeout_warning": "One alert is a starting point, not a complete evidence set.",
+        "timeout_mentor_feedback": "The investigation needs at least one more supporting evidence category before response.",
+        "timeout_log_message": "REMEDY TIMEOUT: The learner did not complete the supporting evidence check."
+      },
+      "suspicious_nodes": [
+        "router",
+        "external"
+      ],
+      "primary_targets": [
+        "router",
+        "external"
+      ],
+      "required_investigation": {
+        "target_scope": "required_targets",
+        "target_ids": [
+          "router",
+          "external"
+        ],
+        "dimensions": [
+          "connectivity",
+          "interpretation"
+        ],
+        "minimum_target_coverage": "all",
+        "required_before_response": true
+      },
+      "events": [
+        {
+          "id": "ec1-log-1",
+          "type": "log",
+          "time": "11:02:10",
+          "message": "IDS: Single medium-confidence alert from 198.51.100.41 indicates possible suspicious traffic",
+          "severity": "medium"
+        },
+        {
+          "id": "ec1-log-2",
+          "type": "log",
+          "time": "11:03:18",
+          "message": "FIREWALL: Additional flow review is required before deciding whether the source should be blocked",
+          "severity": "medium"
+        },
+        {
+          "id": "ec1-alert-1",
+          "type": "alert",
+          "message": "Possible suspicious source detected; collect supporting evidence before response",
+          "severity": "medium",
+          "relatedNode": "router",
+          "relatedLog": "ec1-log-1",
+          "source": "198.51.100.41",
+          "timestamp": "11:03:30"
+        }
+      ],
+      "expected_actions": [
+        "investigate IP",
+        "block IP"
+      ],
+      "wrong_actions": [
+        "ignore",
+        "isolate machine"
+      ],
+      "preferred_action_order": [
+        "investigate IP",
+        "block IP"
+      ],
+      "minimum_actions_to_pass": 2,
+      "mentor_hint": "Use the alert as a lead, then confirm supporting evidence before response.",
+      "mentor": {
+        "stage_hint": "Start with the suspicious source, then confirm whether another evidence category supports the alert.",
+        "coverage_incomplete": "The alert alone is not enough. Check supporting evidence before containment.",
+        "wrong_order": "A response before supporting evidence creates an incomplete investigation record.",
+        "premature_response": "This is too early. Complete the evidence set before acting.",
+        "correct_sequence": "Good. You treated the alert as a lead and confirmed supporting evidence before responding.",
+        "timeout_warning": "Look for the second supporting evidence category before response.",
+        "timeout_feedback": "The stage continued to reinforce evidence completion."
+      },
+      "scoring": {
+        "correct_action_score": 5,
+        "wrong_action_penalty": 3,
+        "pass_score": 10,
+        "max_score": 10
+      },
+      "consequences": {
+        "correct": {
+          "mentor_feedback": "The response was supported by more than one evidence point.",
+          "node_effect": "stable",
+          "log_message": "Suspicious source response completed after evidence confirmation."
+        },
+        "wrong": {
+          "mentor_feedback": "The response was attempted with incomplete evidence.",
+          "node_effect": "suspicious",
+          "log_message": "Incomplete evidence response attempt recorded."
+        }
+      },
+      "ai_metadata": {
+        "stage_objective": "Confirm that one alert alone is insufficient before choosing a response.",
+        "hint_triggers": [
+          "premature_response",
+          "wrong_target",
+          "insufficient_evidence",
+          "time_pressure",
+          "repeated_mistake",
+          "general_guidance"
+        ],
+        "evidence_categories": [
+          "ioc_validation",
+          "activity_confirmation",
+          "containment_readiness"
+        ],
+        "facts": [
+          {
+            "id": "ec1-f1",
+            "label": "A single alert is only a lead, not a complete evidence set.",
+            "category": "ioc_validation",
+            "safe_for_hint": true
+          },
+          {
+            "id": "ec1-f2",
+            "label": "Supporting activity evidence should be checked before response.",
+            "category": "activity_confirmation",
+            "safe_for_hint": true
+          },
+          {
+            "id": "ec1-f3",
+            "label": "Containment readiness depends on enough confirmed evidence.",
+            "category": "containment_readiness",
+            "safe_for_hint": true
+          }
+        ],
+        "action_evaluation": {
+          "correct_actions": [
+            "investigate IP",
+            "block IP"
+          ],
+          "acceptable_actions": [],
+          "premature_actions": [
+            "block IP"
+          ],
+          "wrong_target_actions": [
+            "isolate machine"
+          ],
+          "dangerous_actions": [],
+          "irrelevant_actions": [
+            "ignore"
+          ]
+        },
+        "weakness_codes": {
+          "premature_response": "premature_containment",
+          "wrong_target": "host_pivot_accuracy",
+          "insufficient_evidence": "evidence_completion",
+          "time_pressure": "time_pressure_management",
+          "repeated_mistake": "response_action_order",
+          "general_guidance": "log_correlation"
+        },
+        "remedy_mapping": {
+          "premature_containment": "remedy_premature_containment_01",
+          "host_pivot_accuracy": "remedy_host_pivot_01",
+          "evidence_completion": "remedy_evidence_completion_01",
+          "scope_confirmation": "remedy_scope_confirmation_01",
+          "time_pressure_management": "remedy_time_pressure_01",
+          "response_action_order": "remedy_response_order_01"
+        },
+        "hint_policy": {
+          "default_support_level": "medium",
+          "increase_after_wrong_attempts": 1,
+          "allow_exact_guidance_after_attempts": 3,
+          "allow_exact_guidance": false
+        },
+        "fact_pack_rules": {
+          "max_facts_to_expose": 3,
+          "allow_raw_logs": false,
+          "require_grounded_fact_ids": true
+        }
+      }
+    },
+    {
+      "id": "complete_coverage_set",
+      "stage_type": "remedy_practice",
+      "name": "Complete the Coverage Set",
+      "difficulty": "remedy_easy",
+      "learning_objective": "Validate source, affected asset, and suspicious behavior before containment.",
+      "time_pressure": {
+        "time_limit_seconds": 110,
+        "warning_threshold": 0.75,
+        "timeout_behavior": "continue_with_guidance",
+        "timeout_penalty": 3,
+        "lock_stage_on_timeout": false,
+        "lock_stage_on_success": true,
+        "auto_advance_delay_ms": 2500,
+        "timeout_warning": "Check all required evidence categories: source, asset, and behavior.",
+        "timeout_mentor_feedback": "The required coverage set was not completed.",
+        "timeout_log_message": "REMEDY TIMEOUT: Required evidence coverage remained incomplete."
+      },
+      "suspicious_nodes": [
+        "dnsServer",
+        "workstation4",
+        "external"
+      ],
+      "primary_targets": [
+        "dnsServer",
+        "workstation4",
+        "external"
+      ],
+      "required_investigation": {
+        "target_scope": "required_targets",
+        "target_ids": [
+          "dnsServer",
+          "workstation4",
+          "external"
+        ],
+        "dimensions": [
+          "connectivity",
+          "activity",
+          "interpretation"
+        ],
+        "minimum_target_coverage": "all",
+        "required_before_response": true
+      },
+      "events": [
+        {
+          "id": "ec2-log-1",
+          "type": "log",
+          "time": "11:18:09",
+          "message": "DNS: WS-04 resolved telemetry-sync.example.net repeatedly during the suspicious activity window",
+          "severity": "medium"
+        },
+        {
+          "id": "ec2-log-2",
+          "type": "log",
+          "time": "11:19:22",
+          "message": "FIREWALL: Outbound sessions from WS-04 align with the suspicious DNS resolution window",
+          "severity": "medium"
+        },
+        {
+          "id": "ec2-alert-1",
+          "type": "alert",
+          "message": "Evidence coverage needed: validate source, affected asset, and suspicious behavior before containment",
+          "severity": "medium",
+          "relatedNode": "dnsServer",
+          "relatedLog": "ec2-log-1",
+          "source": "telemetry-sync.example.net",
+          "timestamp": "11:19:45"
+        }
+      ],
+      "expected_actions": [
+        "investigate IP",
+        "isolate machine"
+      ],
+      "wrong_actions": [
+        "ignore",
+        "block IP"
+      ],
+      "preferred_action_order": [
+        "investigate IP",
+        "isolate machine"
+      ],
+      "minimum_actions_to_pass": 2,
+      "mentor_hint": "Complete the source, asset, and behavior checks before containment.",
+      "mentor": {
+        "stage_hint": "Correlate DNS, firewall, and affected asset evidence before containment.",
+        "coverage_incomplete": "One or more required evidence categories are still missing.",
+        "wrong_order": "Containment before full coverage leaves gaps in the investigation.",
+        "premature_response": "The response is too early until source, asset, and behavior are confirmed.",
+        "correct_sequence": "Good. You completed the evidence coverage set before responding.",
+        "timeout_warning": "Check each required category one by one.",
+        "timeout_feedback": "The stage continued to reinforce complete evidence coverage."
+      },
+      "scoring": {
+        "correct_action_score": 5,
+        "wrong_action_penalty": 3,
+        "pass_score": 10,
+        "max_score": 10
+      },
+      "consequences": {
+        "correct": {
+          "mentor_feedback": "The required coverage set was completed before containment.",
+          "node_effect": "stable",
+          "log_message": "Containment applied after source, asset, and behavior validation."
+        },
+        "wrong": {
+          "mentor_feedback": "The response was attempted before required evidence coverage was complete.",
+          "node_effect": "suspicious",
+          "log_message": "Incomplete coverage response attempt recorded."
+        }
+      },
+      "ai_metadata": {
+        "stage_objective": "Validate source, affected asset, and suspicious behavior before containment.",
+        "hint_triggers": [
+          "premature_response",
+          "wrong_target",
+          "insufficient_evidence",
+          "time_pressure",
+          "repeated_mistake",
+          "general_guidance"
+        ],
+        "evidence_categories": [
+          "ioc_validation",
+          "host_scope_confirmation",
+          "activity_confirmation",
+          "containment_readiness"
+        ],
+        "facts": [
+          {
+            "id": "ec2-f1",
+            "label": "The suspicious source should be validated before response.",
+            "category": "ioc_validation",
+            "safe_for_hint": true
+          },
+          {
+            "id": "ec2-f2",
+            "label": "The affected asset should be confirmed before containment.",
+            "category": "host_scope_confirmation",
+            "safe_for_hint": true
+          },
+          {
+            "id": "ec2-f3",
+            "label": "Suspicious behavior should be confirmed with supporting activity evidence.",
+            "category": "activity_confirmation",
+            "safe_for_hint": true
+          }
+        ],
+        "action_evaluation": {
+          "correct_actions": [
+            "investigate IP",
+            "isolate machine"
+          ],
+          "acceptable_actions": [],
+          "premature_actions": [
+            "isolate machine"
+          ],
+          "wrong_target_actions": [
+            "block IP"
+          ],
+          "dangerous_actions": [],
+          "irrelevant_actions": [
+            "ignore"
+          ]
+        },
+        "weakness_codes": {
+          "premature_response": "premature_containment",
+          "wrong_target": "host_pivot_accuracy",
+          "insufficient_evidence": "evidence_completion",
+          "time_pressure": "time_pressure_management",
+          "repeated_mistake": "response_action_order",
+          "general_guidance": "log_correlation"
+        },
+        "remedy_mapping": {
+          "premature_containment": "remedy_premature_containment_01",
+          "host_pivot_accuracy": "remedy_host_pivot_01",
+          "evidence_completion": "remedy_evidence_completion_01",
+          "scope_confirmation": "remedy_scope_confirmation_01",
+          "time_pressure_management": "remedy_time_pressure_01",
+          "response_action_order": "remedy_response_order_01"
+        },
+        "hint_policy": {
+          "default_support_level": "medium",
+          "increase_after_wrong_attempts": 1,
+          "allow_exact_guidance_after_attempts": 3,
+          "allow_exact_guidance": false
+        },
+        "fact_pack_rules": {
+          "max_facts_to_expose": 3,
+          "allow_raw_logs": false,
+          "require_grounded_fact_ids": true
+        }
+      }
+    },
+    {
+      "id": "evidence_to_response_match",
+      "stage_type": "remedy_practice",
+      "name": "Evidence-to-Response Match",
+      "difficulty": "remedy_easy",
+      "learning_objective": "Choose a response that matches the evidence collected.",
+      "time_pressure": {
+        "time_limit_seconds": 115,
+        "warning_threshold": 0.75,
+        "timeout_behavior": "continue_with_guidance",
+        "timeout_penalty": 3,
+        "lock_stage_on_timeout": false,
+        "lock_stage_on_success": true,
+        "auto_advance_delay_ms": 2500,
+        "timeout_warning": "Match the response to the confirmed evidence, not just the first suspicious clue.",
+        "timeout_mentor_feedback": "The evidence-to-response match was not completed.",
+        "timeout_log_message": "REMEDY TIMEOUT: Response matching evidence remained incomplete."
+      },
+      "suspicious_nodes": [
+        "webProxy",
+        "workstation4",
+        "external"
+      ],
+      "primary_targets": [
+        "webProxy",
+        "external"
+      ],
+      "required_investigation": {
+        "target_scope": "required_targets",
+        "target_ids": [
+          "webProxy",
+          "external"
+        ],
+        "dimensions": [
+          "connectivity",
+          "controls",
+          "interpretation"
+        ],
+        "minimum_target_coverage": "all",
+        "required_before_response": true
+      },
+      "events": [
+        {
+          "id": "ec3-log-1",
+          "type": "log",
+          "time": "11:34:01",
+          "message": "PROXY: Repeated outbound requests to suspicious external destination observed through WEB-PROXY-01",
+          "severity": "medium"
+        },
+        {
+          "id": "ec3-log-2",
+          "type": "log",
+          "time": "11:35:12",
+          "message": "SOC SUMMARY: Evidence currently supports blocking the external path at the proxy rather than isolating an unconfirmed host",
+          "severity": "medium"
+        },
+        {
+          "id": "ec3-alert-1",
+          "type": "alert",
+          "message": "Response match required: validate whether the evidence supports path blocking or host isolation",
+          "severity": "medium",
+          "relatedNode": "webProxy",
+          "relatedLog": "ec3-log-1",
+          "source": "203.0.113.19",
+          "timestamp": "11:35:30"
+        }
+      ],
+      "expected_actions": [
+        "investigate IP",
+        "block IP"
+      ],
+      "wrong_actions": [
+        "ignore",
+        "isolate machine"
+      ],
+      "preferred_action_order": [
+        "investigate IP",
+        "block IP"
+      ],
+      "minimum_actions_to_pass": 2,
+      "mentor_hint": "Choose the response that matches the evidence type and confirmed control point.",
+      "mentor": {
+        "stage_hint": "Determine whether the evidence supports network path blocking or host isolation.",
+        "coverage_incomplete": "The response match is not confirmed yet.",
+        "wrong_order": "Response selection should follow evidence type and control point validation.",
+        "premature_response": "The response is too early until the evidence-to-response match is clear.",
+        "correct_sequence": "Good. You matched the response to the confirmed evidence path.",
+        "timeout_warning": "Ask: does the evidence prove a host compromise, or a network path that should be blocked?",
+        "timeout_feedback": "The stage continued to reinforce evidence-to-response matching."
+      },
+      "scoring": {
+        "correct_action_score": 5,
+        "wrong_action_penalty": 3,
+        "pass_score": 10,
+        "max_score": 10
+      },
+      "consequences": {
+        "correct": {
+          "mentor_feedback": "The selected response matched the confirmed evidence and control point.",
+          "node_effect": "stable",
+          "log_message": "External path blocked after evidence-to-response validation."
+        },
+        "wrong": {
+          "mentor_feedback": "The selected response did not match the confirmed evidence type.",
+          "node_effect": "suspicious",
+          "log_message": "Evidence-response mismatch recorded."
+        }
+      },
+      "ai_metadata": {
+        "stage_objective": "Choose a response that matches the evidence collected.",
+        "hint_triggers": [
+          "premature_response",
+          "wrong_target",
+          "insufficient_evidence",
+          "time_pressure",
+          "repeated_mistake",
+          "general_guidance"
+        ],
+        "evidence_categories": [
+          "response_action_order",
+          "containment_readiness",
+          "external_destination_validation"
+        ],
+        "facts": [
+          {
+            "id": "ec3-f1",
+            "label": "The response should match the confirmed evidence type.",
+            "category": "response_action_order",
+            "safe_for_hint": true
+          },
+          {
+            "id": "ec3-f2",
+            "label": "The current evidence supports a network path decision more than host isolation.",
+            "category": "containment_readiness",
+            "safe_for_hint": true
+          },
+          {
+            "id": "ec3-f3",
+            "label": "The external destination and control point should be validated before blocking.",
+            "category": "external_destination_validation",
+            "safe_for_hint": true
+          }
+        ],
+        "action_evaluation": {
+          "correct_actions": [
+            "investigate IP",
+            "block IP"
+          ],
+          "acceptable_actions": [],
+          "premature_actions": [
+            "block IP"
+          ],
+          "wrong_target_actions": [
+            "isolate machine"
+          ],
+          "dangerous_actions": [],
+          "irrelevant_actions": [
+            "ignore"
+          ]
+        },
+        "weakness_codes": {
+          "premature_response": "premature_containment",
+          "wrong_target": "host_pivot_accuracy",
+          "insufficient_evidence": "evidence_completion",
+          "time_pressure": "time_pressure_management",
+          "repeated_mistake": "response_action_order",
+          "general_guidance": "log_correlation"
+        },
+        "remedy_mapping": {
+          "premature_containment": "remedy_premature_containment_01",
+          "host_pivot_accuracy": "remedy_host_pivot_01",
+          "evidence_completion": "remedy_evidence_completion_01",
+          "scope_confirmation": "remedy_scope_confirmation_01",
+          "time_pressure_management": "remedy_time_pressure_01",
+          "response_action_order": "remedy_response_order_01"
+        },
+        "hint_policy": {
+          "default_support_level": "medium",
+          "increase_after_wrong_attempts": 1,
+          "allow_exact_guidance_after_attempts": 3,
+          "allow_exact_guidance": false
+        },
+        "fact_pack_rules": {
+          "max_facts_to_expose": 3,
+          "allow_raw_logs": false,
+          "require_grounded_fact_ids": true
+        }
+      }
+    }
+  ]
+}

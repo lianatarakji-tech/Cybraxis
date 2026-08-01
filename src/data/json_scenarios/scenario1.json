@@ -1,0 +1,1047 @@
+{
+  "scenario_id": "external_recon_to_exfiltration_1",
+  "name": "Perimeter Breach",
+  "description": "A beginner-focused SOC investigation scenario following an external reconnaissance attempt through initial access, execution, lateral movement, and data exfiltration. The scenario is designed to teach staged Kill Chain reasoning, evidence correlation, investigation coverage, and adaptive response under time pressure.",
+  "version": "2.0-dev",
+  "timing_profile": "development",
+  "global_design_notes": {
+    "investigation_model": [
+      "identity",
+      "connectivity",
+      "controls",
+      "activity",
+      "interpretation"
+    ],
+    "adaptive_progression": "Stages may escalate if the learner is too slow, performs poor investigation, or responds before required evidence coverage is complete.",
+    "timer_note": "Development timer values are intentionally short for testing. Presentation/demo values can be increased later.",
+    "scoring_note": "Final scoring should include base action score, investigation coverage score, sequence quality score, time efficiency score, wrong action penalties, timeout/escalation penalty, premature containment penalty, and response quality / wrong abstraction-level penalties."
+  },
+  "stages": [
+    {
+      "id": "recon",
+      "stage_type": "recon",
+      "name": "Reconnaissance",
+      "difficulty": "easy",
+      "learning_objective": "Identify external reconnaissance behavior, validate the suspicious communication path, and inspect perimeter control posture before blocking the external source.",
+      "time_pressure": {
+        "time_limit_seconds": 45,
+        "warning_threshold": 0.7,
+        "timeout_behavior": "escalate_stage",
+        "timeout_penalty": 5,
+        "lock_stage_on_timeout": true,
+        "lock_stage_on_success": true,
+        "auto_advance_delay_ms": 2500,
+        "timeout_warning": "Time pressure is increasing. The external source is still probing the perimeter. Prioritize connectivity and control validation.",
+        "timeout_mentor_feedback": "Delayed investigation allowed the attacker to gain better knowledge of exposed perimeter routes.",
+        "timeout_log_message": "TIMEOUT: Reconnaissance activity continued long enough to improve attacker knowledge of perimeter-facing infrastructure.",
+        "next_stage_modifier": {
+          "escalation_level": 1,
+          "risk_state": "elevated",
+          "extra_logs": [
+            {
+              "id": "access-escalated-log-1",
+              "type": "log",
+              "time": "10:31:42",
+              "message": "AUTH: Additional abnormal authentication attempts observed after unresolved reconnaissance activity.",
+              "severity": "high"
+            }
+          ],
+          "node_status_changes": {
+            "workstation1": "suspicious"
+          },
+          "mentor_context": "Because reconnaissance was not contained quickly, the following access stage begins with elevated attacker pressure."
+        }
+      },
+      "suspicious_nodes": [
+        "router",
+        "external"
+      ],
+      "primary_targets": [
+        "router",
+        "external"
+      ],
+      "required_investigation": {
+        "target_scope": "suspicious_nodes",
+        "target_ids": [],
+        "dimensions": [
+          "connectivity",
+          "controls"
+        ],
+        "minimum_target_coverage": "all",
+        "required_before_response": true
+      },
+      "events": [
+        {
+          "id": "recon-log-1",
+          "type": "log",
+          "time": "09:21:14",
+          "message": "FIREWALL: Repeated connection attempts detected from 203.0.113.42 against perimeter services",
+          "severity": "medium"
+        },
+        {
+          "id": "recon-log-2",
+          "type": "log",
+          "time": "09:23:52",
+          "message": "DNS: Enumeration-style queries observed targeting internal naming patterns",
+          "severity": "medium"
+        },
+        {
+          "id": "recon-alert-1",
+          "type": "alert",
+          "message": "Possible perimeter reconnaissance and service discovery detected from external IP 203.0.113.42",
+          "severity": "medium",
+          "relatedNode": "router",
+          "relatedLog": "recon-log-1",
+          "source": "203.0.113.42",
+          "timestamp": "09:24:10"
+        }
+      ],
+      "expected_actions": [
+        "investigate IP",
+        "block IP"
+      ],
+      "wrong_actions": [
+        "ignore",
+        "isolate machine"
+      ],
+      "preferred_action_order": [
+        "investigate IP",
+        "block IP"
+      ],
+      "minimum_actions_to_pass": 2,
+      "mentor_hint": "Start by investigating the external source and its path before applying a perimeter block.",
+      "mentor": {
+        "stage_hint": "Start by validating the external source, its path into the perimeter, and the current control posture before blocking.",
+        "coverage_incomplete": "The perimeter response is not ready yet. Inspect both the suspicious path and the relevant security controls before blocking.",
+        "wrong_order": "Blocking before validating the path and control state may hide useful evidence and weaken your investigation reasoning.",
+        "premature_response": "A perimeter block is useful only after you understand what route and services were being probed.",
+        "correct_sequence": "Good sequence. You validated the reconnaissance path and perimeter posture before disrupting the external source.",
+        "timeout_warning": "Time pressure is increasing. The attacker may learn more about exposed services if the perimeter path remains unresolved.",
+        "timeout_feedback": "The delay allowed reconnaissance to continue and increased the pressure on the next stage."
+      },
+      "scoring": {
+        "correct_action_score": 5,
+        "wrong_action_penalty": 5,
+        "pass_score": 10,
+        "max_score": 10
+      },
+      "consequences": {
+        "correct": {
+          "mentor_feedback": "The external reconnaissance source was investigated and disrupted before it could continue mapping the environment.",
+          "node_effect": "stable",
+          "log_message": "Perimeter reconnaissance activity contained after analyst validation."
+        },
+        "wrong": {
+          "mentor_feedback": "Leaving reconnaissance unresolved gives the attacker more insight into routes, services, and defensive posture.",
+          "node_effect": "suspicious",
+          "log_message": "Reconnaissance activity continues across perimeter-facing infrastructure."
+        }
+      },
+      "ai_metadata": {
+        "stage_objective": "Identify external reconnaissance behavior, validate the suspicious communication path, and inspect perimeter control posture before blocking the external source.",
+        "hint_triggers": [
+          "premature_response",
+          "wrong_target",
+          "insufficient_evidence",
+          "time_pressure",
+          "repeated_mistake",
+          "general_guidance"
+        ],
+        "evidence_categories": [
+          "external_recon_indicator",
+          "open_port_exposure",
+          "ioc_validation",
+          "containment_readiness"
+        ],
+        "facts": [
+          {
+            "id": "recon-f1",
+            "label": "Repeated external connection attempts targeted perimeter services.",
+            "category": "external_recon_indicator",
+            "safe_for_hint": true
+          },
+          {
+            "id": "recon-f2",
+            "label": "Enumeration-style DNS queries suggest the source is mapping internal naming patterns.",
+            "category": "ioc_validation",
+            "safe_for_hint": true
+          },
+          {
+            "id": "recon-f3",
+            "label": "The perimeter path should be validated before blocking the source.",
+            "category": "containment_readiness",
+            "safe_for_hint": true
+          }
+        ],
+        "action_evaluation": {
+          "correct_actions": [
+            "investigate IP",
+            "block IP"
+          ],
+          "acceptable_actions": [],
+          "premature_actions": [
+            "block IP"
+          ],
+          "wrong_target_actions": [
+            "isolate machine"
+          ],
+          "dangerous_actions": [],
+          "irrelevant_actions": [
+            "ignore"
+          ]
+        },
+        "weakness_codes": {
+          "premature_response": "premature_containment",
+          "wrong_target": "host_pivot_accuracy",
+          "insufficient_evidence": "ioc_validation",
+          "time_pressure": "time_pressure_management",
+          "repeated_mistake": "response_action_order",
+          "general_guidance": "log_correlation"
+        },
+        "remedy_mapping": {
+          "premature_containment": "remedy_premature_containment_01",
+          "host_pivot_accuracy": "remedy_host_pivot_01",
+          "evidence_completion": "remedy_evidence_completion_01",
+          "log_correlation": "remedy_log_correlation_01",
+          "scope_confirmation": "remedy_scope_confirmation_01",
+          "time_pressure_management": "remedy_time_pressure_01",
+          "response_action_order": "remedy_response_order_01",
+          "ioc_validation": "remedy_ioc_validation_01",
+          "lateral_movement_tracking": "remedy_lateral_movement_01",
+          "exfiltration_validation": "remedy_exfiltration_validation_01"
+        },
+        "hint_policy": {
+          "default_support_level": "light",
+          "increase_after_wrong_attempts": 2,
+          "allow_exact_guidance_after_attempts": 3,
+          "allow_exact_guidance": false
+        },
+        "fact_pack_rules": {
+          "max_facts_to_expose": 3,
+          "allow_raw_logs": false,
+          "require_grounded_fact_ids": true
+        }
+      }
+    },
+    {
+      "id": "access",
+      "stage_type": "access",
+      "name": "Initial Access",
+      "difficulty": "easy",
+      "learning_objective": "Validate abnormal authentication and session behavior using identity and activity evidence before isolating the affected endpoint.",
+      "time_pressure": {
+        "time_limit_seconds": 60,
+        "warning_threshold": 0.7,
+        "timeout_behavior": "escalate_stage",
+        "timeout_penalty": 6,
+        "lock_stage_on_timeout": true,
+        "lock_stage_on_success": true,
+        "auto_advance_delay_ms": 2500,
+        "timeout_warning": "Time pressure is increasing. The suspicious session may become a stronger foothold if identity and activity are not validated.",
+        "timeout_mentor_feedback": "Delayed access investigation allowed the attacker to strengthen the foothold on the workstation.",
+        "timeout_log_message": "TIMEOUT: Abnormal access activity persisted long enough for the foothold to stabilize.",
+        "next_stage_modifier": {
+          "escalation_level": 1,
+          "risk_state": "elevated",
+          "extra_logs": [
+            {
+              "id": "execution-escalated-log-1",
+              "type": "log",
+              "time": "11:11:20",
+              "message": "TELEMETRY: Delayed access response preceded stronger workstation execution indicators on WS-04.",
+              "severity": "high"
+            }
+          ],
+          "node_status_changes": {
+            "workstation1": "compromised"
+          },
+          "mentor_context": "Because the suspicious access was not contained quickly, the execution stage begins with a stronger foothold."
+        }
+      },
+      "suspicious_nodes": [
+        "workstation1",
+        "external"
+      ],
+      "primary_targets": [
+        "workstation1"
+      ],
+      "required_investigation": {
+        "target_scope": "suspicious_nodes",
+        "target_ids": [],
+        "dimensions": [
+          "identity",
+          "activity"
+        ],
+        "minimum_target_coverage": "all",
+        "required_before_response": true
+      },
+      "events": [
+        {
+          "id": "access-log-1",
+          "type": "log",
+          "time": "10:34:18",
+          "message": "AUTH: User jsmith authenticated to WS-04 from an abnormal external-origin path not seen in baseline activity",
+          "severity": "high"
+        },
+        {
+          "id": "access-log-2",
+          "type": "log",
+          "time": "10:36:02",
+          "message": "SESSION: New remote session established on WS-04 following repeated abnormal access attempts",
+          "severity": "high"
+        },
+        {
+          "id": "access-alert-1",
+          "type": "alert",
+          "message": "Anomalous access behavior detected on WS-04 from a suspected external-origin route",
+          "severity": "high",
+          "relatedNode": "workstation1",
+          "relatedLog": "access-log-1",
+          "source": "203.0.113.42",
+          "timestamp": "10:36:21"
+        }
+      ],
+      "expected_actions": [
+        "investigate user",
+        "isolate machine"
+      ],
+      "wrong_actions": [
+        "ignore",
+        "block IP"
+      ],
+      "preferred_action_order": [
+        "investigate user",
+        "isolate machine"
+      ],
+      "minimum_actions_to_pass": 2,
+      "mentor_hint": "Compare the user and workstation baseline first, then isolate only after the access pattern is understood.",
+      "mentor": {
+        "stage_hint": "Review the user identity context and host activity before isolating the workstation.",
+        "coverage_incomplete": "Initial access is not fully validated yet. Review both identity and activity evidence on the suspicious context before containment.",
+        "wrong_order": "Containment before identity and activity review may stop the host, but it does not prove what access behavior was abnormal.",
+        "premature_response": "Isolating too early can interrupt the attacker, but it weakens the learning goal of validating user and session behavior.",
+        "correct_sequence": "Good sequence. You reviewed identity and activity evidence before containing the suspicious foothold.",
+        "timeout_warning": "Time pressure is increasing. The suspicious session may become a stable foothold.",
+        "timeout_feedback": "The delay allowed the access foothold to strengthen before containment."
+      },
+      "scoring": {
+        "correct_action_score": 5,
+        "wrong_action_penalty": 5,
+        "pass_score": 10,
+        "max_score": 10
+      },
+      "consequences": {
+        "correct": {
+          "mentor_feedback": "The suspicious foothold on WS-04 was investigated through user context and then contained before wider internal abuse.",
+          "node_effect": "isolated",
+          "log_message": "Anomalous access path on WS-04 contained after user-context investigation."
+        },
+        "wrong": {
+          "mentor_feedback": "Failure to assess the user and host context allows the attacker to establish a stronger foothold through a valid-looking access path.",
+          "node_effect": "compromised",
+          "log_message": "Initial foothold on WS-04 remains active inside the user subnet."
+        }
+      },
+      "ai_metadata": {
+        "stage_objective": "Validate abnormal authentication and session behavior using identity and activity evidence before isolating the affected endpoint.",
+        "hint_triggers": [
+          "premature_response",
+          "wrong_target",
+          "insufficient_evidence",
+          "time_pressure",
+          "repeated_mistake",
+          "general_guidance"
+        ],
+        "evidence_categories": [
+          "credential_use_anomaly",
+          "session_anomaly",
+          "host_scope_confirmation",
+          "containment_readiness"
+        ],
+        "facts": [
+          {
+            "id": "access-f1",
+            "label": "Abnormal authentication activity suggests a suspicious access attempt.",
+            "category": "credential_use_anomaly",
+            "safe_for_hint": true
+          },
+          {
+            "id": "access-f2",
+            "label": "Session behavior should be validated before isolating the endpoint.",
+            "category": "session_anomaly",
+            "safe_for_hint": true
+          },
+          {
+            "id": "access-f3",
+            "label": "The affected endpoint scope must be confirmed before containment.",
+            "category": "host_scope_confirmation",
+            "safe_for_hint": true
+          }
+        ],
+        "action_evaluation": {
+          "correct_actions": [
+            "investigate user",
+            "isolate machine"
+          ],
+          "acceptable_actions": [],
+          "premature_actions": [
+            "isolate machine"
+          ],
+          "wrong_target_actions": [
+            "block IP"
+          ],
+          "dangerous_actions": [],
+          "irrelevant_actions": [
+            "ignore"
+          ]
+        },
+        "weakness_codes": {
+          "premature_response": "premature_containment",
+          "wrong_target": "host_pivot_accuracy",
+          "insufficient_evidence": "scope_confirmation",
+          "time_pressure": "time_pressure_management",
+          "repeated_mistake": "response_action_order",
+          "general_guidance": "log_correlation"
+        },
+        "remedy_mapping": {
+          "premature_containment": "remedy_premature_containment_01",
+          "host_pivot_accuracy": "remedy_host_pivot_01",
+          "evidence_completion": "remedy_evidence_completion_01",
+          "log_correlation": "remedy_log_correlation_01",
+          "scope_confirmation": "remedy_scope_confirmation_01",
+          "time_pressure_management": "remedy_time_pressure_01",
+          "response_action_order": "remedy_response_order_01",
+          "ioc_validation": "remedy_ioc_validation_01",
+          "lateral_movement_tracking": "remedy_lateral_movement_01",
+          "exfiltration_validation": "remedy_exfiltration_validation_01"
+        },
+        "hint_policy": {
+          "default_support_level": "light",
+          "increase_after_wrong_attempts": 2,
+          "allow_exact_guidance_after_attempts": 3,
+          "allow_exact_guidance": false
+        },
+        "fact_pack_rules": {
+          "max_facts_to_expose": 3,
+          "allow_raw_logs": false,
+          "require_grounded_fact_ids": true
+        }
+      }
+    },
+    {
+      "id": "execution",
+      "stage_type": "execution",
+      "name": "Execution",
+      "difficulty": "medium",
+      "learning_objective": "Confirm command-channel behavior by correlating workstation activity, external communication, and evidence interpretation before containment.",
+      "time_pressure": {
+        "time_limit_seconds": 60,
+        "warning_threshold": 0.7,
+        "timeout_behavior": "escalate_stage",
+        "timeout_penalty": 7,
+        "lock_stage_on_timeout": true,
+        "lock_stage_on_success": true,
+        "auto_advance_delay_ms": 2500,
+        "timeout_warning": "Time pressure is increasing. The suspected command channel may stabilize if the workstation and external path are not validated.",
+        "timeout_mentor_feedback": "Delayed execution response allowed the command channel to stabilize and increased lateral movement risk.",
+        "timeout_log_message": "TIMEOUT: Command-channel behavior persisted, increasing the likelihood of internal movement.",
+        "next_stage_modifier": {
+          "escalation_level": 1,
+          "risk_state": "elevated",
+          "extra_logs": [
+            {
+              "id": "lateral-escalated-log-1",
+              "type": "log",
+              "time": "11:52:33",
+              "message": "NETWORK: Additional internal probing observed after unresolved command-channel activity from WS-04.",
+              "severity": "critical"
+            }
+          ],
+          "node_status_changes": {
+            "server": "suspicious"
+          },
+          "mentor_context": "Because execution was not contained quickly, the lateral movement stage begins with higher internal risk."
+        }
+      },
+      "suspicious_nodes": [
+        "workstation1",
+        "external"
+      ],
+      "primary_targets": [
+        "workstation1",
+        "external"
+      ],
+      "required_investigation": {
+        "target_scope": "required_targets",
+        "target_ids": [
+          "workstation1",
+          "external"
+        ],
+        "dimensions": [
+          "connectivity",
+          "activity",
+          "interpretation"
+        ],
+        "minimum_target_coverage": "all",
+        "required_before_response": true
+      },
+      "events": [
+        {
+          "id": "execution-log-1",
+          "type": "log",
+          "time": "11:15:44",
+          "message": "NETWORK: Persistent outbound encrypted communication established between WS-04 and 45.33.32.156 over an unusual high port",
+          "severity": "high"
+        },
+        {
+          "id": "execution-log-2",
+          "type": "log",
+          "time": "11:18:10",
+          "message": "TELEMETRY: WS-04 traffic profile diverges from expected workstation behavior and begins periodic beacon-like activity",
+          "severity": "high"
+        },
+        {
+          "id": "execution-alert-1",
+          "type": "alert",
+          "message": "Possible command-channel establishment detected from WS-04 to an external endpoint",
+          "severity": "high",
+          "relatedNode": "workstation1",
+          "relatedLog": "execution-log-1",
+          "source": "45.33.32.156",
+          "timestamp": "11:18:32"
+        }
+      ],
+      "expected_actions": [
+        "investigate IP",
+        "isolate machine"
+      ],
+      "wrong_actions": [
+        "ignore",
+        "block IP"
+      ],
+      "preferred_action_order": [
+        "investigate IP",
+        "isolate machine"
+      ],
+      "minimum_actions_to_pass": 2,
+      "mentor_hint": "Validate the external communication path first, then contain the workstation once compromise is supported by evidence.",
+      "mentor": {
+        "stage_hint": "Correlate the workstation activity with the external communication path, then interpret whether this supports compromise before isolating.",
+        "coverage_incomplete": "Execution is not fully validated yet. Review connectivity, activity, and interpretation evidence for the required targets.",
+        "wrong_order": "Containment before activity review and interpretation may stop traffic, but it does not teach how to validate command-channel behavior.",
+        "premature_response": "Isolating before interpreting evidence can hide the difference between suspicious traffic and confirmed command-channel behavior.",
+        "correct_sequence": "Good sequence. You correlated communication, activity, and interpretation before containment.",
+        "timeout_warning": "Time pressure is increasing. The command channel may stabilize if the affected host is not contained.",
+        "timeout_feedback": "The delay allowed execution behavior to persist and increased lateral movement risk."
+      },
+      "scoring": {
+        "correct_action_score": 5,
+        "wrong_action_penalty": 6,
+        "pass_score": 10,
+        "max_score": 10
+      },
+      "consequences": {
+        "correct": {
+          "mentor_feedback": "The malicious external communication path was confirmed and the compromised workstation was contained before deeper internal abuse.",
+          "node_effect": "isolated",
+          "log_message": "Outbound command-channel activity on WS-04 interrupted after investigation."
+        },
+        "wrong": {
+          "mentor_feedback": "Uninterrupted execution allows the attacker to operate from the foothold and prepare internal movement.",
+          "node_effect": "compromised",
+          "log_message": "Malicious command-channel behavior remains active on WS-04."
+        }
+      },
+      "ai_metadata": {
+        "stage_objective": "Confirm command-channel behavior by correlating workstation activity, external communication, and evidence interpretation before containment.",
+        "hint_triggers": [
+          "premature_response",
+          "wrong_target",
+          "insufficient_evidence",
+          "time_pressure",
+          "repeated_mistake",
+          "general_guidance"
+        ],
+        "evidence_categories": [
+          "endpoint_execution_confirmation",
+          "privilege_escalation_indicator",
+          "host_scope_confirmation",
+          "containment_readiness"
+        ],
+        "facts": [
+          {
+            "id": "execution-f1",
+            "label": "Execution evidence should be confirmed before treating the host as contained.",
+            "category": "endpoint_execution_confirmation",
+            "safe_for_hint": true
+          },
+          {
+            "id": "execution-f2",
+            "label": "Privilege or execution indicators increase the need for careful host validation.",
+            "category": "privilege_escalation_indicator",
+            "safe_for_hint": true
+          },
+          {
+            "id": "execution-f3",
+            "label": "Containment should follow confirmation of the affected host and activity.",
+            "category": "containment_readiness",
+            "safe_for_hint": true
+          }
+        ],
+        "action_evaluation": {
+          "correct_actions": [
+            "investigate IP",
+            "isolate machine"
+          ],
+          "acceptable_actions": [],
+          "premature_actions": [
+            "isolate machine"
+          ],
+          "wrong_target_actions": [
+            "block IP"
+          ],
+          "dangerous_actions": [],
+          "irrelevant_actions": [
+            "ignore"
+          ]
+        },
+        "weakness_codes": {
+          "premature_response": "premature_containment",
+          "wrong_target": "host_pivot_accuracy",
+          "insufficient_evidence": "evidence_completion",
+          "time_pressure": "time_pressure_management",
+          "repeated_mistake": "response_action_order",
+          "general_guidance": "log_correlation"
+        },
+        "remedy_mapping": {
+          "premature_containment": "remedy_premature_containment_01",
+          "host_pivot_accuracy": "remedy_host_pivot_01",
+          "evidence_completion": "remedy_evidence_completion_01",
+          "log_correlation": "remedy_log_correlation_01",
+          "scope_confirmation": "remedy_scope_confirmation_01",
+          "time_pressure_management": "remedy_time_pressure_01",
+          "response_action_order": "remedy_response_order_01",
+          "ioc_validation": "remedy_ioc_validation_01",
+          "lateral_movement_tracking": "remedy_lateral_movement_01",
+          "exfiltration_validation": "remedy_exfiltration_validation_01"
+        },
+        "hint_policy": {
+          "default_support_level": "light",
+          "increase_after_wrong_attempts": 2,
+          "allow_exact_guidance_after_attempts": 3,
+          "allow_exact_guidance": false
+        },
+        "fact_pack_rules": {
+          "max_facts_to_expose": 3,
+          "allow_raw_logs": false,
+          "require_grounded_fact_ids": true
+        }
+      }
+    },
+    {
+      "id": "lateral",
+      "stage_type": "lateral",
+      "name": "Lateral Movement",
+      "difficulty": "medium",
+      "learning_objective": "Trace internal trust-path abuse by correlating internal connectivity, privileged identity behavior, and security control gaps before containment.",
+      "time_pressure": {
+        "time_limit_seconds": 75,
+        "warning_threshold": 0.7,
+        "timeout_behavior": "escalate_stage",
+        "timeout_penalty": 8,
+        "lock_stage_on_timeout": true,
+        "lock_stage_on_success": true,
+        "auto_advance_delay_ms": 2500,
+        "timeout_warning": "Time pressure is increasing. The attacker may deepen access through internal trust paths.",
+        "timeout_mentor_feedback": "Delayed lateral movement response allowed the attacker to increase server-tier compromise risk.",
+        "timeout_log_message": "TIMEOUT: Internal trust-path abuse continued, increasing exposure of service-tier assets.",
+        "next_stage_modifier": {
+          "escalation_level": 1,
+          "risk_state": "critical",
+          "extra_logs": [
+            {
+              "id": "exfil-escalated-log-1",
+              "type": "log",
+              "time": "12:31:11",
+              "message": "DB: Elevated access volume observed after unresolved internal movement toward server-tier assets.",
+              "severity": "critical"
+            }
+          ],
+          "node_status_changes": {
+            "server": "compromised"
+          },
+          "mentor_context": "Because lateral movement was not contained quickly, exfiltration begins with greater data exposure risk."
+        }
+      },
+      "suspicious_nodes": [
+        "workstation1",
+        "server"
+      ],
+      "primary_targets": [
+        "workstation1",
+        "server"
+      ],
+      "required_investigation": {
+        "target_scope": "suspicious_nodes",
+        "target_ids": [],
+        "dimensions": [
+          "connectivity",
+          "identity",
+          "controls"
+        ],
+        "minimum_target_coverage": "all",
+        "required_before_response": true
+      },
+      "events": [
+        {
+          "id": "lateral-log-1",
+          "type": "log",
+          "time": "12:01:07",
+          "message": "AUTH: Unusual privileged authentication pattern observed from WS-04 toward SRV-PROD-01",
+          "severity": "critical"
+        },
+        {
+          "id": "lateral-log-2",
+          "type": "log",
+          "time": "12:03:41",
+          "message": "NETWORK: Internal trust path abuse suspected as workstation-origin traffic reaches server-tier services outside baseline",
+          "severity": "high"
+        },
+        {
+          "id": "lateral-alert-1",
+          "type": "alert",
+          "message": "Potential lateral movement detected from WS-04 toward SRV-PROD-01",
+          "severity": "critical",
+          "relatedNode": "server",
+          "relatedLog": "lateral-log-1",
+          "source": "10.0.0.12",
+          "timestamp": "12:04:03"
+        }
+      ],
+      "expected_actions": [
+        "investigate IP",
+        "isolate machine"
+      ],
+      "wrong_actions": [
+        "ignore",
+        "block IP"
+      ],
+      "preferred_action_order": [
+        "investigate IP",
+        "isolate machine"
+      ],
+      "minimum_actions_to_pass": 2,
+      "mentor_hint": "Trace the internal movement path before containment so you understand which trust relationship is being abused.",
+      "mentor": {
+        "stage_hint": "Trace the internal movement path, review identity behavior, and inspect control gaps before isolating the affected node.",
+        "coverage_incomplete": "Lateral movement is not fully understood yet. Review connectivity, identity, and controls across the suspicious internal path.",
+        "wrong_order": "Containment before tracing the trust path may stop one node while leaving the abused relationship unclear.",
+        "premature_response": "Isolating without validating identity and control context can miss how the attacker moved internally.",
+        "correct_sequence": "Good sequence. You traced the internal path, reviewed identity context, and checked controls before containment.",
+        "timeout_warning": "Time pressure is increasing. The attacker may move deeper through trusted internal relationships.",
+        "timeout_feedback": "The delay allowed internal movement to continue and increased server-tier compromise risk."
+      },
+      "scoring": {
+        "correct_action_score": 5,
+        "wrong_action_penalty": 7,
+        "pass_score": 10,
+        "max_score": 10
+      },
+      "consequences": {
+        "correct": {
+          "mentor_feedback": "The internal pivot path was investigated and interrupted before full compromise of additional service-tier assets.",
+          "node_effect": "isolated",
+          "log_message": "Lateral movement path from WS-04 toward SRV-PROD-01 disrupted."
+        },
+        "wrong": {
+          "mentor_feedback": "Missed lateral movement gives the attacker a route through trusted internal relationships toward high-value systems.",
+          "node_effect": "compromised",
+          "log_message": "Attacker movement through internal trust paths continues toward the server tier."
+        }
+      },
+      "ai_metadata": {
+        "stage_objective": "Trace internal trust-path abuse by correlating internal connectivity, privileged identity behavior, and security control gaps before containment.",
+        "hint_triggers": [
+          "premature_response",
+          "wrong_target",
+          "insufficient_evidence",
+          "time_pressure",
+          "repeated_mistake",
+          "general_guidance"
+        ],
+        "evidence_categories": [
+          "lateral_movement_path",
+          "credential_use_anomaly",
+          "scope_confirmation",
+          "containment_readiness"
+        ],
+        "facts": [
+          {
+            "id": "lateral-f1",
+            "label": "The movement path between internal assets should be validated.",
+            "category": "lateral_movement_path",
+            "safe_for_hint": true
+          },
+          {
+            "id": "lateral-f2",
+            "label": "Credential or session evidence helps confirm the pivot direction.",
+            "category": "credential_use_anomaly",
+            "safe_for_hint": true
+          },
+          {
+            "id": "lateral-f3",
+            "label": "Containment should target the confirmed movement path rather than a guessed asset.",
+            "category": "scope_confirmation",
+            "safe_for_hint": true
+          }
+        ],
+        "action_evaluation": {
+          "correct_actions": [
+            "investigate IP",
+            "isolate machine"
+          ],
+          "acceptable_actions": [],
+          "premature_actions": [
+            "isolate machine"
+          ],
+          "wrong_target_actions": [
+            "block IP"
+          ],
+          "dangerous_actions": [],
+          "irrelevant_actions": [
+            "ignore"
+          ]
+        },
+        "weakness_codes": {
+          "premature_response": "premature_containment",
+          "wrong_target": "lateral_movement_tracking",
+          "insufficient_evidence": "scope_confirmation",
+          "time_pressure": "time_pressure_management",
+          "repeated_mistake": "response_action_order",
+          "general_guidance": "log_correlation"
+        },
+        "remedy_mapping": {
+          "premature_containment": "remedy_premature_containment_01",
+          "host_pivot_accuracy": "remedy_host_pivot_01",
+          "evidence_completion": "remedy_evidence_completion_01",
+          "log_correlation": "remedy_log_correlation_01",
+          "scope_confirmation": "remedy_scope_confirmation_01",
+          "time_pressure_management": "remedy_time_pressure_01",
+          "response_action_order": "remedy_response_order_01",
+          "ioc_validation": "remedy_ioc_validation_01",
+          "lateral_movement_tracking": "remedy_lateral_movement_01",
+          "exfiltration_validation": "remedy_exfiltration_validation_01"
+        },
+        "hint_policy": {
+          "default_support_level": "light",
+          "increase_after_wrong_attempts": 2,
+          "allow_exact_guidance_after_attempts": 3,
+          "allow_exact_guidance": false
+        },
+        "fact_pack_rules": {
+          "max_facts_to_expose": 3,
+          "allow_raw_logs": false,
+          "require_grounded_fact_ids": true
+        }
+      }
+    },
+    {
+      "id": "exfil",
+      "stage_type": "exfil",
+      "name": "Data Exfiltration",
+      "difficulty": "hard",
+      "learning_objective": "Validate sensitive data access and outbound transfer by correlating activity evidence, communication path, and final interpretation before blocking the exfiltration channel.",
+      "time_pressure": {
+        "time_limit_seconds": 75,
+        "warning_threshold": 0.7,
+        "timeout_behavior": "complete_degraded",
+        "timeout_penalty": 10,
+        "lock_stage_on_timeout": true,
+        "lock_stage_on_success": true,
+        "auto_advance_delay_ms": 2500,
+        "timeout_warning": "Time pressure is critical. Delayed response may increase data-loss exposure.",
+        "timeout_mentor_feedback": "Delayed exfiltration response increased data-loss exposure and produced a degraded scenario outcome.",
+        "timeout_log_message": "TIMEOUT: Exfiltration traffic continued long enough to increase probable data-loss impact.",
+        "final_outcome_modifier": {
+          "result": "contained_late",
+          "risk_state": "degraded",
+          "mentor_context": "The campaign ended with degraded containment because exfiltration was not stopped in time."
+        }
+      },
+      "suspicious_nodes": [
+        "server",
+        "external"
+      ],
+      "primary_targets": [
+        "server",
+        "external"
+      ],
+      "required_investigation": {
+        "target_scope": "required_targets",
+        "target_ids": [
+          "server",
+          "external"
+        ],
+        "dimensions": [
+          "activity",
+          "connectivity",
+          "interpretation"
+        ],
+        "minimum_target_coverage": "all",
+        "required_before_response": true
+      },
+      "events": [
+        {
+          "id": "exfil-log-1",
+          "type": "log",
+          "time": "12:44:18",
+          "message": "DB: Large-volume access to sensitive records observed on DB-SERVER-01 outside established baseline patterns",
+          "severity": "critical"
+        },
+        {
+          "id": "exfil-log-2",
+          "type": "log",
+          "time": "12:46:37",
+          "message": "NETWORK: Sustained outbound transfer associated with the campaign path detected toward 45.33.32.156",
+          "severity": "critical"
+        },
+        {
+          "id": "exfil-alert-1",
+          "type": "alert",
+          "message": "Possible data exfiltration channel detected between internal assets and external host 45.33.32.156",
+          "severity": "critical",
+          "relatedNode": "external",
+          "relatedLog": "exfil-log-2",
+          "source": "45.33.32.156",
+          "timestamp": "12:46:58"
+        }
+      ],
+      "expected_actions": [
+        "investigate IP",
+        "block IP"
+      ],
+      "wrong_actions": [
+        "ignore",
+        "isolate machine"
+      ],
+      "preferred_action_order": [
+        "investigate IP",
+        "block IP"
+      ],
+      "minimum_actions_to_pass": 2,
+      "mentor_hint": "Confirm the external exfiltration path and its role in the campaign before blocking it at the perimeter.",
+      "mentor": {
+        "stage_hint": "Confirm data access activity, validate the outbound transfer path, and interpret the evidence before blocking the exfiltration channel.",
+        "coverage_incomplete": "Exfiltration is not fully validated yet. Review activity, connectivity, and interpretation evidence for the data source and external path.",
+        "wrong_order": "Blocking before validating both data access and outbound transfer can stop traffic, but it weakens evidence-based reasoning.",
+        "premature_response": "A perimeter block should come after confirming the exfiltration path and its relationship to sensitive data activity.",
+        "correct_sequence": "Good sequence. You correlated data activity, outbound connectivity, and interpretation before blocking the exfiltration channel.",
+        "timeout_warning": "Time pressure is critical. Continued delay may increase data-loss exposure.",
+        "timeout_feedback": "The delay allowed exfiltration risk to increase and produced a degraded containment outcome."
+      },
+      "scoring": {
+        "correct_action_score": 5,
+        "wrong_action_penalty": 8,
+        "pass_score": 10,
+        "max_score": 10
+      },
+      "consequences": {
+        "correct": {
+          "mentor_feedback": "The exfiltration endpoint was investigated and blocked after the campaign path was confirmed.",
+          "node_effect": "stable",
+          "log_message": "External exfiltration channel disrupted after analyst validation."
+        },
+        "wrong": {
+          "mentor_feedback": "Failure to stop the external channel allows continued attacker communication and ongoing data loss risk.",
+          "node_effect": "compromised",
+          "log_message": "Exfiltration traffic remains active toward the external endpoint."
+        }
+      },
+      "ai_metadata": {
+        "stage_objective": "Validate sensitive data access and outbound transfer by correlating activity evidence, communication path, and final interpretation before blocking the exfiltration channel.",
+        "hint_triggers": [
+          "premature_response",
+          "wrong_target",
+          "insufficient_evidence",
+          "time_pressure",
+          "repeated_mistake",
+          "general_guidance"
+        ],
+        "evidence_categories": [
+          "exfiltration_volume_indicator",
+          "external_destination_validation",
+          "scope_confirmation",
+          "containment_readiness"
+        ],
+        "facts": [
+          {
+            "id": "exfil-f1",
+            "label": "Outbound data movement should be validated before final containment.",
+            "category": "exfiltration_volume_indicator",
+            "safe_for_hint": true
+          },
+          {
+            "id": "exfil-f2",
+            "label": "The external destination must be confirmed as part of the exfiltration path.",
+            "category": "external_destination_validation",
+            "safe_for_hint": true
+          },
+          {
+            "id": "exfil-f3",
+            "label": "The response should protect evidence while disrupting the confirmed exfiltration route.",
+            "category": "containment_readiness",
+            "safe_for_hint": true
+          }
+        ],
+        "action_evaluation": {
+          "correct_actions": [
+            "investigate IP",
+            "block IP"
+          ],
+          "acceptable_actions": [],
+          "premature_actions": [
+            "block IP"
+          ],
+          "wrong_target_actions": [
+            "isolate machine"
+          ],
+          "dangerous_actions": [],
+          "irrelevant_actions": [
+            "ignore"
+          ]
+        },
+        "weakness_codes": {
+          "premature_response": "premature_containment",
+          "wrong_target": "exfiltration_validation",
+          "insufficient_evidence": "exfiltration_validation",
+          "time_pressure": "time_pressure_management",
+          "repeated_mistake": "response_action_order",
+          "general_guidance": "log_correlation"
+        },
+        "remedy_mapping": {
+          "premature_containment": "remedy_premature_containment_01",
+          "host_pivot_accuracy": "remedy_host_pivot_01",
+          "evidence_completion": "remedy_evidence_completion_01",
+          "log_correlation": "remedy_log_correlation_01",
+          "scope_confirmation": "remedy_scope_confirmation_01",
+          "time_pressure_management": "remedy_time_pressure_01",
+          "response_action_order": "remedy_response_order_01",
+          "ioc_validation": "remedy_ioc_validation_01",
+          "lateral_movement_tracking": "remedy_lateral_movement_01",
+          "exfiltration_validation": "remedy_exfiltration_validation_01"
+        },
+        "hint_policy": {
+          "default_support_level": "light",
+          "increase_after_wrong_attempts": 2,
+          "allow_exact_guidance_after_attempts": 3,
+          "allow_exact_guidance": false
+        },
+        "fact_pack_rules": {
+          "max_facts_to_expose": 3,
+          "allow_raw_logs": false,
+          "require_grounded_fact_ids": true
+        }
+      }
+    }
+  ]
+}

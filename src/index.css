@@ -1,0 +1,46 @@
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg-root:       #071423;
+  --bg-panel:      #0b1b2b;
+  --bg-surface:    #10283b;
+  --bg-hover:      #163650;
+  --bg-deep:       #06111d;
+
+  --border-bright: #2b6b91;
+  --border-mid:    #22506f;
+  --border-dim:    #17334a;
+
+  --cyan:    #00e5ff;
+  --cyan-dim: rgba(0,229,255,0.15);
+  --green:   #00ff88;
+  --blue:    #3a9ef5;
+  --yellow:  #ffd740;
+  --orange:  #ff9040;
+  --red:     #ff3b3b;
+  --red-dim: rgba(255,59,59,0.12);
+
+  --text-bright:  #e6f6ff;
+  --text-mid:     #a9d4ea;
+  --text-dim:     #7da3bd;
+  --text-danger:  #ff9b9b;
+  --text-warn:    #f2d983;
+}
+
+html, body, #root {
+  height: 100%;
+  overflow: hidden;
+  background: var(--bg-root);
+}
+
+body {
+  font-family: 'Exo 2', 'Segoe UI', sans-serif;
+  font-size: 13px;
+  color: var(--text-bright);
+  -webkit-font-smoothing: antialiased;
+}
+
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: var(--bg-deep); }
+::-webkit-scrollbar-thumb { background: var(--border-bright); border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: var(--cyan); }

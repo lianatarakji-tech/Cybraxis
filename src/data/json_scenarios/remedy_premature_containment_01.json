@@ -1,0 +1,610 @@
+{
+  "scenario_id": "remedy_premature_containment_01",
+  "gameplay_name": "Evidence Before Response",
+  "name": "Premature Containment Remedy - Evidence Before Response",
+  "description": "A short remedial SOC investigation module focused on correcting premature containment behavior. The learner practices validating source, affected scope, and containment readiness before blocking or isolating.",
+  "version": "1.0-dev",
+  "timing_profile": "development",
+  "difficulty": "remedy",
+  "scenario_type": "remedy",
+  "primary_weakness": "premature_containment",
+  "remedy_focus": "evidence_before_response",
+  "source_failed_scenario_types": [
+    "external_recon_to_exfiltration_1",
+    "silent_beacon_1"
+  ],
+  "recommended_replay_target": "failed_scenario_or_equivalent_variant",
+  "global_design_notes": {
+    "network_only_boundary": "This remedy uses network/security-monitoring evidence only: firewall logs, DNS logs, IDS alerts, authentication summaries, network flow summaries, and SOC-facing endpoint status summaries.",
+    "remedy_rule": "This remedy does not replace the failed scenario. After completion, the learner should replay the failed scenario or an equivalent controlled variant.",
+    "ai_support_note": "AI may explain backend-approved facts but cannot decide correctness, score, pass/fail, progression, or remedy selection.",
+    "scoring_note": "Scoring should emphasize evidence coverage before response, action order, and avoiding premature containment."
+  },
+  "variant_design": {
+    "status": "planned_not_active",
+    "seeded_variant_required_later": true,
+    "variant_family": "remedy_premature_containment",
+    "pools": {
+      "external_source": [
+        "198.51.100.23",
+        "203.0.113.77",
+        "192.0.2.44"
+      ],
+      "internal_asset": [
+        "workstation4",
+        "workstation7",
+        "financeLaptop"
+      ],
+      "control_point": [
+        "router",
+        "dnsServer",
+        "webProxy"
+      ]
+    }
+  },
+  "stages": [
+    {
+      "id": "perimeter_contact",
+      "stage_type": "remedy_practice",
+      "name": "Suspicious Perimeter Contact",
+      "difficulty": "remedy_easy",
+      "learning_objective": "Validate the suspicious external connection and perimeter path before blocking the source.",
+      "time_pressure": {
+        "time_limit_seconds": 90,
+        "warning_threshold": 0.75,
+        "timeout_behavior": "continue_with_guidance",
+        "timeout_penalty": 3,
+        "lock_stage_on_timeout": false,
+        "lock_stage_on_success": true,
+        "auto_advance_delay_ms": 2500,
+        "timeout_warning": "Slow down and confirm the connection path before responding. This remedy is about evidence-before-response order.",
+        "timeout_mentor_feedback": "The investigation needs source and path validation before a block is justified.",
+        "timeout_log_message": "REMEDY TIMEOUT: The suspicious source remained unconfirmed because the evidence path was not completed."
+      },
+      "suspicious_nodes": [
+        "router",
+        "external"
+      ],
+      "primary_targets": [
+        "router",
+        "external"
+      ],
+      "required_investigation": {
+        "target_scope": "required_targets",
+        "target_ids": [
+          "router",
+          "external"
+        ],
+        "dimensions": [
+          "connectivity",
+          "controls"
+        ],
+        "minimum_target_coverage": "all",
+        "required_before_response": true
+      },
+      "events": [
+        {
+          "id": "pc-log-1",
+          "type": "log",
+          "time": "08:42:11",
+          "message": "FIREWALL: Repeated inbound connection attempts from 198.51.100.23 toward perimeter service ports",
+          "severity": "medium"
+        },
+        {
+          "id": "pc-log-2",
+          "type": "log",
+          "time": "08:43:02",
+          "message": "IDS: Connection pattern resembles probing but no confirmed exploitation is observed",
+          "severity": "medium"
+        },
+        {
+          "id": "pc-alert-1",
+          "type": "alert",
+          "message": "Possible perimeter probing detected; validate source and path before blocking",
+          "severity": "medium",
+          "relatedNode": "router",
+          "relatedLog": "pc-log-1",
+          "source": "198.51.100.23",
+          "timestamp": "08:43:20"
+        }
+      ],
+      "expected_actions": [
+        "investigate IP",
+        "block IP"
+      ],
+      "wrong_actions": [
+        "ignore",
+        "isolate machine"
+      ],
+      "preferred_action_order": [
+        "investigate IP",
+        "block IP"
+      ],
+      "minimum_actions_to_pass": 2,
+      "mentor_hint": "Do not block yet. First confirm the source and perimeter path, then apply the block if the evidence supports it.",
+      "mentor": {
+        "stage_hint": "Start by validating the suspicious source and the perimeter route before choosing a response.",
+        "coverage_incomplete": "You still need source and path validation before blocking.",
+        "wrong_order": "Blocking before investigation may stop traffic, but it weakens the evidence record.",
+        "premature_response": "This is the exact skill this remedy trains: response comes after evidence coverage.",
+        "correct_sequence": "Good. You confirmed the perimeter contact before applying containment.",
+        "timeout_warning": "Take one evidence path at a time: source first, path second, response last.",
+        "timeout_feedback": "The stage continued because this remedy is focused on practice, not punishment."
+      },
+      "scoring": {
+        "correct_action_score": 5,
+        "wrong_action_penalty": 3,
+        "pass_score": 10,
+        "max_score": 10
+      },
+      "consequences": {
+        "correct": {
+          "mentor_feedback": "The source and perimeter path were validated before the block was applied.",
+          "node_effect": "stable",
+          "log_message": "Perimeter source blocked after analyst validation."
+        },
+        "wrong": {
+          "mentor_feedback": "The response was attempted before the evidence path was complete.",
+          "node_effect": "suspicious",
+          "log_message": "Premature containment attempt recorded for remedial feedback."
+        }
+      },
+      "ai_metadata": {
+        "stage_objective": "Validate the suspicious external connection and perimeter path before blocking the source.",
+        "hint_triggers": [
+          "premature_response",
+          "wrong_target",
+          "insufficient_evidence",
+          "time_pressure",
+          "repeated_mistake",
+          "general_guidance"
+        ],
+        "evidence_categories": [
+          "external_recon_indicator",
+          "ioc_validation",
+          "containment_readiness"
+        ],
+        "facts": [
+          {
+            "id": "pc-f1",
+            "label": "Repeated inbound attempts indicate suspicious perimeter contact.",
+            "category": "external_recon_indicator",
+            "safe_for_hint": true
+          },
+          {
+            "id": "pc-f2",
+            "label": "The source and path should be validated before blocking.",
+            "category": "ioc_validation",
+            "safe_for_hint": true
+          },
+          {
+            "id": "pc-f3",
+            "label": "Containment readiness depends on completing the evidence path.",
+            "category": "containment_readiness",
+            "safe_for_hint": true
+          }
+        ],
+        "action_evaluation": {
+          "correct_actions": [
+            "investigate IP",
+            "block IP"
+          ],
+          "acceptable_actions": [],
+          "premature_actions": [
+            "block IP"
+          ],
+          "wrong_target_actions": [
+            "isolate machine"
+          ],
+          "dangerous_actions": [],
+          "irrelevant_actions": [
+            "ignore"
+          ]
+        },
+        "weakness_codes": {
+          "premature_response": "premature_containment",
+          "wrong_target": "host_pivot_accuracy",
+          "insufficient_evidence": "evidence_completion",
+          "time_pressure": "time_pressure_management",
+          "repeated_mistake": "response_action_order",
+          "general_guidance": "log_correlation"
+        },
+        "remedy_mapping": {
+          "premature_containment": "remedy_premature_containment_01",
+          "host_pivot_accuracy": "remedy_host_pivot_01",
+          "evidence_completion": "remedy_evidence_completion_01",
+          "time_pressure_management": "remedy_time_pressure_01",
+          "response_action_order": "remedy_response_order_01"
+        },
+        "hint_policy": {
+          "default_support_level": "medium",
+          "increase_after_wrong_attempts": 1,
+          "allow_exact_guidance_after_attempts": 3,
+          "allow_exact_guidance": false
+        },
+        "fact_pack_rules": {
+          "max_facts_to_expose": 3,
+          "allow_raw_logs": false,
+          "require_grounded_fact_ids": true
+        }
+      }
+    },
+    {
+      "id": "internal_session",
+      "stage_type": "remedy_practice",
+      "name": "Suspicious Internal Session",
+      "difficulty": "remedy_easy",
+      "learning_objective": "Confirm the affected internal asset before isolating the machine.",
+      "time_pressure": {
+        "time_limit_seconds": 100,
+        "warning_threshold": 0.75,
+        "timeout_behavior": "continue_with_guidance",
+        "timeout_penalty": 3,
+        "lock_stage_on_timeout": false,
+        "lock_stage_on_success": true,
+        "auto_advance_delay_ms": 2500,
+        "timeout_warning": "Confirm which internal asset is affected before applying isolation.",
+        "timeout_mentor_feedback": "The host scope was not fully confirmed before response.",
+        "timeout_log_message": "REMEDY TIMEOUT: Host scope validation remained incomplete."
+      },
+      "suspicious_nodes": [
+        "workstation4",
+        "router"
+      ],
+      "primary_targets": [
+        "workstation4"
+      ],
+      "required_investigation": {
+        "target_scope": "required_targets",
+        "target_ids": [
+          "workstation4"
+        ],
+        "dimensions": [
+          "identity",
+          "activity"
+        ],
+        "minimum_target_coverage": "all",
+        "required_before_response": true
+      },
+      "events": [
+        {
+          "id": "is-log-1",
+          "type": "log",
+          "time": "09:10:18",
+          "message": "AUTH: Multiple failed login attempts followed by one successful session for user acct-ops",
+          "severity": "medium"
+        },
+        {
+          "id": "is-log-2",
+          "type": "log",
+          "time": "09:11:04",
+          "message": "NETFLOW: WS-04 established a short outbound session shortly after abnormal authentication activity",
+          "severity": "medium"
+        },
+        {
+          "id": "is-alert-1",
+          "type": "alert",
+          "message": "Suspicious session behavior requires host scope confirmation before isolation",
+          "severity": "medium",
+          "relatedNode": "workstation4",
+          "relatedLog": "is-log-1",
+          "source": "acct-ops",
+          "timestamp": "09:11:30"
+        }
+      ],
+      "expected_actions": [
+        "investigate user",
+        "isolate machine"
+      ],
+      "wrong_actions": [
+        "ignore",
+        "block IP"
+      ],
+      "preferred_action_order": [
+        "investigate user",
+        "isolate machine"
+      ],
+      "minimum_actions_to_pass": 2,
+      "mentor_hint": "Confirm which asset and session are involved before isolating the workstation.",
+      "mentor": {
+        "stage_hint": "Validate the user/session evidence and affected workstation before isolation.",
+        "coverage_incomplete": "The affected asset is not fully confirmed yet.",
+        "wrong_order": "Isolation before host scope confirmation can disrupt the wrong asset.",
+        "premature_response": "Isolation is a response action. Confirm the affected host first.",
+        "correct_sequence": "Good. You confirmed the suspicious session before isolating the affected host.",
+        "timeout_warning": "Focus on the user/session evidence, then confirm the host.",
+        "timeout_feedback": "The stage continued to reinforce host-scope validation."
+      },
+      "scoring": {
+        "correct_action_score": 5,
+        "wrong_action_penalty": 3,
+        "pass_score": 10,
+        "max_score": 10
+      },
+      "consequences": {
+        "correct": {
+          "mentor_feedback": "The affected host was confirmed before isolation.",
+          "node_effect": "stable",
+          "log_message": "WS-04 isolated after suspicious session validation."
+        },
+        "wrong": {
+          "mentor_feedback": "The response was attempted before host scope was confirmed.",
+          "node_effect": "suspicious",
+          "log_message": "Premature host containment attempt recorded."
+        }
+      },
+      "ai_metadata": {
+        "stage_objective": "Confirm the affected internal asset before isolating the machine.",
+        "hint_triggers": [
+          "premature_response",
+          "wrong_target",
+          "insufficient_evidence",
+          "time_pressure",
+          "repeated_mistake",
+          "general_guidance"
+        ],
+        "evidence_categories": [
+          "host_scope_confirmation",
+          "session_anomaly",
+          "containment_readiness"
+        ],
+        "facts": [
+          {
+            "id": "is-f1",
+            "label": "Abnormal authentication activity suggests a suspicious session.",
+            "category": "session_anomaly",
+            "safe_for_hint": true
+          },
+          {
+            "id": "is-f2",
+            "label": "The affected workstation should be confirmed before isolation.",
+            "category": "host_scope_confirmation",
+            "safe_for_hint": true
+          },
+          {
+            "id": "is-f3",
+            "label": "Isolation is only ready after the host scope is validated.",
+            "category": "containment_readiness",
+            "safe_for_hint": true
+          }
+        ],
+        "action_evaluation": {
+          "correct_actions": [
+            "investigate user",
+            "isolate machine"
+          ],
+          "acceptable_actions": [],
+          "premature_actions": [
+            "isolate machine"
+          ],
+          "wrong_target_actions": [
+            "block IP"
+          ],
+          "dangerous_actions": [],
+          "irrelevant_actions": [
+            "ignore"
+          ]
+        },
+        "weakness_codes": {
+          "premature_response": "premature_containment",
+          "wrong_target": "host_pivot_accuracy",
+          "insufficient_evidence": "scope_confirmation",
+          "time_pressure": "time_pressure_management",
+          "repeated_mistake": "response_action_order",
+          "general_guidance": "log_correlation"
+        },
+        "remedy_mapping": {
+          "premature_containment": "remedy_premature_containment_01",
+          "host_pivot_accuracy": "remedy_host_pivot_01",
+          "evidence_completion": "remedy_evidence_completion_01",
+          "scope_confirmation": "remedy_scope_confirmation_01",
+          "time_pressure_management": "remedy_time_pressure_01",
+          "response_action_order": "remedy_response_order_01"
+        },
+        "hint_policy": {
+          "default_support_level": "medium",
+          "increase_after_wrong_attempts": 1,
+          "allow_exact_guidance_after_attempts": 3,
+          "allow_exact_guidance": false
+        },
+        "fact_pack_rules": {
+          "max_facts_to_expose": 3,
+          "allow_raw_logs": false,
+          "require_grounded_fact_ids": true
+        }
+      }
+    },
+    {
+      "id": "response_readiness",
+      "stage_type": "remedy_practice",
+      "name": "Response Readiness Check",
+      "difficulty": "remedy_easy",
+      "learning_objective": "Correlate source, affected asset, and control point before final response.",
+      "time_pressure": {
+        "time_limit_seconds": 110,
+        "warning_threshold": 0.75,
+        "timeout_behavior": "continue_with_guidance",
+        "timeout_penalty": 3,
+        "lock_stage_on_timeout": false,
+        "lock_stage_on_success": true,
+        "auto_advance_delay_ms": 2500,
+        "timeout_warning": "Check source, affected asset, and control point before the final response.",
+        "timeout_mentor_feedback": "The final response needs complete readiness evidence.",
+        "timeout_log_message": "REMEDY TIMEOUT: Response readiness evidence was incomplete."
+      },
+      "suspicious_nodes": [
+        "router",
+        "workstation4",
+        "external"
+      ],
+      "primary_targets": [
+        "router",
+        "workstation4",
+        "external"
+      ],
+      "required_investigation": {
+        "target_scope": "required_targets",
+        "target_ids": [
+          "router",
+          "workstation4",
+          "external"
+        ],
+        "dimensions": [
+          "connectivity",
+          "activity",
+          "controls"
+        ],
+        "minimum_target_coverage": "all",
+        "required_before_response": true
+      },
+      "events": [
+        {
+          "id": "rr-log-1",
+          "type": "log",
+          "time": "09:28:10",
+          "message": "FIREWALL: External source and WS-04 show related short-lived sessions through the perimeter control point",
+          "severity": "medium"
+        },
+        {
+          "id": "rr-log-2",
+          "type": "log",
+          "time": "09:29:44",
+          "message": "SOC SUMMARY: Source, affected asset, and perimeter control point require correlation before final response",
+          "severity": "medium"
+        },
+        {
+          "id": "rr-alert-1",
+          "type": "alert",
+          "message": "Response readiness check: confirm source, affected host, and control point before containment",
+          "severity": "medium",
+          "relatedNode": "router",
+          "relatedLog": "rr-log-1",
+          "source": "198.51.100.23",
+          "timestamp": "09:30:00"
+        }
+      ],
+      "expected_actions": [
+        "investigate IP",
+        "block IP"
+      ],
+      "wrong_actions": [
+        "ignore",
+        "isolate machine"
+      ],
+      "preferred_action_order": [
+        "investigate IP",
+        "block IP"
+      ],
+      "minimum_actions_to_pass": 2,
+      "mentor_hint": "Complete the response readiness check before choosing containment.",
+      "mentor": {
+        "stage_hint": "Confirm the source, affected asset, and control point before applying the final response.",
+        "coverage_incomplete": "The response readiness picture is incomplete.",
+        "wrong_order": "Final containment should follow source, asset, and control-point correlation.",
+        "premature_response": "This response is too early until the readiness evidence is complete.",
+        "correct_sequence": "Good. You completed the readiness check before responding.",
+        "timeout_warning": "Slow down and check the three-part evidence path.",
+        "timeout_feedback": "The stage continued so you can practice completing readiness evidence."
+      },
+      "scoring": {
+        "correct_action_score": 5,
+        "wrong_action_penalty": 3,
+        "pass_score": 10,
+        "max_score": 10
+      },
+      "consequences": {
+        "correct": {
+          "mentor_feedback": "The response was applied after source, asset, and control-point validation.",
+          "node_effect": "stable",
+          "log_message": "Final containment applied after response readiness validation."
+        },
+        "wrong": {
+          "mentor_feedback": "The final response was attempted before readiness evidence was complete.",
+          "node_effect": "suspicious",
+          "log_message": "Premature final response attempt recorded."
+        }
+      },
+      "ai_metadata": {
+        "stage_objective": "Correlate source, affected asset, and control point before final response.",
+        "hint_triggers": [
+          "premature_response",
+          "wrong_target",
+          "insufficient_evidence",
+          "time_pressure",
+          "repeated_mistake",
+          "general_guidance"
+        ],
+        "evidence_categories": [
+          "ioc_validation",
+          "scope_confirmation",
+          "response_action_order",
+          "containment_readiness"
+        ],
+        "facts": [
+          {
+            "id": "rr-f1",
+            "label": "Source, affected asset, and control point should be correlated before response.",
+            "category": "scope_confirmation",
+            "safe_for_hint": true
+          },
+          {
+            "id": "rr-f2",
+            "label": "The final response should match the confirmed evidence path.",
+            "category": "response_action_order",
+            "safe_for_hint": true
+          },
+          {
+            "id": "rr-f3",
+            "label": "Containment readiness is complete only after required evidence coverage.",
+            "category": "containment_readiness",
+            "safe_for_hint": true
+          }
+        ],
+        "action_evaluation": {
+          "correct_actions": [
+            "investigate IP",
+            "block IP"
+          ],
+          "acceptable_actions": [],
+          "premature_actions": [
+            "block IP"
+          ],
+          "wrong_target_actions": [
+            "isolate machine"
+          ],
+          "dangerous_actions": [],
+          "irrelevant_actions": [
+            "ignore"
+          ]
+        },
+        "weakness_codes": {
+          "premature_response": "premature_containment",
+          "wrong_target": "host_pivot_accuracy",
+          "insufficient_evidence": "evidence_completion",
+          "time_pressure": "time_pressure_management",
+          "repeated_mistake": "response_action_order",
+          "general_guidance": "log_correlation"
+        },
+        "remedy_mapping": {
+          "premature_containment": "remedy_premature_containment_01",
+          "host_pivot_accuracy": "remedy_host_pivot_01",
+          "evidence_completion": "remedy_evidence_completion_01",
+          "scope_confirmation": "remedy_scope_confirmation_01",
+          "time_pressure_management": "remedy_time_pressure_01",
+          "response_action_order": "remedy_response_order_01"
+        },
+        "hint_policy": {
+          "default_support_level": "medium",
+          "increase_after_wrong_attempts": 1,
+          "allow_exact_guidance_after_attempts": 3,
+          "allow_exact_guidance": false
+        },
+        "fact_pack_rules": {
+          "max_facts_to_expose": 3,
+          "allow_raw_logs": false,
+          "require_grounded_fact_ids": true
+        }
+      }
+    }
+  ]
+}

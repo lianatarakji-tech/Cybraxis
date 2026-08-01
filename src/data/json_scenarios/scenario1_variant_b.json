@@ -1,0 +1,1004 @@
+{
+  "scenario_id": "external_recon_to_exfiltration_1b",
+  "gameplay_name": "South Bridge Pivot",
+  "name": "South Bridge Pivot",
+  "description": "A controlled replay variant of Scenario 1. The learner investigates an external scan, suspicious authentication, encrypted beacon-like traffic, internal discovery, and outbound data transfer while preserving the same foundational learning objectives as Scenario 1A.",
+  "version": "1.0-dev",
+  "timing_profile": "development",
+  "difficulty": "foundational",
+  "scenario_type": "replay_variant",
+  "variant_of": "external_recon_to_exfiltration_1",
+  "variant_id": "1B",
+  "replay_after_remedy": true,
+  "recommended_after": [
+    "remedy_premature_containment_01",
+    "remedy_host_pivot_01",
+    "remedy_evidence_completion_01"
+  ],
+  "global_design_notes": {
+    "network_only_boundary": "This variant uses firewall logs, IDS alerts, authentication summaries, DNS logs, proxy logs, network flow summaries, SMB/data-access summaries, DLP summaries, and SOC-facing endpoint status summaries only.",
+    "variant_rule": "Preserves Scenario 1A learning objectives while changing indicators, affected asset, log wording, evidence placement, and decoys to reduce memorization.",
+    "ai_support_note": "AI may explain backend-approved facts but cannot decide correctness, score, pass/fail, progression, or remedy selection."
+  },
+  "variant_design": {
+    "status": "draft_not_registered",
+    "variant_family": "external_recon_to_exfiltration",
+    "preserves_learning_objectives_from": "external_recon_to_exfiltration_1",
+    "changed_elements": [
+      "external scanning indicator",
+      "authentication pattern",
+      "affected workstation role",
+      "beacon-like traffic destination",
+      "internal discovery path",
+      "data transfer destination"
+    ]
+  },
+  "stages": [
+    {
+      "id": "recon",
+      "stage_type": "Recon",
+      "name": "Reconnaissance - Exposed Remote Service",
+      "difficulty": "foundational",
+      "learning_objective": "Validate external reconnaissance behavior, confirm the exposed perimeter service, and inspect the communication path before blocking the source.",
+      "time_pressure": {
+        "time_limit_seconds": 120,
+        "warning_threshold": 0.75,
+        "timeout_behavior": "advance_with_escalation",
+        "timeout_penalty": 5,
+        "lock_stage_on_timeout": true,
+        "lock_stage_on_success": true,
+        "auto_advance_delay_ms": 2500,
+        "timeout_warning": "Time is running low. Prioritize evidence validation before response.",
+        "timeout_mentor_feedback": "The next stage begins with elevated risk because the evidence path was not completed in time.",
+        "timeout_log_message": "TIMEOUT ESCALATION: Investigation incomplete; attacker activity continues into the next stage."
+      },
+      "suspicious_nodes": [
+        "router",
+        "workstation4",
+        "external"
+      ],
+      "primary_targets": [
+        "router",
+        "external"
+      ],
+      "required_investigation": {
+        "target_scope": "required_targets",
+        "target_ids": [
+          "router",
+          "external"
+        ],
+        "dimensions": [
+          "connectivity",
+          "controls"
+        ],
+        "minimum_target_coverage": "all",
+        "required_before_response": true
+      },
+      "events": [
+        {
+          "id": "s1b-recon-log-1",
+          "type": "log",
+          "time": "08:12:10",
+          "message": "FIREWALL: 47 rejected inbound attempts from 45.33.22.11 toward exposed remote-access service on perimeter rule",
+          "severity": "medium"
+        },
+        {
+          "id": "s1b-recon-log-2",
+          "type": "log",
+          "time": "08:12:44",
+          "message": "IDS: Repeated connection pattern suggests automated external service probing",
+          "severity": "medium"
+        },
+        {
+          "id": "s1b-recon-alert-1",
+          "type": "alert",
+          "message": "External scanning pattern detected; validate source and exposed path before blocking",
+          "severity": "medium",
+          "relatedNode": "router",
+          "relatedLog": "s1b-recon-log-1",
+          "source": "45.33.22.11",
+          "timestamp": "08:13:00"
+        }
+      ],
+      "expected_actions": [
+        "investigate IP",
+        "block IP"
+      ],
+      "wrong_actions": [
+        "ignore",
+        "isolate machine"
+      ],
+      "preferred_action_order": [
+        "investigate IP",
+        "block IP"
+      ],
+      "minimum_actions_to_pass": 2,
+      "mentor_hint": "Start with the external source and perimeter rule before taking a response action.",
+      "mentor": {
+        "stage_hint": "Start with the external source and perimeter rule before taking a response action.",
+        "coverage_incomplete": "The scan pattern and exposed path are not fully validated yet.",
+        "wrong_order": "Blocking before validation may stop traffic, but it leaves an evidence gap.",
+        "premature_response": "Investigate the source and path first; response comes after validation.",
+        "correct_sequence": "Good. You validated the reconnaissance path before blocking.",
+        "timeout_warning": "Confirm the external source and perimeter exposure before the stage escalates.",
+        "timeout_feedback": "The attacker may have learned enough about the exposed service to try access next."
+      },
+      "scoring": {
+        "correct_action_score": 5,
+        "wrong_action_penalty": 3,
+        "pass_score": 10,
+        "max_score": 10
+      },
+      "consequences": {
+        "correct": {
+          "mentor_feedback": "The external scan was validated and the source was blocked with evidence support.",
+          "node_effect": "stable",
+          "log_message": "Perimeter scan source blocked after validation."
+        },
+        "wrong": {
+          "mentor_feedback": "The response did not follow the required evidence-before-response order.",
+          "node_effect": "suspicious",
+          "log_message": "Premature or incorrect response recorded during reconnaissance."
+        }
+      },
+      "ai_metadata": {
+        "stage_objective": "Validate external reconnaissance behavior, confirm the exposed perimeter service, and inspect the communication path before blocking the source.",
+        "hint_triggers": [
+          "premature_response",
+          "wrong_target",
+          "insufficient_evidence",
+          "time_pressure",
+          "repeated_mistake",
+          "general_guidance"
+        ],
+        "evidence_categories": [
+          "external_recon_indicator",
+          "open_port_exposure",
+          "ioc_validation",
+          "containment_readiness"
+        ],
+        "facts": [
+          {
+            "id": "s1b-recon-f1",
+            "label": "Repeated inbound attempts indicate suspicious external reconnaissance.",
+            "category": "external_recon_indicator",
+            "safe_for_hint": true
+          },
+          {
+            "id": "s1b-recon-f2",
+            "label": "A perimeter rule exposes a remote-access path that should be validated.",
+            "category": "open_port_exposure",
+            "safe_for_hint": true
+          },
+          {
+            "id": "s1b-recon-f3",
+            "label": "Blocking should follow source and path validation.",
+            "category": "containment_readiness",
+            "safe_for_hint": true
+          }
+        ],
+        "action_evaluation": {
+          "correct_actions": [
+            "investigate IP",
+            "block IP"
+          ],
+          "acceptable_actions": [],
+          "premature_actions": [
+            "block IP"
+          ],
+          "wrong_target_actions": [
+            "isolate machine"
+          ],
+          "dangerous_actions": [],
+          "irrelevant_actions": [
+            "ignore"
+          ]
+        },
+        "weakness_codes": {
+          "premature_response": "premature_containment",
+          "wrong_target": "host_pivot_accuracy",
+          "insufficient_evidence": "ioc_validation",
+          "time_pressure": "time_pressure_management",
+          "repeated_mistake": "response_action_order",
+          "general_guidance": "log_correlation"
+        },
+        "remedy_mapping": {
+          "premature_containment": "remedy_premature_containment_01",
+          "host_pivot_accuracy": "remedy_host_pivot_01",
+          "evidence_completion": "remedy_evidence_completion_01",
+          "log_correlation": "remedy_log_correlation_01",
+          "scope_confirmation": "remedy_scope_confirmation_01",
+          "time_pressure_management": "remedy_time_pressure_01",
+          "response_action_order": "remedy_response_order_01",
+          "ioc_validation": "remedy_ioc_validation_01",
+          "lateral_movement_tracking": "remedy_lateral_movement_01",
+          "exfiltration_validation": "remedy_exfiltration_validation_01"
+        },
+        "hint_policy": {
+          "default_support_level": "light",
+          "increase_after_wrong_attempts": 2,
+          "allow_exact_guidance_after_attempts": 3,
+          "allow_exact_guidance": false
+        },
+        "fact_pack_rules": {
+          "max_facts_to_expose": 3,
+          "allow_raw_logs": false,
+          "require_grounded_fact_ids": true
+        }
+      }
+    },
+    {
+      "id": "access",
+      "stage_type": "Access",
+      "name": "Initial Access - Suspicious Authentication",
+      "difficulty": "foundational",
+      "learning_objective": "Validate abnormal authentication and session behavior before isolating the affected endpoint.",
+      "time_pressure": {
+        "time_limit_seconds": 120,
+        "warning_threshold": 0.75,
+        "timeout_behavior": "advance_with_escalation",
+        "timeout_penalty": 5,
+        "lock_stage_on_timeout": true,
+        "lock_stage_on_success": true,
+        "auto_advance_delay_ms": 2500,
+        "timeout_warning": "Time is running low. Prioritize evidence validation before response.",
+        "timeout_mentor_feedback": "The next stage begins with elevated risk because the evidence path was not completed in time.",
+        "timeout_log_message": "TIMEOUT ESCALATION: Investigation incomplete; attacker activity continues into the next stage."
+      },
+      "suspicious_nodes": [
+        "workstation4",
+        "database",
+        "external"
+      ],
+      "primary_targets": [
+        "workstation4"
+      ],
+      "required_investigation": {
+        "target_scope": "required_targets",
+        "target_ids": [
+          "workstation4"
+        ],
+        "dimensions": [
+          "identity",
+          "activity"
+        ],
+        "minimum_target_coverage": "all",
+        "required_before_response": true
+      },
+      "events": [
+        {
+          "id": "s1b-access-log-1",
+          "type": "log",
+          "time": "08:21:15",
+          "message": "AUTH SUMMARY: Multiple failed remote-login attempts followed by one successful login for finance user j.garcia from 45.33.22.11",
+          "severity": "high"
+        },
+        {
+          "id": "s1b-access-log-2",
+          "type": "log",
+          "time": "08:22:01",
+          "message": "USER BEHAVIOR: j.garcia has no normal history of external remote access during this time window",
+          "severity": "medium"
+        },
+        {
+          "id": "s1b-access-alert-1",
+          "type": "alert",
+          "message": "Suspicious authentication sequence detected; confirm user/session context before isolation",
+          "severity": "high",
+          "relatedNode": "workstation4",
+          "relatedLog": "s1b-access-log-1",
+          "source": "j.garcia",
+          "timestamp": "08:22:20"
+        }
+      ],
+      "expected_actions": [
+        "investigate user",
+        "isolate machine"
+      ],
+      "wrong_actions": [
+        "ignore",
+        "block IP"
+      ],
+      "preferred_action_order": [
+        "investigate user",
+        "isolate machine"
+      ],
+      "minimum_actions_to_pass": 2,
+      "mentor_hint": "Focus on the successful login after the failed attempts, then confirm whether the user/session is abnormal.",
+      "mentor": {
+        "stage_hint": "Focus on the successful login after the failed attempts, then confirm whether the user/session is abnormal.",
+        "coverage_incomplete": "The affected user and endpoint are not fully confirmed yet.",
+        "wrong_order": "Isolation before user/session validation can disrupt the wrong system.",
+        "premature_response": "Confirm the suspicious login context before containment.",
+        "correct_sequence": "Good. You validated the suspicious session before isolating the host.",
+        "timeout_warning": "Find the successful authentication event and compare it with normal behavior.",
+        "timeout_feedback": "The suspicious session may establish follow-on communication in the next stage."
+      },
+      "scoring": {
+        "correct_action_score": 5,
+        "wrong_action_penalty": 3,
+        "pass_score": 10,
+        "max_score": 10
+      },
+      "consequences": {
+        "correct": {
+          "mentor_feedback": "The abnormal session was validated before the workstation was isolated.",
+          "node_effect": "contained",
+          "log_message": "Finance workstation isolated after suspicious authentication validation."
+        },
+        "wrong": {
+          "mentor_feedback": "The response missed the required user/session validation step.",
+          "node_effect": "compromised",
+          "log_message": "Suspicious session remains active due to incomplete validation."
+        }
+      },
+      "ai_metadata": {
+        "stage_objective": "Validate abnormal authentication and session behavior before isolating the affected endpoint.",
+        "hint_triggers": [
+          "premature_response",
+          "wrong_target",
+          "insufficient_evidence",
+          "time_pressure",
+          "repeated_mistake",
+          "general_guidance"
+        ],
+        "evidence_categories": [
+          "credential_use_anomaly",
+          "session_anomaly",
+          "host_scope_confirmation",
+          "containment_readiness"
+        ],
+        "facts": [
+          {
+            "id": "s1b-access-f1",
+            "label": "A successful remote login followed many failed login attempts.",
+            "category": "credential_use_anomaly",
+            "safe_for_hint": true
+          },
+          {
+            "id": "s1b-access-f2",
+            "label": "The login is abnormal for the user and time window.",
+            "category": "session_anomaly",
+            "safe_for_hint": true
+          },
+          {
+            "id": "s1b-access-f3",
+            "label": "The affected workstation should be confirmed before isolation.",
+            "category": "host_scope_confirmation",
+            "safe_for_hint": true
+          }
+        ],
+        "action_evaluation": {
+          "correct_actions": [
+            "investigate user",
+            "isolate machine"
+          ],
+          "acceptable_actions": [],
+          "premature_actions": [
+            "isolate machine"
+          ],
+          "wrong_target_actions": [
+            "block IP"
+          ],
+          "dangerous_actions": [],
+          "irrelevant_actions": [
+            "ignore"
+          ]
+        },
+        "weakness_codes": {
+          "premature_response": "premature_containment",
+          "wrong_target": "host_pivot_accuracy",
+          "insufficient_evidence": "scope_confirmation",
+          "time_pressure": "time_pressure_management",
+          "repeated_mistake": "response_action_order",
+          "general_guidance": "log_correlation"
+        },
+        "remedy_mapping": {
+          "premature_containment": "remedy_premature_containment_01",
+          "host_pivot_accuracy": "remedy_host_pivot_01",
+          "evidence_completion": "remedy_evidence_completion_01",
+          "log_correlation": "remedy_log_correlation_01",
+          "scope_confirmation": "remedy_scope_confirmation_01",
+          "time_pressure_management": "remedy_time_pressure_01",
+          "response_action_order": "remedy_response_order_01",
+          "ioc_validation": "remedy_ioc_validation_01",
+          "lateral_movement_tracking": "remedy_lateral_movement_01",
+          "exfiltration_validation": "remedy_exfiltration_validation_01"
+        },
+        "hint_policy": {
+          "default_support_level": "light",
+          "increase_after_wrong_attempts": 2,
+          "allow_exact_guidance_after_attempts": 3,
+          "allow_exact_guidance": false
+        },
+        "fact_pack_rules": {
+          "max_facts_to_expose": 3,
+          "allow_raw_logs": false,
+          "require_grounded_fact_ids": true
+        }
+      }
+    },
+    {
+      "id": "execution",
+      "stage_type": "Execution",
+      "name": "Command Channel - Encrypted Beacon Pattern",
+      "difficulty": "foundational",
+      "learning_objective": "Confirm suspicious workstation-to-external communication behavior before containment.",
+      "time_pressure": {
+        "time_limit_seconds": 120,
+        "warning_threshold": 0.75,
+        "timeout_behavior": "advance_with_escalation",
+        "timeout_penalty": 5,
+        "lock_stage_on_timeout": true,
+        "lock_stage_on_success": true,
+        "auto_advance_delay_ms": 2500,
+        "timeout_warning": "Time is running low. Prioritize evidence validation before response.",
+        "timeout_mentor_feedback": "The next stage begins with elevated risk because the evidence path was not completed in time.",
+        "timeout_log_message": "TIMEOUT ESCALATION: Investigation incomplete; attacker activity continues into the next stage."
+      },
+      "suspicious_nodes": [
+        "workstation4",
+        "server",
+        "external"
+      ],
+      "primary_targets": [
+        "workstation4",
+        "external"
+      ],
+      "required_investigation": {
+        "target_scope": "required_targets",
+        "target_ids": [
+          "workstation4",
+          "external"
+        ],
+        "dimensions": [
+          "connectivity",
+          "activity",
+          "interpretation"
+        ],
+        "minimum_target_coverage": "all",
+        "required_before_response": true
+      },
+      "events": [
+        {
+          "id": "s1b-exec-log-1",
+          "type": "log",
+          "time": "08:29:10",
+          "message": "DNS: WS-04 repeatedly resolved cdn-assets-us.example at near-regular intervals",
+          "severity": "medium"
+        },
+        {
+          "id": "s1b-exec-log-2",
+          "type": "log",
+          "time": "08:30:05",
+          "message": "PROXY: WS-04 made small encrypted outbound sessions to cdn-assets-us.example every ~60 seconds",
+          "severity": "medium"
+        },
+        {
+          "id": "s1b-exec-alert-1",
+          "type": "alert",
+          "message": "Beacon-like outbound pattern detected; validate DNS/proxy evidence before containment",
+          "severity": "high",
+          "relatedNode": "workstation4",
+          "relatedLog": "s1b-exec-log-2",
+          "source": "cdn-assets-us.example",
+          "timestamp": "08:30:20"
+        }
+      ],
+      "expected_actions": [
+        "investigate IP",
+        "isolate machine"
+      ],
+      "wrong_actions": [
+        "ignore",
+        "block IP"
+      ],
+      "preferred_action_order": [
+        "investigate IP",
+        "isolate machine"
+      ],
+      "minimum_actions_to_pass": 2,
+      "mentor_hint": "Check the frequency and size of outbound sessions before deciding how to contain the host.",
+      "mentor": {
+        "stage_hint": "Check the frequency and size of outbound sessions before deciding how to contain the host.",
+        "coverage_incomplete": "The outbound pattern and source host need confirmation.",
+        "wrong_order": "Containment before confirming the pattern leaves the command-channel evidence unclear.",
+        "premature_response": "Validate the beacon-like pattern before isolation.",
+        "correct_sequence": "Good. You confirmed the outbound pattern before containment.",
+        "timeout_warning": "Compare DNS timing with proxy timing to confirm the pattern.",
+        "timeout_feedback": "The suspicious communication may support internal discovery in the next stage."
+      },
+      "scoring": {
+        "correct_action_score": 5,
+        "wrong_action_penalty": 3,
+        "pass_score": 10,
+        "max_score": 10
+      },
+      "consequences": {
+        "correct": {
+          "mentor_feedback": "The beacon-like pattern was validated and the affected host was contained.",
+          "node_effect": "contained",
+          "log_message": "WS-04 contained after encrypted outbound pattern validation."
+        },
+        "wrong": {
+          "mentor_feedback": "The response missed the required communication-pattern validation.",
+          "node_effect": "compromised",
+          "log_message": "Beacon-like sessions continue due to incomplete containment."
+        }
+      },
+      "ai_metadata": {
+        "stage_objective": "Confirm suspicious workstation-to-external communication behavior before containment.",
+        "hint_triggers": [
+          "premature_response",
+          "wrong_target",
+          "insufficient_evidence",
+          "time_pressure",
+          "repeated_mistake",
+          "general_guidance"
+        ],
+        "evidence_categories": [
+          "dns_pattern",
+          "proxy_pattern",
+          "network_flow_anomaly",
+          "containment_readiness"
+        ],
+        "facts": [
+          {
+            "id": "s1b-exec-f1",
+            "label": "The workstation repeatedly resolves the same external domain.",
+            "category": "dns_pattern",
+            "safe_for_hint": true
+          },
+          {
+            "id": "s1b-exec-f2",
+            "label": "Small encrypted outbound sessions recur at near-regular intervals.",
+            "category": "proxy_pattern",
+            "safe_for_hint": true
+          },
+          {
+            "id": "s1b-exec-f3",
+            "label": "The source host should be confirmed before isolation.",
+            "category": "containment_readiness",
+            "safe_for_hint": true
+          }
+        ],
+        "action_evaluation": {
+          "correct_actions": [
+            "investigate IP",
+            "isolate machine"
+          ],
+          "acceptable_actions": [],
+          "premature_actions": [
+            "isolate machine"
+          ],
+          "wrong_target_actions": [
+            "block IP"
+          ],
+          "dangerous_actions": [],
+          "irrelevant_actions": [
+            "ignore"
+          ]
+        },
+        "weakness_codes": {
+          "premature_response": "premature_containment",
+          "wrong_target": "host_pivot_accuracy",
+          "insufficient_evidence": "ioc_validation",
+          "time_pressure": "time_pressure_management",
+          "repeated_mistake": "response_action_order",
+          "general_guidance": "log_correlation"
+        },
+        "remedy_mapping": {
+          "premature_containment": "remedy_premature_containment_01",
+          "host_pivot_accuracy": "remedy_host_pivot_01",
+          "evidence_completion": "remedy_evidence_completion_01",
+          "log_correlation": "remedy_log_correlation_01",
+          "scope_confirmation": "remedy_scope_confirmation_01",
+          "time_pressure_management": "remedy_time_pressure_01",
+          "response_action_order": "remedy_response_order_01",
+          "ioc_validation": "remedy_ioc_validation_01",
+          "lateral_movement_tracking": "remedy_lateral_movement_01",
+          "exfiltration_validation": "remedy_exfiltration_validation_01"
+        },
+        "hint_policy": {
+          "default_support_level": "light",
+          "increase_after_wrong_attempts": 2,
+          "allow_exact_guidance_after_attempts": 3,
+          "allow_exact_guidance": false
+        },
+        "fact_pack_rules": {
+          "max_facts_to_expose": 3,
+          "allow_raw_logs": false,
+          "require_grounded_fact_ids": true
+        }
+      }
+    },
+    {
+      "id": "lateral",
+      "stage_type": "Lateral",
+      "name": "Lateral Movement - Internal Discovery",
+      "difficulty": "foundational",
+      "learning_objective": "Trace internal discovery and file-server access before choosing containment.",
+      "time_pressure": {
+        "time_limit_seconds": 120,
+        "warning_threshold": 0.75,
+        "timeout_behavior": "advance_with_escalation",
+        "timeout_penalty": 5,
+        "lock_stage_on_timeout": true,
+        "lock_stage_on_success": true,
+        "auto_advance_delay_ms": 2500,
+        "timeout_warning": "Time is running low. Prioritize evidence validation before response.",
+        "timeout_mentor_feedback": "The next stage begins with elevated risk because the evidence path was not completed in time.",
+        "timeout_log_message": "TIMEOUT ESCALATION: Investigation incomplete; attacker activity continues into the next stage."
+      },
+      "suspicious_nodes": [
+        "workstation4",
+        "database",
+        "database"
+      ],
+      "primary_targets": [
+        "workstation4",
+        "database"
+      ],
+      "required_investigation": {
+        "target_scope": "required_targets",
+        "target_ids": [
+          "workstation4",
+          "database"
+        ],
+        "dimensions": [
+          "connectivity",
+          "activity",
+          "interpretation"
+        ],
+        "minimum_target_coverage": "all",
+        "required_before_response": true
+      },
+      "events": [
+        {
+          "id": "s1b-lateral-log-1",
+          "type": "log",
+          "time": "08:37:00",
+          "message": "NETFLOW: WS-04 generated internal name-query traffic followed by SMB sessions to FILE-SRV",
+          "severity": "medium"
+        },
+        {
+          "id": "s1b-lateral-log-2",
+          "type": "log",
+          "time": "08:38:14",
+          "message": "DATA ACCESS SUMMARY: Finance share listing accessed from WS-04 using j.garcia session",
+          "severity": "high"
+        },
+        {
+          "id": "s1b-lateral-alert-1",
+          "type": "alert",
+          "message": "Internal discovery and file-share access pattern detected; trace movement path before containment",
+          "severity": "high",
+          "relatedNode": "database",
+          "relatedLog": "s1b-lateral-log-2",
+          "source": "workstation4",
+          "timestamp": "08:38:30"
+        }
+      ],
+      "expected_actions": [
+        "investigate IP",
+        "isolate machine"
+      ],
+      "wrong_actions": [
+        "ignore",
+        "block IP"
+      ],
+      "preferred_action_order": [
+        "investigate IP",
+        "isolate machine"
+      ],
+      "minimum_actions_to_pass": 2,
+      "mentor_hint": "Follow the internal path from workstation activity to the file-server access summary.",
+      "mentor": {
+        "stage_hint": "Follow the internal path from workstation activity to the file-server access summary.",
+        "coverage_incomplete": "The internal movement path is not fully traced yet.",
+        "wrong_order": "Containment before tracing the path may miss the data-at-risk scope.",
+        "premature_response": "Trace the internal access pattern before choosing containment.",
+        "correct_sequence": "Good. You traced the internal movement path before containment.",
+        "timeout_warning": "Focus on the source workstation and the file-server access summary.",
+        "timeout_feedback": "The attacker may stage accessed data for outbound transfer."
+      },
+      "scoring": {
+        "correct_action_score": 5,
+        "wrong_action_penalty": 3,
+        "pass_score": 10,
+        "max_score": 10
+      },
+      "consequences": {
+        "correct": {
+          "mentor_feedback": "The internal movement path was traced and the affected host was contained.",
+          "node_effect": "contained",
+          "log_message": "Internal discovery path documented before containment."
+        },
+        "wrong": {
+          "mentor_feedback": "The response missed the movement path or selected the wrong target.",
+          "node_effect": "compromised",
+          "log_message": "File-server access scope remains uncertain."
+        }
+      },
+      "ai_metadata": {
+        "stage_objective": "Trace internal discovery and file-server access before choosing containment.",
+        "hint_triggers": [
+          "premature_response",
+          "wrong_target",
+          "insufficient_evidence",
+          "time_pressure",
+          "repeated_mistake",
+          "general_guidance"
+        ],
+        "evidence_categories": [
+          "lateral_movement_path",
+          "internal_recon_indicator",
+          "scope_confirmation",
+          "containment_readiness"
+        ],
+        "facts": [
+          {
+            "id": "s1b-lateral-f1",
+            "label": "The workstation generated internal discovery-style traffic.",
+            "category": "internal_recon_indicator",
+            "safe_for_hint": true
+          },
+          {
+            "id": "s1b-lateral-f2",
+            "label": "File-share access followed the internal discovery activity.",
+            "category": "lateral_movement_path",
+            "safe_for_hint": true
+          },
+          {
+            "id": "s1b-lateral-f3",
+            "label": "Containment should target the confirmed source of internal movement.",
+            "category": "scope_confirmation",
+            "safe_for_hint": true
+          }
+        ],
+        "action_evaluation": {
+          "correct_actions": [
+            "investigate IP",
+            "isolate machine"
+          ],
+          "acceptable_actions": [],
+          "premature_actions": [
+            "isolate machine"
+          ],
+          "wrong_target_actions": [
+            "block IP"
+          ],
+          "dangerous_actions": [],
+          "irrelevant_actions": [
+            "ignore"
+          ]
+        },
+        "weakness_codes": {
+          "premature_response": "premature_containment",
+          "wrong_target": "lateral_movement_tracking",
+          "insufficient_evidence": "scope_confirmation",
+          "time_pressure": "time_pressure_management",
+          "repeated_mistake": "response_action_order",
+          "general_guidance": "log_correlation"
+        },
+        "remedy_mapping": {
+          "premature_containment": "remedy_premature_containment_01",
+          "host_pivot_accuracy": "remedy_host_pivot_01",
+          "evidence_completion": "remedy_evidence_completion_01",
+          "log_correlation": "remedy_log_correlation_01",
+          "scope_confirmation": "remedy_scope_confirmation_01",
+          "time_pressure_management": "remedy_time_pressure_01",
+          "response_action_order": "remedy_response_order_01",
+          "ioc_validation": "remedy_ioc_validation_01",
+          "lateral_movement_tracking": "remedy_lateral_movement_01",
+          "exfiltration_validation": "remedy_exfiltration_validation_01"
+        },
+        "hint_policy": {
+          "default_support_level": "light",
+          "increase_after_wrong_attempts": 2,
+          "allow_exact_guidance_after_attempts": 3,
+          "allow_exact_guidance": false
+        },
+        "fact_pack_rules": {
+          "max_facts_to_expose": 3,
+          "allow_raw_logs": false,
+          "require_grounded_fact_ids": true
+        }
+      }
+    },
+    {
+      "id": "exfil",
+      "stage_type": "Exfil",
+      "name": "Exfiltration - Outbound Upload",
+      "difficulty": "foundational",
+      "learning_objective": "Validate outbound data movement and external destination before blocking the exfiltration path.",
+      "time_pressure": {
+        "time_limit_seconds": 120,
+        "warning_threshold": 0.75,
+        "timeout_behavior": "advance_with_escalation",
+        "timeout_penalty": 5,
+        "lock_stage_on_timeout": true,
+        "lock_stage_on_success": true,
+        "auto_advance_delay_ms": 2500,
+        "timeout_warning": "Time is running low. Prioritize evidence validation before response.",
+        "timeout_mentor_feedback": "The next stage begins with elevated risk because the evidence path was not completed in time.",
+        "timeout_log_message": "TIMEOUT ESCALATION: Investigation incomplete; attacker activity continues into the next stage."
+      },
+      "suspicious_nodes": [
+        "workstation4",
+        "database",
+        "external"
+      ],
+      "primary_targets": [
+        "workstation4",
+        "external"
+      ],
+      "required_investigation": {
+        "target_scope": "required_targets",
+        "target_ids": [
+          "workstation4",
+          "external"
+        ],
+        "dimensions": [
+          "connectivity",
+          "activity",
+          "controls"
+        ],
+        "minimum_target_coverage": "all",
+        "required_before_response": true
+      },
+      "events": [
+        {
+          "id": "s1b-exfil-log-1",
+          "type": "log",
+          "time": "08:45:10",
+          "message": "DLP: 45MB outbound upload from WS-04 to object-storage-like external destination",
+          "severity": "critical"
+        },
+        {
+          "id": "s1b-exfil-log-2",
+          "type": "log",
+          "time": "08:45:30",
+          "message": "PROXY: Upload path includes accounting archive name; destination is not in approved corporate storage list",
+          "severity": "critical"
+        },
+        {
+          "id": "s1b-exfil-alert-1",
+          "type": "alert",
+          "message": "Outbound data transfer requires destination validation and egress containment",
+          "severity": "critical",
+          "relatedNode": "external",
+          "relatedLog": "s1b-exfil-log-1",
+          "source": "workstation4",
+          "timestamp": "08:45:45"
+        }
+      ],
+      "expected_actions": [
+        "investigate IP",
+        "block IP"
+      ],
+      "wrong_actions": [
+        "ignore",
+        "isolate machine"
+      ],
+      "preferred_action_order": [
+        "investigate IP",
+        "block IP"
+      ],
+      "minimum_actions_to_pass": 2,
+      "mentor_hint": "Validate where the data went and whether the destination is approved before blocking.",
+      "mentor": {
+        "stage_hint": "Validate where the data went and whether the destination is approved before blocking.",
+        "coverage_incomplete": "The outbound destination and data-transfer details need confirmation.",
+        "wrong_order": "Blocking before validation can leave the data-loss scope unclear.",
+        "premature_response": "Confirm the external destination and transfer pattern before response.",
+        "correct_sequence": "Good. You validated the outbound transfer before blocking the path.",
+        "timeout_warning": "Check transfer size, destination, and approval status.",
+        "timeout_feedback": "The final report will record incomplete exfiltration validation."
+      },
+      "scoring": {
+        "correct_action_score": 5,
+        "wrong_action_penalty": 3,
+        "pass_score": 10,
+        "max_score": 10
+      },
+      "consequences": {
+        "correct": {
+          "mentor_feedback": "The outbound transfer was validated and the destination path was blocked.",
+          "node_effect": "contained",
+          "log_message": "Exfiltration path blocked after destination validation."
+        },
+        "wrong": {
+          "mentor_feedback": "The response did not fully validate the outbound transfer or destination.",
+          "node_effect": "compromised",
+          "log_message": "Exfiltration validation incomplete."
+        }
+      },
+      "ai_metadata": {
+        "stage_objective": "Validate outbound data movement and external destination before blocking the exfiltration path.",
+        "hint_triggers": [
+          "premature_response",
+          "wrong_target",
+          "insufficient_evidence",
+          "time_pressure",
+          "repeated_mistake",
+          "general_guidance"
+        ],
+        "evidence_categories": [
+          "exfiltration_volume_indicator",
+          "external_destination_validation",
+          "data_scope_confirmation",
+          "containment_readiness"
+        ],
+        "facts": [
+          {
+            "id": "s1b-exfil-f1",
+            "label": "A high-volume outbound upload was observed from the affected workstation.",
+            "category": "exfiltration_volume_indicator",
+            "safe_for_hint": true
+          },
+          {
+            "id": "s1b-exfil-f2",
+            "label": "The destination is not listed as approved corporate storage.",
+            "category": "external_destination_validation",
+            "safe_for_hint": true
+          },
+          {
+            "id": "s1b-exfil-f3",
+            "label": "The response should preserve data-scope evidence while blocking the exfiltration path.",
+            "category": "containment_readiness",
+            "safe_for_hint": true
+          }
+        ],
+        "action_evaluation": {
+          "correct_actions": [
+            "investigate IP",
+            "block IP"
+          ],
+          "acceptable_actions": [],
+          "premature_actions": [
+            "block IP"
+          ],
+          "wrong_target_actions": [
+            "isolate machine"
+          ],
+          "dangerous_actions": [],
+          "irrelevant_actions": [
+            "ignore"
+          ]
+        },
+        "weakness_codes": {
+          "premature_response": "premature_containment",
+          "wrong_target": "exfiltration_validation",
+          "insufficient_evidence": "exfiltration_validation",
+          "time_pressure": "time_pressure_management",
+          "repeated_mistake": "response_action_order",
+          "general_guidance": "log_correlation"
+        },
+        "remedy_mapping": {
+          "premature_containment": "remedy_premature_containment_01",
+          "host_pivot_accuracy": "remedy_host_pivot_01",
+          "evidence_completion": "remedy_evidence_completion_01",
+          "log_correlation": "remedy_log_correlation_01",
+          "scope_confirmation": "remedy_scope_confirmation_01",
+          "time_pressure_management": "remedy_time_pressure_01",
+          "response_action_order": "remedy_response_order_01",
+          "ioc_validation": "remedy_ioc_validation_01",
+          "lateral_movement_tracking": "remedy_lateral_movement_01",
+          "exfiltration_validation": "remedy_exfiltration_validation_01"
+        },
+        "hint_policy": {
+          "default_support_level": "light",
+          "increase_after_wrong_attempts": 2,
+          "allow_exact_guidance_after_attempts": 3,
+          "allow_exact_guidance": false
+        },
+        "fact_pack_rules": {
+          "max_facts_to_expose": 3,
+          "allow_raw_logs": false,
+          "require_grounded_fact_ids": true
+        }
+      }
+    }
+  ]
+}

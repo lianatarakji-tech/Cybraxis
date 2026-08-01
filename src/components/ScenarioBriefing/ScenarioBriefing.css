@@ -1,0 +1,585 @@
+.scenario-briefing {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  padding: 14px 18px;
+  color: #f4fcff;
+  background:
+    radial-gradient(circle at 15% 12%, rgba(0, 229, 255, 0.20), transparent 25%),
+    radial-gradient(circle at 82% 18%, rgba(168, 85, 247, 0.15), transparent 26%),
+    radial-gradient(circle at 78% 90%, rgba(0, 255, 136, 0.08), transparent 25%),
+    linear-gradient(135deg, #030a13 0%, #061726 100%);
+}
+
+.scenario-briefing,
+.scenario-briefing * {
+  box-sizing: border-box;
+}
+
+.scenario-briefing__shell {
+  width: min(1280px, calc(100vw - 36px));
+  height: calc(100vh - 28px);
+  margin: 0 auto;
+  display: grid;
+  grid-template-rows: 1.02fr 1fr 0.62fr 0.86fr auto;
+  gap: 10px;
+  padding: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(0, 229, 255, 0.46);
+  border-top: 2px solid #1ff7ff;
+  background:
+    linear-gradient(180deg, rgba(7, 26, 43, 0.98), rgba(4, 14, 25, 0.99));
+  box-shadow:
+    0 18px 55px rgba(0, 0, 0, 0.52),
+    inset 0 0 38px rgba(0, 229, 255, 0.045);
+}
+
+.scenario-briefing__poster {
+  min-height: 0;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(0, 229, 255, 0.34);
+  background:
+    radial-gradient(circle at 88% 18%, rgba(168, 85, 247, 0.20), transparent 28%),
+    radial-gradient(circle at 72% 92%, rgba(0, 255, 136, 0.10), transparent 26%),
+    linear-gradient(120deg, rgba(0, 229, 255, 0.11), rgba(168, 85, 247, 0.065)),
+    rgba(3, 18, 31, 0.9);
+  padding: 19px 22px;
+  display: grid;
+  grid-template-columns: 1fr;
+  align-items: center;
+}
+
+.scenario-briefing__poster::before {
+  content: "";
+  position: absolute;
+  right: 24px;
+  top: 18px;
+  width: 230px;
+  height: 120px;
+  border: 1px solid rgba(0, 229, 255, 0.13);
+  background:
+    linear-gradient(rgba(31, 247, 255, 0.055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(31, 247, 255, 0.055) 1px, transparent 1px);
+  background-size: 18px 18px;
+  opacity: 0.55;
+  transform: skewX(-10deg);
+  pointer-events: none;
+}
+
+.scenario-briefing__poster::after {
+  content: "";
+  position: absolute;
+  right: -80px;
+  top: -95px;
+  width: 310px;
+  height: 310px;
+  border-radius: 50%;
+  border: 1px solid rgba(31, 247, 255, 0.18);
+  box-shadow:
+    0 0 0 34px rgba(0, 229, 255, 0.025),
+    0 0 0 72px rgba(168, 85, 247, 0.025);
+  pointer-events: none;
+}
+
+.scenario-briefing__poster-copy {
+  position: relative;
+  z-index: 1;
+}
+
+.scenario-briefing__threat-strip {
+  display: none !important;
+}
+
+.scenario-briefing__eyebrow,
+.scenario-briefing__label {
+  font-family: "Share Tech Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 2.6px;
+  text-transform: uppercase;
+  color: #1ff7ff;
+}
+
+.scenario-briefing__eyebrow {
+  display: inline-flex;
+  margin-bottom: 9px;
+}
+
+.scenario-briefing__poster h1 {
+  margin: 0 0 9px;
+  color: #ffffff;
+  font-size: clamp(38px, 4.2vw, 56px);
+  line-height: 1;
+  text-shadow:
+    0 0 20px rgba(0, 229, 255, 0.16),
+    0 0 34px rgba(168, 85, 247, 0.10);
+}
+
+.scenario-briefing__poster p {
+  margin: 0;
+  max-width: 1040px;
+  color: #e9fbff;
+  font-size: 18px;
+  line-height: 1.42;
+}
+
+.scenario-briefing__mission {
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.scenario-briefing__brief,
+.scenario-briefing__focus,
+.scenario-briefing__cycle,
+.scenario-briefing__route {
+  min-height: 0;
+  border: 1px solid rgba(0, 229, 255, 0.28);
+  background: rgba(8, 27, 44, 0.84);
+  padding: 15px;
+  overflow: hidden;
+}
+
+.scenario-briefing__brief {
+  position: relative;
+  border-left: 3px solid #1ff7ff;
+  background:
+    radial-gradient(circle at 92% 12%, rgba(0, 229, 255, 0.10), transparent 34%),
+    linear-gradient(135deg, rgba(0, 229, 255, 0.075), rgba(0, 0, 0, 0)),
+    rgba(8, 27, 44, 0.84);
+}
+
+.scenario-briefing__brief--green {
+  border-left-color: #27ff9a;
+  background:
+    radial-gradient(circle at 90% 12%, rgba(0, 255, 136, 0.12), transparent 34%),
+    linear-gradient(135deg, rgba(0, 255, 136, 0.08), rgba(0, 0, 0, 0)),
+    rgba(8, 27, 44, 0.84);
+}
+
+.scenario-briefing__brief::after,
+.scenario-briefing__brief--green::after {
+  content: "";
+  position: absolute;
+  right: 14px;
+  bottom: 12px;
+  width: 90px;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, rgba(31, 247, 255, 0.55));
+  opacity: 0.45;
+}
+
+.scenario-briefing__brief--green::after {
+  background: linear-gradient(90deg, transparent, rgba(39, 255, 154, 0.55));
+}
+
+.scenario-briefing__brief p {
+  margin: 10px 0 0;
+  color: #ffffff;
+  font-size: 17px;
+  line-height: 1.52;
+  text-shadow: 0 0 10px rgba(0, 0, 0, 0.22);
+}
+
+.scenario-briefing__route {
+  padding: 12px 14px;
+  background:
+    radial-gradient(circle at 50% 100%, rgba(0, 229, 255, 0.08), transparent 35%),
+    rgba(8, 27, 44, 0.84);
+}
+
+.scenario-briefing__route-head {
+  margin-bottom: 9px;
+}
+
+.scenario-briefing__route-track {
+  height: calc(100% - 26px);
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.scenario-briefing__route-step {
+  position: relative;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 8px;
+  border: 1px solid rgba(0, 229, 255, 0.32);
+  background:
+    linear-gradient(135deg, rgba(0, 229, 255, 0.09), rgba(0, 0, 0, 0)),
+    rgba(4, 15, 27, 0.74);
+  box-shadow: inset 0 0 14px rgba(0, 229, 255, 0.025);
+}
+
+.scenario-briefing__route-step:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  right: -7px;
+  top: 50%;
+  width: 7px;
+  height: 7px;
+  border-top: 2px solid #1ff7ff;
+  border-right: 2px solid #1ff7ff;
+  transform: translateY(-50%) rotate(45deg);
+  z-index: 2;
+}
+
+.scenario-briefing__route-step b {
+  width: 28px;
+  height: 28px;
+  flex: 0 0 auto;
+  border-radius: 999px;
+  border: 1px solid rgba(31, 247, 255, 0.55);
+  color: #ffffff;
+  background: rgba(0, 229, 255, 0.10);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Share Tech Mono", monospace;
+  font-size: 11px;
+  box-shadow: 0 0 12px rgba(0, 229, 255, 0.10);
+}
+
+.scenario-briefing__route-step span {
+  color: #f7fdff;
+  font-size: 14px;
+  line-height: 1.2;
+  font-weight: 800;
+}
+
+.scenario-briefing__bottom {
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 0.95fr 1.05fr;
+  gap: 10px;
+}
+
+.scenario-briefing__focus {
+  background:
+    radial-gradient(circle at 92% 20%, rgba(0, 229, 255, 0.10), transparent 32%),
+    rgba(8, 27, 44, 0.84);
+}
+
+.scenario-briefing__focus ul {
+  list-style: none;
+  display: grid;
+  gap: 8px;
+  margin: 10px 0 0;
+  padding: 0;
+}
+
+.scenario-briefing__focus li {
+  position: relative;
+  padding-left: 20px;
+  color: #ffffff;
+  font-size: 15.5px;
+  line-height: 1.36;
+}
+
+.scenario-briefing__focus li::before {
+  content: ">";
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: #1ff7ff;
+  text-shadow: 0 0 10px rgba(31, 247, 255, 0.35);
+  font-family: "Share Tech Mono", monospace;
+}
+
+.scenario-briefing__cycle {
+  background:
+    radial-gradient(circle at 78% 18%, rgba(168, 85, 247, 0.16), transparent 34%),
+    linear-gradient(135deg, rgba(168, 85, 247, 0.10), rgba(0, 229, 255, 0.035)),
+    rgba(8, 27, 44, 0.84);
+}
+
+.scenario-briefing__cycle-track {
+  position: relative;
+  height: calc(100% - 28px);
+  margin-top: 10px;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 10px;
+  align-items: center;
+}
+
+.scenario-briefing__cycle-track::before {
+  content: "";
+  position: absolute;
+  left: 7%;
+  right: 7%;
+  top: 50%;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    rgba(31, 247, 255, 0.35),
+    rgba(168, 85, 247, 0.65),
+    rgba(39, 255, 154, 0.35)
+  );
+  transform: translateY(-50%);
+  z-index: 0;
+}
+
+.scenario-briefing__cycle-track span {
+  position: relative;
+  z-index: 1;
+  min-width: 0;
+  min-height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 8px;
+  border: 1px solid rgba(168, 85, 247, 0.42);
+  background:
+    linear-gradient(135deg, rgba(168, 85, 247, 0.18), rgba(0, 229, 255, 0.065)),
+    rgba(4, 15, 27, 0.94);
+  color: #ffffff;
+  font-family: "Share Tech Mono", monospace;
+  font-size: 12.5px;
+  line-height: 1.2;
+  box-shadow:
+    0 0 0 3px rgba(4, 14, 25, 0.92),
+    0 0 16px rgba(168, 85, 247, 0.10);
+}
+
+.scenario-briefing__cycle-track span::before {
+  display: none;
+  content: none;
+}
+
+.scenario-briefing__cycle-track span:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  right: -10px;
+  top: 50%;
+  width: 9px;
+  height: 9px;
+  border-top: 3px solid #32f7ff;
+  border-right: 3px solid #32f7ff;
+  transform: translateY(-50%) rotate(45deg);
+  z-index: 20;
+  opacity: 1;
+  box-shadow: 0 0 10px rgba(50, 247, 255, 0.45);
+}
+
+.scenario-briefing__actions {
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(0, 229, 255, 0.22);
+}
+
+.scenario-briefing__btn {
+  border-radius: 3px;
+  padding: 8px 14px;
+  font-family: "Share Tech Mono", monospace;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.16s ease;
+}
+
+.scenario-briefing__btn--secondary {
+  background: rgba(0, 229, 255, 0.11);
+  border: 1px solid rgba(0, 229, 255, 0.44);
+  color: #1ff7ff;
+}
+
+.scenario-briefing__btn--secondary:hover {
+  background: rgba(0, 229, 255, 0.18);
+  border-color: #1ff7ff;
+  box-shadow: 0 0 16px rgba(0, 229, 255, 0.16);
+}
+
+.scenario-briefing__btn--primary {
+  background: rgba(0, 255, 136, 0.15);
+  border: 1px solid rgba(0, 255, 136, 0.48);
+  color: #2fff9f;
+}
+
+.scenario-briefing__btn--primary:hover {
+  background: rgba(0, 255, 136, 0.23);
+  border-color: #2fff9f;
+  box-shadow: 0 0 16px rgba(0, 255, 136, 0.16);
+}
+
+.scenario-briefing__delay {
+  font-family: "Share Tech Mono", monospace;
+  font-size: 10.5px;
+  letter-spacing: 1px;
+  color: #cde7f3;
+  border: 1px solid rgba(0, 229, 255, 0.24);
+  background: rgba(4, 15, 27, 0.68);
+  padding: 8px 12px;
+}
+
+@media (max-height: 760px) {
+  .scenario-briefing {
+    padding: 8px 12px;
+  }
+
+  .scenario-briefing__shell {
+    width: calc(100vw - 24px);
+    height: calc(100vh - 16px);
+    grid-template-rows: 1fr 0.92fr 0.52fr 0.74fr auto;
+    gap: 8px;
+    padding: 9px;
+  }
+
+  .scenario-briefing__poster {
+    padding: 12px 14px;
+  }
+
+  .scenario-briefing__poster h1 {
+    font-size: 31px;
+  }
+
+  .scenario-briefing__poster p {
+    font-size: 14px;
+    line-height: 1.34;
+  }
+
+  .scenario-briefing__brief,
+  .scenario-briefing__focus,
+  .scenario-briefing__cycle,
+  .scenario-briefing__route {
+    padding: 9px;
+  }
+
+  .scenario-briefing__brief p,
+  .scenario-briefing__focus li {
+    font-size: 13.2px;
+    line-height: 1.3;
+  }
+
+  .scenario-briefing__route-step,
+  .scenario-briefing__cycle-track span {
+    padding: 6px;
+  }
+
+  .scenario-briefing__route-step b {
+    width: 22px;
+    height: 22px;
+    font-size: 10px;
+  }
+
+  .scenario-briefing__route-step span,
+  .scenario-briefing__cycle-track span {
+    font-size: 11px;
+  }
+
+  .scenario-briefing__cycle-track span {
+    min-height: 42px;
+  }
+
+  .scenario-briefing__actions {
+    min-height: 34px;
+    padding-top: 5px;
+  }
+
+  .scenario-briefing__btn,
+  .scenario-briefing__delay {
+    padding: 6px 10px;
+  }
+}
+
+@media (max-width: 980px) {
+  .scenario-briefing__poster {
+    grid-template-columns: 1fr;
+  }
+
+  .scenario-briefing__mission,
+  .scenario-briefing__bottom {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+/* CYBRAXIS_ONLY_CYCLE_ARROW_VISIBILITY_START */
+.scenario-briefing__cycle,
+.scenario-briefing__cycle-track,
+.scenario-briefing__cycle-track span {
+  overflow: visible !important;
+}
+
+.scenario-briefing__cycle-track span:not(:last-child)::after {
+  content: ">" !important;
+  position: absolute !important;
+  right: -13px !important;
+  top: 50% !important;
+  width: auto !important;
+  height: auto !important;
+  border: 0 !important;
+  transform: translateY(-50%) !important;
+  z-index: 50 !important;
+  color: #32f7ff !important;
+  font-family: "Share Tech Mono", monospace !important;
+  font-size: 24px !important;
+  font-weight: 900 !important;
+  line-height: 1 !important;
+  text-shadow:
+    0 0 6px rgba(50, 247, 255, 0.85),
+    0 0 14px rgba(50, 247, 255, 0.55) !important;
+  pointer-events: none !important;
+}
+/* CYBRAXIS_ONLY_CYCLE_ARROW_VISIBILITY_END */
+
+
+/* CYBRAXIS_VISIBLE_CYCLE_ARROWS_START */
+.scenario-briefing__cycle,
+.scenario-briefing__cycle-track {
+  overflow: visible !important;
+}
+
+.scenario-briefing__cycle-track {
+  gap: 20px !important;
+}
+
+.scenario-briefing__cycle-track span {
+  overflow: visible !important;
+}
+
+.scenario-briefing__cycle-track span::before {
+  display: none !important;
+  content: none !important;
+}
+
+.scenario-briefing__cycle-track span:not(:last-child)::after {
+  content: "" !important;
+  position: absolute !important;
+  right: -15px !important;
+  top: 50% !important;
+  width: 0 !important;
+  height: 0 !important;
+  border-top: 8px solid transparent !important;
+  border-bottom: 8px solid transparent !important;
+  border-left: 10px solid #32f7ff !important;
+  border-right: 0 !important;
+  transform: translateY(-50%) !important;
+  z-index: 99 !important;
+  opacity: 1 !important;
+  filter: drop-shadow(0 0 8px rgba(50, 247, 255, 0.9)) !important;
+}
+/* CYBRAXIS_VISIBLE_CYCLE_ARROWS_END */
+
+
+/* CYBRAXIS_ONLY_MISSION_HEIGHT_START */
+.scenario-briefing__shell {
+  grid-template-rows: 1.02fr 0.86fr 0.62fr 0.86fr auto !important;
+}
+
+@media (max-height: 760px) {
+  .scenario-briefing__shell {
+    grid-template-rows: 1fr 0.80fr 0.52fr 0.74fr auto !important;
+  }
+}
+/* CYBRAXIS_ONLY_MISSION_HEIGHT_END */

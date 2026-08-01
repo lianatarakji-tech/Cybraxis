@@ -1,0 +1,30 @@
+{
+  "name": "cybraxis-server",
+  "version": "1.0.0",
+  "description": "Express + PostgreSQL backend for Cybraxis",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "keywords": [
+    "cybraxis",
+    "soc-training",
+    "express",
+    "postgresql"
+  ],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@mistralai/mistralai": "^2.2.5",
+    "ajv": "^8.20.0",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "pg": "^8.16.3"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.11"
+  }
+}

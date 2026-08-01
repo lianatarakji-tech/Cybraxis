@@ -1,0 +1,4551 @@
+.cy-menu {
+  min-height: 100vh;
+  height: 100vh;
+  padding: 16px;
+  overflow: auto;
+  color: var(--text-bright);
+  background:
+    radial-gradient(circle at 14% 8%, rgba(0, 229, 255, 0.13), transparent 28%),
+    radial-gradient(circle at 82% 10%, rgba(255, 215, 64, 0.08), transparent 24%),
+    radial-gradient(circle at 50% 92%, rgba(151, 91, 255, 0.07), transparent 34%),
+    linear-gradient(180deg, #010813 0%, #020c17 48%, #010710 100%);
+}
+
+.cy-menu__shell {
+  min-height: calc(100vh - 32px);
+  max-width: 1360px;
+  margin: 0 auto;
+  border: 1px solid rgba(0, 229, 255, 0.45);
+  border-top: 2px solid rgba(0, 229, 255, 0.85);
+  border-radius: 18px;
+  background:
+    linear-gradient(180deg, rgba(5, 23, 39, 0.96), rgba(2, 11, 21, 0.985));
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.025),
+    0 0 42px rgba(0, 229, 255, 0.13),
+    0 26px 90px rgba(0, 0, 0, 0.68);
+  overflow: hidden;
+}
+
+.cy-menu__shell--wide {
+  max-width: 1400px;
+}
+
+.cy-menu__hero {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  gap: 26px;
+  padding: 34px 34px;
+  border-bottom: 1px solid rgba(0, 229, 255, 0.26);
+  background:
+    linear-gradient(90deg, rgba(0, 229, 255, 0.075), transparent 54%),
+    radial-gradient(circle at 66% 45%, rgba(0, 229, 255, 0.18), transparent 26%),
+    radial-gradient(circle at 89% 52%, rgba(255, 215, 64, 0.10), transparent 23%),
+    rgba(0, 0, 0, 0.26);
+  isolation: isolate;
+}
+
+.cy-menu__hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0.18;
+  background-image:
+    linear-gradient(rgba(0,229,255,0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,229,255,0.08) 1px, transparent 1px);
+  background-size: 34px 34px;
+  mask-image: linear-gradient(90deg, transparent, black 22%, black 82%, transparent);
+  pointer-events: none;
+  z-index: -1;
+}
+
+.cy-menu__hero--home {
+  min-height: 242px;
+  align-items: center;
+}
+
+.cy-menu__hero--compact {
+  min-height: 150px;
+  align-items: center;
+}
+
+.cy-menu__hero-copy {
+  position: relative;
+  z-index: 2;
+  max-width: 620px;
+}
+
+.cy-menu__brand-lockup {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.cy-menu__brand-lockup span,
+.cy-menu__eyebrow,
+.cy-menu__status span,
+.cy-menu__card-label,
+.cy-menu__button,
+.cy-menu__profile-card span,
+.cy-menu__dash-card span,
+.cy-menu__section-kicker,
+.cy-menu__remedy-strip span,
+.cy-menu__fundamentals-hero span,
+.cy-menu__accordion-head span,
+.cy-menu__accordion-head em {
+  font-family: 'Share Tech Mono', monospace;
+  text-transform: uppercase;
+  letter-spacing: 1.6px;
+}
+
+.cy-menu__brand-lockup span {
+  color: var(--cyan);
+  font-size: 18px;
+  letter-spacing: 5px;
+  text-shadow: 0 0 14px rgba(0,229,255,0.35);
+}
+
+.cy-menu__logo-mark {
+  width: 76px;
+  height: 76px;
+  filter: drop-shadow(0 0 18px rgba(0, 229, 255, 0.22));
+}
+
+.cy-menu__logo-mark svg {
+  width: 100%;
+  height: 100%;
+}
+
+.cy-menu__logo-cyan {
+  fill: rgba(0, 229, 255, 0.18);
+  stroke: var(--cyan);
+  stroke-width: 3;
+  stroke-linejoin: round;
+}
+
+.cy-menu__logo-yellow {
+  fill: rgba(255, 215, 64, 0.30);
+  stroke: var(--yellow);
+  stroke-width: 3;
+  stroke-linejoin: round;
+}
+
+.cy-menu__logo-inner {
+  fill: rgba(2, 11, 21, 0.96);
+  stroke: rgba(0, 229, 255, 0.65);
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+
+.cy-menu__eyebrow {
+  color: var(--yellow);
+  font-size: 10px;
+  margin-bottom: 8px;
+}
+
+.cy-menu h1 {
+  margin: 0 0 10px;
+  font-size: clamp(30px, 4vw, 42px);
+  letter-spacing: -1.2px;
+  color: #e7f6ff;
+  text-shadow: 0 0 22px rgba(0, 229, 255, 0.10);
+}
+
+.cy-menu h2 {
+  margin: 0;
+}
+
+.cy-menu p {
+  margin: 0;
+  color: rgba(196, 230, 248, 0.84);
+  line-height: 1.58;
+  font-size: 14px;
+}
+
+.cy-menu__hero-line {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 22px;
+}
+
+.cy-menu__hero-line span:first-child {
+  width: 56px;
+  height: 3px;
+  background: var(--cyan);
+  border-radius: 999px;
+  box-shadow: 0 0 14px rgba(0, 229, 255, 0.7);
+}
+
+.cy-menu__hero-line span:nth-child(2) {
+  width: 42px;
+  height: 1px;
+  background: rgba(0, 229, 255, 0.40);
+}
+
+.cy-menu__hero-line span:nth-child(3) {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--yellow);
+  box-shadow: 0 0 12px rgba(255, 215, 64, 0.6);
+}
+
+.cy-menu__hero-art {
+  position: absolute;
+  left: 56%;
+  top: 20px;
+  width: 360px;
+  height: 220px;
+  transform: translateX(-35%);
+  pointer-events: none;
+  opacity: 0.95;
+}
+
+.cy-menu__orbit,
+.cy-menu__shield,
+.cy-menu__wave {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%,-50%);
+}
+
+.cy-menu__orbit {
+  border-radius: 999px;
+  border: 1px solid rgba(0, 229, 255, 0.35);
+  box-shadow: 0 0 24px rgba(0, 229, 255, 0.14);
+}
+
+.cy-menu__orbit--one {
+  width: 92px;
+  height: 92px;
+  animation: cy-orbit 8s linear infinite;
+}
+
+.cy-menu__orbit--two {
+  width: 132px;
+  height: 132px;
+  border-color: rgba(255, 215, 64, 0.38);
+  animation: cy-orbit 11s linear infinite reverse;
+}
+
+.cy-menu__orbit--three {
+  width: 184px;
+  height: 184px;
+  border-color: rgba(0, 229, 255, 0.18);
+}
+
+.cy-menu__shield {
+  width: 74px;
+  height: 74px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  background:
+    radial-gradient(circle, rgba(0,229,255,0.18), rgba(0,0,0,0.20) 62%);
+  box-shadow:
+    0 0 30px rgba(0,229,255,0.35),
+    0 0 38px rgba(255,215,64,0.14);
+}
+
+.cy-menu__shield svg {
+  width: 46px;
+  height: 46px;
+  fill: rgba(0,229,255,0.18);
+  stroke: #64f4ff;
+  stroke-width: 3;
+  filter: drop-shadow(0 0 12px rgba(0,229,255,0.8));
+}
+
+.cy-menu__wave {
+  width: 330px;
+  height: 84px;
+  top: 73%;
+  border-radius: 50%;
+  border-top: 1px solid rgba(0, 229, 255, 0.35);
+  transform: translate(-50%, -50%) rotate(-5deg);
+}
+
+.cy-menu__wave--two {
+  width: 380px;
+  border-color: rgba(255, 215, 64, 0.28);
+  transform: translate(-50%, -45%) rotate(5deg);
+}
+
+@keyframes cy-orbit {
+  to { transform: translate(-50%,-50%) rotate(360deg); }
+}
+
+.cy-menu__status {
+  position: relative;
+  z-index: 2;
+  width: 250px;
+  min-height: 118px;
+  border: 1px solid rgba(0, 229, 255, 0.42);
+  border-radius: 16px;
+  display: grid;
+  align-content: center;
+  gap: 8px;
+  padding: 22px;
+  background:
+    linear-gradient(145deg, rgba(15, 45, 62, 0.82), rgba(4, 15, 26, 0.82)),
+    rgba(0, 0, 0, 0.20);
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,0.025),
+    0 0 22px rgba(0, 229, 255, 0.10);
+}
+
+.cy-menu__status::after {
+  content: "◉";
+  position: absolute;
+  right: 22px;
+  top: 42px;
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(0, 229, 255, 0.42);
+  border-radius: 999px;
+  color: var(--cyan);
+  background: rgba(0,229,255,0.04);
+}
+
+.cy-menu__status span {
+  color: var(--cyan);
+  font-size: 9px;
+}
+
+.cy-menu__status strong {
+  color: #f2fbff;
+  font-size: 24px;
+}
+
+.cy-menu__status-meter {
+  width: 150px;
+  height: 4px;
+  border-radius: 999px;
+  background: rgba(122,170,200,0.18);
+  overflow: hidden;
+}
+
+.cy-menu__status-meter i {
+  display: block;
+  width: 44%;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--yellow);
+  box-shadow: 0 0 12px rgba(255, 215, 64, 0.65);
+}
+
+.cy-menu__cards {
+  display: grid;
+  gap: 18px;
+  padding: 28px 34px 34px;
+}
+
+.cy-menu__cards--six {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.cy-menu__card {
+  --tone: var(--cyan);
+  position: relative;
+  min-height: 228px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--tone), transparent 45%);
+  border-radius: 16px;
+  padding: 22px;
+  background:
+    linear-gradient(145deg, rgba(19, 57, 82, 0.78), rgba(5, 24, 40, 0.94) 55%, rgba(2, 12, 22, 0.985)),
+    rgba(0, 0, 0, 0.20);
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,0.026),
+    0 16px 38px rgba(0,0,0,0.28);
+  transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.cy-menu__card--cyan { --tone: var(--cyan); }
+.cy-menu__card--teal { --tone: #00f0c8; }
+.cy-menu__card--yellow { --tone: var(--yellow); }
+.cy-menu__card--red { --tone: var(--red); }
+.cy-menu__card--purple { --tone: #a76dff; }
+
+.cy-menu__card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-left: 2px solid var(--tone);
+  border-top: 2px solid color-mix(in srgb, var(--tone), transparent 18%);
+  pointer-events: none;
+  opacity: 0.9;
+}
+
+.cy-menu__card-glow {
+  position: absolute;
+  right: -110px;
+  top: -110px;
+  width: 230px;
+  height: 230px;
+  border-radius: 999px;
+  background: radial-gradient(circle, color-mix(in srgb, var(--tone), transparent 75%), transparent 68%);
+  pointer-events: none;
+}
+
+.cy-menu__card:hover {
+  transform: translateY(-4px);
+  border-color: var(--tone);
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,0.035),
+    0 22px 48px rgba(0,0,0,0.38),
+    0 0 22px color-mix(in srgb, var(--tone), transparent 82%);
+}
+
+.cy-menu__card-main {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  gap: 22px;
+  align-items: center;
+}
+
+.cy-menu__orb {
+  width: 86px;
+  height: 86px;
+  display: grid;
+  place-items: center;
+  border: 1px solid color-mix(in srgb, var(--tone), transparent 35%);
+  border-radius: 22px;
+  background:
+    radial-gradient(circle at 50% 42%, color-mix(in srgb, var(--tone), transparent 82%), rgba(0,0,0,0.10) 58%),
+    rgba(0,0,0,0.15);
+  box-shadow:
+    0 0 22px color-mix(in srgb, var(--tone), transparent 84%),
+    inset 0 0 0 1px rgba(255,255,255,0.03);
+}
+
+.cy-menu__orb::after {
+  content: "";
+  position: absolute;
+  width: 84px;
+  height: 26px;
+  margin-top: 84px;
+  border-radius: 50%;
+  border-top: 1px solid color-mix(in srgb, var(--tone), transparent 40%);
+  filter: blur(0.2px);
+}
+
+.cy-menu__orb svg {
+  width: 44px;
+  height: 44px;
+  fill: none;
+  stroke: var(--tone);
+  stroke-width: 4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  filter: drop-shadow(0 0 10px color-mix(in srgb, var(--tone), transparent 25%));
+}
+
+.cy-menu__card-label {
+  display: block;
+  color: var(--tone);
+  font-size: 10px;
+  margin-bottom: 10px;
+}
+
+.cy-menu__card h2 {
+  margin: 0 0 10px;
+  font-size: 23px;
+  line-height: 1.2;
+  color: #e9f8ff;
+}
+
+.cy-menu__card p {
+  color: rgba(196, 230, 248, 0.82);
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.cy-menu__button {
+  border: 1px solid var(--cyan);
+  border-radius: 9px;
+  background:
+    linear-gradient(90deg, rgba(0,229,255,0.075), rgba(0,229,255,0.018));
+  color: var(--cyan);
+  padding: 11px 14px;
+  cursor: pointer;
+  font-family: 'Share Tech Mono', monospace;
+  text-transform: uppercase;
+  letter-spacing: 1.6px;
+  font-weight: 700;
+  font-size: 10px;
+  transition: all 0.16s ease;
+}
+
+.cy-menu__button:hover:not(:disabled) {
+  border-color: var(--yellow);
+  color: var(--yellow);
+  background: rgba(255, 215, 64, 0.055);
+  box-shadow: 0 0 16px rgba(255, 215, 64, 0.10);
+}
+
+.cy-menu__button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.cy-menu__button--fit {
+  width: auto;
+  min-width: 160px;
+}
+
+.cy-menu__button--danger {
+  border-color: var(--red);
+  color: var(--red);
+}
+
+.cy-menu__card-button {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  margin-top: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  border-color: color-mix(in srgb, var(--tone), transparent 22%);
+  color: var(--tone);
+  background:
+    linear-gradient(90deg, color-mix(in srgb, var(--tone), transparent 94%), rgba(0,0,0,0.05));
+}
+
+.cy-menu__card-button b {
+  font-size: 20px;
+  line-height: 1;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.cy-menu__page {
+  max-height: calc(100vh - 188px);
+  overflow: auto;
+  padding: 28px 34px 38px;
+  background:
+    linear-gradient(180deg, rgba(0, 229, 255, 0.018), transparent 24%);
+}
+
+.cy-menu__profile-layout {
+  display: grid;
+  grid-template-columns: minmax(420px, 760px);
+  gap: 18px;
+  align-items: start;
+}
+
+.cy-menu__profile-card,
+.cy-menu__dashboard-hero,
+.cy-menu__dash-card,
+.cy-menu__insight,
+.cy-menu__curve,
+.cy-menu__remedy-strip article,
+.cy-menu__danger-card,
+.cy-menu__fundamentals-frame {
+  border: 1px solid rgba(0, 229, 255, 0.25);
+  border-radius: 14px;
+  background:
+    linear-gradient(180deg, rgba(13, 45, 67, 0.58), rgba(4, 18, 31, 0.82));
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,0.02),
+    0 14px 34px rgba(0,0,0,0.22);
+}
+
+.cy-menu__profile-card {
+  display: grid;
+  gap: 17px;
+  padding: 22px;
+}
+
+.cy-menu__avatar {
+  width: 82px;
+  height: 82px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--yellow);
+  border-radius: 22px;
+  color: var(--yellow);
+  background: rgba(255, 215, 64, 0.07);
+  font-size: 32px;
+  font-weight: 800;
+  box-shadow: 0 0 20px rgba(255, 215, 64, 0.11);
+}
+
+.cy-menu__profile-card label {
+  display: grid;
+  gap: 8px;
+  color: var(--cyan);
+  font-family: 'Share Tech Mono', monospace;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-size: 9px;
+}
+
+.cy-menu__profile-card input {
+  border: 1px solid var(--border-bright);
+  background: rgba(0, 0, 0, 0.24);
+  color: var(--text-bright);
+  border-radius: 8px;
+  padding: 12px;
+  font-size: 16px;
+}
+
+.cy-menu__profile-facts {
+  display: grid;
+  gap: 11px;
+}
+
+.cy-menu__profile-card span {
+  display: block;
+  color: var(--cyan);
+  font-size: 8px;
+  margin-bottom: 5px;
+}
+
+.cy-menu__profile-card strong {
+  font-size: 15px;
+}
+
+.cy-menu__dashboard-hero {
+  display: grid;
+  grid-template-columns: 170px 1fr;
+  gap: 20px;
+  align-items: center;
+  padding: 20px;
+  margin-bottom: 16px;
+}
+
+.cy-menu__progress-ring {
+  --progress: 0;
+  width: 138px;
+  height: 138px;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  border-radius: 999px;
+  background:
+    radial-gradient(circle at center, rgba(5, 22, 36, 0.97) 58%, transparent 59%),
+    conic-gradient(var(--yellow) calc(var(--progress) * 1%), rgba(0, 229, 255, 0.16) 0);
+  border: 1px solid rgba(255, 215, 64, 0.45);
+}
+
+.cy-menu__progress-ring strong {
+  color: var(--yellow);
+  font-size: 28px;
+}
+
+.cy-menu__progress-ring span {
+  color: var(--text-mid);
+  font-size: 10px;
+  text-align: center;
+}
+
+.cy-menu__section-kicker {
+  display: block;
+  color: var(--cyan);
+  font-size: 8px;
+  margin-bottom: 7px;
+}
+
+.cy-menu__dashboard-hero h2,
+.cy-menu__insight h2,
+.cy-menu__curve h2,
+.cy-menu__danger-card h2 {
+  color: var(--cyan);
+  font-size: 19px;
+  margin: 0 0 10px;
+}
+
+.cy-menu__dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 11px;
+}
+
+.cy-menu__dash-card {
+  padding: 15px;
+}
+
+.cy-menu__dash-card span {
+  display: block;
+  color: var(--cyan);
+  font-size: 8px;
+  margin-bottom: 7px;
+}
+
+.cy-menu__dash-card strong {
+  font-size: 15px;
+  word-break: break-word;
+}
+
+.cy-menu__dash-card--yellow {
+  border-color: rgba(255, 215, 64, 0.34);
+}
+
+.cy-menu__dash-card--green {
+  border-color: rgba(0, 255, 136, 0.34);
+}
+
+.cy-menu__two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.cy-menu__insight,
+.cy-menu__curve,
+.cy-menu__danger-card,
+.cy-menu__remedy-strip article {
+  padding: 18px;
+}
+
+.cy-menu__insight--green {
+  border-color: rgba(0, 255, 136, 0.30);
+}
+
+.cy-menu__insight--yellow {
+  border-color: rgba(255, 215, 64, 0.30);
+}
+
+.cy-menu__remedy-strip {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.cy-menu__remedy-strip span {
+  display: block;
+  color: var(--cyan);
+  font-size: 8px;
+  margin-bottom: 6px;
+}
+
+.cy-menu__remedy-strip strong {
+  display: block;
+  margin-bottom: 6px;
+}
+
+.cy-menu__curve {
+  margin-top: 16px;
+}
+
+.cy-menu__curve-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.cy-menu__curve-head strong {
+  color: var(--yellow);
+  font-family: 'Share Tech Mono', monospace;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-size: 8px;
+}
+
+.cy-menu__curve-box svg {
+  width: 100%;
+  height: 150px;
+  border: 1px solid var(--border-mid);
+  border-radius: 9px;
+  background:
+    linear-gradient(rgba(0, 229, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 229, 255, 0.035) 1px, transparent 1px),
+    rgba(0,0,0,0.18);
+  background-size: 24px 24px;
+}
+
+.cy-menu__curve-box polyline {
+  fill: none;
+  stroke: var(--yellow);
+  stroke-width: 3;
+}
+
+.cy-menu__curve-box circle {
+  fill: var(--cyan);
+}
+
+.cy-menu__danger-card {
+  max-width: 720px;
+}
+
+.cy-menu__fundamentals-frame {
+  max-height: calc(100vh - 220px);
+  overflow: auto;
+  padding: 20px;
+}
+
+.cy-menu__fundamentals-hero {
+  border: 1px solid rgba(0, 229, 255, 0.28);
+  border-radius: 14px;
+  background:
+    linear-gradient(110deg, rgba(0, 229, 255, 0.08), transparent 60%),
+    rgba(0, 0, 0, 0.20);
+  padding: 22px;
+  margin-bottom: 15px;
+}
+
+.cy-menu__fundamentals-hero span {
+  color: var(--yellow);
+  font-size: 9px;
+}
+
+.cy-menu__fundamentals-hero h2 {
+  margin: 8px 0;
+  font-size: 28px;
+}
+
+.cy-menu__accordion {
+  display: grid;
+  gap: 11px;
+}
+
+.cy-menu__accordion-item {
+  border: 1px solid rgba(0, 229, 255, 0.22);
+  border-radius: 12px;
+  background:
+    linear-gradient(180deg, rgba(8, 33, 52, 0.72), rgba(3, 16, 28, 0.92));
+  overflow: hidden;
+}
+
+.cy-menu__accordion-item--open {
+  border-color: rgba(255, 215, 64, 0.42);
+}
+
+.cy-menu__accordion-head {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 180px 1fr 80px;
+  align-items: center;
+  gap: 12px;
+  border: none;
+  background: transparent;
+  color: var(--text-bright);
+  text-align: left;
+  padding: 16px 18px;
+  cursor: pointer;
+}
+
+.cy-menu__accordion-head:hover {
+  background: rgba(0, 229, 255, 0.035);
+}
+
+.cy-menu__accordion-head span {
+  color: var(--cyan);
+  font-size: 8px;
+}
+
+.cy-menu__accordion-head strong {
+  font-size: 17px;
+}
+
+.cy-menu__accordion-head em {
+  justify-self: end;
+  color: var(--yellow);
+  font-style: normal;
+  font-size: 8px;
+}
+
+.cy-menu__accordion-body {
+  border-top: 1px solid rgba(0, 229, 255, 0.18);
+  padding: 17px 22px 20px;
+  background:
+    linear-gradient(180deg, rgba(0,0,0,0.24), rgba(0,0,0,0.12));
+}
+
+.cy-menu__accordion-body p {
+  color: var(--text-bright);
+  margin-bottom: 10px;
+}
+
+.cy-menu__accordion-body ul {
+  margin: 0;
+  padding-left: 20px;
+  color: var(--text-mid);
+  line-height: 1.65;
+  font-size: 13px;
+}
+
+@media (max-width: 1180px) {
+  .cy-menu__cards--six {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .cy-menu__hero-art {
+    opacity: 0.35;
+  }
+}
+
+@media (max-width: 860px) {
+  .cy-menu__hero,
+  .cy-menu__two-col,
+  .cy-menu__remedy-strip,
+  .cy-menu__dashboard-hero {
+    grid-template-columns: 1fr;
+    flex-direction: column;
+  }
+
+  .cy-menu__cards--six,
+  .cy-menu__dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .cy-menu__hero-art {
+    display: none;
+  }
+
+  .cy-menu__status {
+    width: 100%;
+  }
+
+  .cy-menu__card-main {
+    grid-template-columns: 86px 1fr;
+  }
+
+  .cy-menu__page,
+  .cy-menu__fundamentals-frame {
+    max-height: none;
+  }
+}
+
+@media (max-width: 760px) {
+  .cy-menu__accordion-head {
+    grid-template-columns: 1fr;
+  }
+
+  .cy-menu__accordion-head em {
+    justify-self: start;
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* CYBRAXIS MAIN MENU RECOVERY POLISH */
+
+/* Better title sizing */
+.cy-menu__hero-copy h1 {
+  max-width: 760px !important;
+  font-size: clamp(44px, 4.6vw, 72px) !important;
+  line-height: 1.04 !important;
+  letter-spacing: -1.6px !important;
+}
+
+/* X-centered logo */
+.cy-menu__brand-lockup .cy-menu__logo-mark {
+  width: 112px !important;
+  height: 72px !important;
+  flex: 0 0 112px !important;
+  background: none !important;
+  filter:
+    drop-shadow(0 0 10px rgba(0, 229, 255, 0.22))
+    drop-shadow(0 0 8px rgba(255, 215, 64, 0.08)) !important;
+}
+
+.cy-menu__logo-mark--x-pro svg {
+  width: 100% !important;
+  height: 100% !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  overflow: visible !important;
+}
+
+.cy-menu__logo-mark--x-pro svg * {
+  vector-effect: non-scaling-stroke;
+}
+
+.cy-menu__x-logo-frame {
+  fill: rgba(0, 229, 255, 0.035);
+  stroke: rgba(0, 229, 255, 0.42);
+  stroke-width: 2.2;
+  stroke-linejoin: round;
+}
+
+.cy-menu__x-logo-line,
+.cy-menu__x-logo-cross,
+.cy-menu__x-logo-circuit {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.cy-menu__x-logo-line--a {
+  stroke: url(#xGold);
+  stroke-width: 6;
+}
+
+.cy-menu__x-logo-line--b {
+  stroke: url(#xCyan);
+  stroke-width: 6;
+}
+
+.cy-menu__x-logo-cross--a {
+  stroke: url(#xCyan);
+  stroke-width: 4.5;
+}
+
+.cy-menu__x-logo-cross--b {
+  stroke: url(#xGold);
+  stroke-width: 3.8;
+}
+
+.cy-menu__x-logo-circuit {
+  stroke: rgba(0, 229, 255, 0.40);
+  stroke-width: 2;
+}
+
+.cy-menu__x-logo circle {
+  fill: var(--yellow);
+}
+
+/* Restore old shield style, no weird live aura */
+.cy-menu__hero-art {
+  width: 500px !important;
+  height: 300px !important;
+  left: 61% !important;
+  top: -20px !important;
+  transform: translateX(-40%) !important;
+  opacity: 0.96 !important;
+  background-image: url("data:image/svg+xml,%0A%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20560%20340%22%3E%0A%20%20%3Cdefs%3E%0A%20%20%20%20%3CradialGradient%20id%3D%22mainGlow%22%20cx%3D%2250%25%22%20cy%3D%2258%25%22%20r%3D%2260%25%22%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%220%22%20stop-color%3D%22%2300e5ff%22%20stop-opacity%3D%22.70%22%2F%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%22.32%22%20stop-color%3D%22%2300e5ff%22%20stop-opacity%3D%22.22%22%2F%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%22.70%22%20stop-color%3D%22%2300e5ff%22%20stop-opacity%3D%22.06%22%2F%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%221%22%20stop-color%3D%22%2300e5ff%22%20stop-opacity%3D%220%22%2F%3E%0A%20%20%20%20%3C%2FradialGradient%3E%0A%20%20%20%20%3Cfilter%20id%3D%22glow%22%20x%3D%22-80%25%22%20y%3D%22-80%25%22%20width%3D%22260%25%22%20height%3D%22260%25%22%3E%0A%20%20%20%20%20%20%3CfeGaussianBlur%20stdDeviation%3D%225.2%22%20result%3D%22blur%22%2F%3E%0A%20%20%20%20%20%20%3CfeMerge%3E%3CfeMergeNode%20in%3D%22blur%22%2F%3E%3CfeMergeNode%20in%3D%22SourceGraphic%22%2F%3E%3C%2FfeMerge%3E%0A%20%20%20%20%3C%2Ffilter%3E%0A%20%20%3C%2Fdefs%3E%0A%0A%20%20%3Cellipse%20cx%3D%22280%22%20cy%3D%22272%22%20rx%3D%22150%22%20ry%3D%2239%22%20fill%3D%22rgba(0%2C229%2C255%2C.08)%22%20stroke%3D%22rgba(0%2C229%2C255%2C.42)%22%20stroke-width%3D%222%22%2F%3E%0A%20%20%3Cellipse%20cx%3D%22280%22%20cy%3D%22272%22%20rx%3D%22112%22%20ry%3D%2228%22%20fill%3D%22none%22%20stroke%3D%22rgba(0%2C229%2C255%2C.66)%22%20stroke-width%3D%222%22%2F%3E%0A%20%20%3Cellipse%20cx%3D%22280%22%20cy%3D%22272%22%20rx%3D%2266%22%20ry%3D%2216%22%20fill%3D%22none%22%20stroke%3D%22rgba(255%2C215%2C64%2C.36)%22%20stroke-width%3D%221.5%22%2F%3E%0A%20%20%3Cellipse%20cx%3D%22280%22%20cy%3D%22272%22%20rx%3D%2252%22%20ry%3D%2212%22%20fill%3D%22%2300e5ff%22%20opacity%3D%22.72%22%20filter%3D%22url(%23glow)%22%2F%3E%0A%0A%20%20%3Cpath%20d%3D%22M214%20119%20L280%20267%20L346%20119%22%20fill%3D%22rgba(0%2C229%2C255%2C.07)%22%20stroke%3D%22rgba(0%2C229%2C255%2C.20)%22%20stroke-width%3D%222%22%2F%3E%0A%20%20%3Cpath%20d%3D%22M235%20132%20L280%20267%20L325%20132%22%20fill%3D%22none%22%20stroke%3D%22rgba(0%2C229%2C255%2C.38)%22%20stroke-width%3D%221.6%22%2F%3E%0A%0A%20%20%3Cellipse%20cx%3D%22280%22%20cy%3D%22113%22%20rx%3D%22196%22%20ry%3D%2255%22%20fill%3D%22none%22%20stroke%3D%22%2300e5ff%22%20stroke-width%3D%224.5%22%20opacity%3D%22.90%22%20transform%3D%22rotate(-16%20280%20113)%22%2F%3E%0A%20%20%3Cellipse%20cx%3D%22280%22%20cy%3D%22113%22%20rx%3D%22184%22%20ry%3D%2249%22%20fill%3D%22none%22%20stroke%3D%22%23ffd740%22%20stroke-width%3D%224.5%22%20opacity%3D%22.82%22%20transform%3D%22rotate(17%20280%20113)%22%2F%3E%0A%20%20%3Cellipse%20cx%3D%22280%22%20cy%3D%22113%22%20rx%3D%22250%22%20ry%3D%2294%22%20fill%3D%22none%22%20stroke%3D%22rgba(0%2C229%2C255%2C.25)%22%20stroke-width%3D%222.2%22%20transform%3D%22rotate(-3%20280%20113)%22%2F%3E%0A%0A%20%20%3Ccircle%20cx%3D%22280%22%20cy%3D%22113%22%20r%3D%22116%22%20fill%3D%22url(%23mainGlow)%22%20opacity%3D%22.88%22%2F%3E%0A%20%20%3Ccircle%20cx%3D%22280%22%20cy%3D%22113%22%20r%3D%2267%22%20fill%3D%22rgba(0%2C229%2C255%2C.08)%22%20stroke%3D%22rgba(0%2C229%2C255%2C.38)%22%20stroke-width%3D%222%22%2F%3E%0A%20%20%3Ccircle%20cx%3D%22280%22%20cy%3D%22113%22%20r%3D%2248%22%20fill%3D%22rgba(0%2C229%2C255%2C.08)%22%20stroke%3D%22rgba(255%2C215%2C64%2C.26)%22%20stroke-width%3D%221.7%22%2F%3E%0A%0A%20%20%3Cg%20filter%3D%22url(%23glow)%22%3E%0A%20%20%20%20%3Cpath%20d%3D%22M280%2050%20L327%2069%20V107%20C327%20141%20306%20166%20280%20181%20C254%20166%20233%20141%20233%20107%20V69%20Z%22%0A%20%20%20%20%20%20fill%3D%22rgba(0%2C229%2C255%2C.13)%22%20stroke%3D%22%237dfcff%22%20stroke-width%3D%225.5%22%20stroke-linejoin%3D%22round%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M280%2063%20V169%20M233%20107%20H327%20M247%2078%20L280%20107%20L313%2078%20M247%20146%20L280%20107%20L313%20146%22%0A%20%20%20%20%20%20fill%3D%22none%22%20stroke%3D%22rgba(125%2C252%2C255%2C.64)%22%20stroke-width%3D%222.8%22%20stroke-linecap%3D%22round%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M264%20111%20H296%20V142%20H264%20Z%20M271%20111%20V99%20C271%2086%20289%2086%20289%2099%20V111%22%0A%20%20%20%20%20%20fill%3D%22none%22%20stroke%3D%22%23ffd740%22%20stroke-width%3D%226.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%0A%20%20%3C%2Fg%3E%0A%0A%20%20%3Ccircle%20cx%3D%22104%22%20cy%3D%2279%22%20r%3D%225%22%20fill%3D%22%2300e5ff%22%20filter%3D%22url(%23glow)%22%2F%3E%0A%20%20%3Ccircle%20cx%3D%22424%22%20cy%3D%2282%22%20r%3D%226%22%20fill%3D%22%23ffd740%22%20filter%3D%22url(%23glow)%22%2F%3E%0A%20%20%3Ccircle%20cx%3D%22145%22%20cy%3D%22149%22%20r%3D%225%22%20fill%3D%22%2300e5ff%22%20filter%3D%22url(%23glow)%22%2F%3E%0A%20%20%3Ccircle%20cx%3D%22389%22%20cy%3D%22152%22%20r%3D%225%22%20fill%3D%22%2300e5ff%22%20filter%3D%22url(%23glow)%22%2F%3E%0A%3C%2Fsvg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-position: center !important;
+  background-size: contain !important;
+  filter:
+    drop-shadow(0 0 22px rgba(0, 229, 255, 0.24))
+    drop-shadow(0 0 14px rgba(255, 215, 64, 0.07)) !important;
+  animation: cy-recovered-shield-glow 7s ease-in-out infinite !important;
+  overflow: visible !important;
+}
+
+.cy-menu__hero-art > *,
+.cy-menu__hero-art::before,
+.cy-menu__hero-art::after {
+  display: none !important;
+  content: none !important;
+}
+
+@keyframes cy-recovered-shield-glow {
+  0%, 100% {
+    opacity: 0.90;
+    filter:
+      drop-shadow(0 0 18px rgba(0, 229, 255, 0.20))
+      drop-shadow(0 0 10px rgba(255, 215, 64, 0.06));
+  }
+
+  50% {
+    opacity: 1;
+    filter:
+      drop-shadow(0 0 28px rgba(0, 229, 255, 0.30))
+      drop-shadow(0 0 16px rgba(255, 215, 64, 0.10));
+  }
+}
+
+/* Player tab recovery */
+.cy-menu__shell,
+.cy-menu__hero,
+.cy-menu__hero--home {
+  overflow: visible !important;
+}
+
+.cy-menu__hero--home {
+  position: relative !important;
+  z-index: 50 !important;
+}
+
+.cy-menu__cards,
+.cy-menu__cards--six {
+  position: relative !important;
+  z-index: 2 !important;
+}
+
+.cy-menu__hero--home .cy-menu__status {
+  transform: translateY(18px) !important;
+}
+
+.cy-menu__status {
+  position: relative !important;
+  z-index: 200 !important;
+  width: 310px !important;
+  min-height: 132px !important;
+  padding: 24px 136px 22px 24px !important;
+  overflow: visible !important;
+  background:
+    linear-gradient(90deg, rgba(5, 26, 41, .92), rgba(6, 37, 52, .66)) !important;
+}
+
+.cy-menu__status span {
+  font-size: 9.5px !important;
+  letter-spacing: 1.7px !important;
+}
+
+.cy-menu__status strong {
+  display: block !important;
+  max-width: 138px !important;
+  font-size: 20px !important;
+  line-height: 1.18 !important;
+  color: #edfaff !important;
+  white-space: normal !important;
+  word-break: normal !important;
+}
+
+.cy-menu__status-meter,
+.cy-menu__status::before {
+  display: none !important;
+}
+
+.cy-menu__status::after {
+  content: "" !important;
+  display: block !important;
+  position: absolute !important;
+  right: 18px !important;
+  top: 50% !important;
+  width: 108px !important;
+  height: 108px !important;
+  transform: translateY(-50%) !important;
+  background-image: url("data:image/svg+xml,%0A%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20132%20132%22%3E%0A%20%20%3Cdefs%3E%0A%20%20%20%20%3CradialGradient%20id%3D%22p%22%20cx%3D%2250%25%22%20cy%3D%2250%25%22%20r%3D%2252%25%22%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%220%22%20stop-color%3D%22%2300e5ff%22%20stop-opacity%3D%22.34%22%2F%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%22.58%22%20stop-color%3D%22%2300e5ff%22%20stop-opacity%3D%22.10%22%2F%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%221%22%20stop-color%3D%22%2300e5ff%22%20stop-opacity%3D%220%22%2F%3E%0A%20%20%20%20%3C%2FradialGradient%3E%0A%20%20%20%20%3Cfilter%20id%3D%22pg%22%20x%3D%22-60%25%22%20y%3D%22-60%25%22%20width%3D%22220%25%22%20height%3D%22220%25%22%3E%0A%20%20%20%20%20%20%3CfeGaussianBlur%20stdDeviation%3D%222.7%22%20result%3D%22b%22%2F%3E%0A%20%20%20%20%20%20%3CfeMerge%3E%3CfeMergeNode%20in%3D%22b%22%2F%3E%3CfeMergeNode%20in%3D%22SourceGraphic%22%2F%3E%3C%2FfeMerge%3E%0A%20%20%20%20%3C%2Ffilter%3E%0A%20%20%3C%2Fdefs%3E%0A%20%20%3Ccircle%20cx%3D%2266%22%20cy%3D%2266%22%20r%3D%2251%22%20fill%3D%22url(%23p)%22%20stroke%3D%22rgba(0%2C229%2C255%2C.34)%22%20stroke-width%3D%221.5%22%2F%3E%0A%20%20%3Ccircle%20cx%3D%2266%22%20cy%3D%2266%22%20r%3D%2236%22%20fill%3D%22rgba(0%2C229%2C255%2C.055)%22%20stroke%3D%22rgba(0%2C229%2C255%2C.36)%22%20stroke-width%3D%222%22%2F%3E%0A%20%20%3Cg%20filter%3D%22url(%23pg)%22%20fill%3D%22none%22%20stroke%3D%22%2378fbff%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%0A%20%20%20%20%3Ccircle%20cx%3D%2266%22%20cy%3D%2252%22%20r%3D%2212%22%20stroke-width%3D%225%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M42%2099%20C46%2080%2056%2072%2066%2072%20C76%2072%2086%2080%2090%2099%22%20stroke-width%3D%225%22%2F%3E%0A%20%20%3C%2Fg%3E%0A%20%20%3Ccircle%20cx%3D%22104%22%20cy%3D%2250%22%20r%3D%223.8%22%20fill%3D%22%2300e5ff%22%20filter%3D%22url(%23pg)%22%2F%3E%0A%20%20%3Ccircle%20cx%3D%2231%22%20cy%3D%2278%22%20r%3D%223.8%22%20fill%3D%22%23ffd740%22%20filter%3D%22url(%23pg)%22%2F%3E%0A%3C%2Fsvg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-position: center !important;
+  background-size: contain !important;
+  border: none !important;
+  box-shadow: none !important;
+  filter: drop-shadow(0 0 18px rgba(0,229,255,.20)) !important;
+}
+
+.cy-menu__status--clickable {
+  cursor: pointer !important;
+}
+
+.cy-menu__status--clickable:hover {
+  border-color: rgba(0, 229, 255, 0.72) !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,0.03),
+    0 0 30px rgba(0, 229, 255, 0.14) !important;
+}
+
+/* User dropdown recovery */
+.cy-menu__user-switcher {
+  position: absolute !important;
+  z-index: 9999 !important;
+  right: 0 !important;
+  top: calc(100% + 14px) !important;
+  width: 340px !important;
+  border: 1px solid rgba(0, 229, 255, 0.42) !important;
+  border-radius: 14px !important;
+  background:
+    linear-gradient(180deg, rgba(7, 31, 48, 0.99), rgba(2, 12, 22, 0.99)) !important;
+  box-shadow:
+    0 28px 70px rgba(0, 0, 0, 0.58),
+    0 0 30px rgba(0, 229, 255, 0.14) !important;
+  padding: 12px !important;
+}
+
+.cy-menu__user-switcher-head {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  gap: 12px !important;
+  padding: 5px 5px 10px !important;
+}
+
+.cy-menu__user-switcher-head span,
+.cy-menu__user-panel-head span,
+.cy-menu__user-row span,
+.cy-menu__user-option span {
+  font-family: 'Share Tech Mono', monospace !important;
+  text-transform: uppercase !important;
+  letter-spacing: 1.3px !important;
+}
+
+.cy-menu__user-switcher-head span,
+.cy-menu__user-panel-head span {
+  color: var(--yellow) !important;
+  font-size: 9px !important;
+}
+
+.cy-menu__user-switcher-head button {
+  border: 1px solid rgba(0, 229, 255, 0.55) !important;
+  border-radius: 999px !important;
+  background: rgba(0, 229, 255, 0.05) !important;
+  color: var(--cyan) !important;
+  padding: 7px 12px !important;
+  font-family: 'Share Tech Mono', monospace !important;
+  text-transform: uppercase !important;
+  letter-spacing: 1px !important;
+  font-size: 8px !important;
+  cursor: pointer !important;
+}
+
+.cy-menu__user-option,
+.cy-menu__user-row {
+  width: 100% !important;
+  min-height: 50px !important;
+  display: flex !important;
+  justify-content: space-between !important;
+  gap: 12px !important;
+  align-items: center !important;
+  border: 1px solid rgba(0, 229, 255, 0.22) !important;
+  border-radius: 10px !important;
+  background: rgba(0, 229, 255, 0.04) !important;
+  color: var(--text-bright) !important;
+  padding: 10px 12px !important;
+  margin-top: 8px !important;
+  cursor: pointer !important;
+  text-align: left !important;
+}
+
+.cy-menu__user-option:hover,
+.cy-menu__user-row:hover,
+.cy-menu__user-option--active,
+.cy-menu__user-row--active {
+  border-color: rgba(255, 215, 64, 0.58) !important;
+  background: rgba(255, 215, 64, 0.052) !important;
+}
+
+.cy-menu__user-option strong,
+.cy-menu__user-row strong {
+  color: #edfaff !important;
+  font-size: 14px !important;
+  line-height: 1.25 !important;
+}
+
+.cy-menu__user-option span,
+.cy-menu__user-row span {
+  color: var(--cyan) !important;
+  font-size: 8px !important;
+}
+
+/* Profile page recovery */
+.cy-menu__profile-layout--users {
+  display: grid !important;
+  grid-template-columns: minmax(420px, 760px) minmax(320px, 1fr) !important;
+  gap: 22px !important;
+  align-items: start !important;
+}
+
+.cy-menu__profile-card {
+  min-height: auto !important;
+}
+
+.cy-menu__user-panel {
+  border: 1px solid rgba(0, 229, 255, 0.25) !important;
+  border-radius: 14px !important;
+  background:
+    linear-gradient(180deg, rgba(13, 45, 67, 0.58), rgba(4, 18, 31, 0.82)) !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,0.02),
+    0 14px 34px rgba(0,0,0,0.22) !important;
+  padding: 18px !important;
+}
+
+.cy-menu__user-panel-head {
+  display: flex !important;
+  justify-content: space-between !important;
+  gap: 14px !important;
+  align-items: center !important;
+  margin-bottom: 12px !important;
+}
+
+.cy-menu__user-panel-head h2 {
+  color: var(--text-bright) !important;
+  font-size: 22px !important;
+  margin-top: 6px !important;
+}
+
+.cy-menu__user-list {
+  display: grid !important;
+  gap: 8px !important;
+}
+
+/* Fundamentals recovery: calmer, readable, not oversized */
+.cy-menu__shell--wide .cy-menu__hero--compact::after {
+  display: none !important;
+}
+
+.cy-menu__shell--wide .cy-menu__hero--compact {
+  min-height: 210px !important;
+  background:
+    linear-gradient(90deg, rgba(3, 20, 33, .96), rgba(5, 38, 54, .58)),
+    radial-gradient(circle at 74% 42%, rgba(0,229,255,.10), transparent 38%) !important;
+  overflow: hidden !important;
+}
+
+.cy-menu__fundamentals-frame {
+  padding: 18px !important;
+  border-radius: 18px !important;
+  background:
+    linear-gradient(180deg, rgba(10, 41, 62, .50), rgba(3, 16, 28, .82)) !important;
+}
+
+.cy-menu__fundamentals-hero {
+  padding: 22px 28px !important;
+  margin: 0 0 16px !important;
+  background:
+    linear-gradient(90deg, rgba(14, 49, 73, .72), rgba(7, 31, 49, .62)) !important;
+}
+
+.cy-menu__fundamentals-hero h2 {
+  font-size: 28px !important;
+  line-height: 1.15 !important;
+  letter-spacing: .1px !important;
+}
+
+.cy-menu__fundamentals-hero p {
+  font-size: 16px !important;
+  line-height: 1.6 !important;
+  color: rgba(220, 242, 255, .88) !important;
+}
+
+.cy-menu__accordion {
+  gap: 10px !important;
+}
+
+.cy-menu__accordion-item {
+  background:
+    linear-gradient(180deg, rgba(12, 43, 64, .66), rgba(5, 20, 34, .74)) !important;
+}
+
+.cy-menu__accordion-head {
+  min-height: 68px !important;
+  padding: 18px 22px !important;
+}
+
+.cy-menu__accordion-head strong {
+  font-size: 20px !important;
+  letter-spacing: .1px !important;
+}
+
+.cy-menu__accordion-head span {
+  font-size: 9px !important;
+  letter-spacing: 1.5px !important;
+}
+
+.cy-menu__accordion-body {
+  padding: 20px 28px 24px !important;
+  background: rgba(8, 28, 45, .66) !important;
+}
+
+.cy-menu__accordion-body p {
+  font-size: 16px !important;
+  line-height: 1.55 !important;
+  color: #edfaff !important;
+}
+
+.cy-menu__accordion-body li {
+  font-size: 15.5px !important;
+  line-height: 1.7 !important;
+  color: rgba(220, 242, 255, .90) !important;
+  margin-bottom: 5px !important;
+}
+
+/* Keep dashboard dynamic improvements readable */
+.cy-menu__curve-empty {
+  min-height: 168px;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  color: var(--text-muted);
+}
+
+.cy-menu__curve-empty-icon {
+  width: 54px;
+  height: 54px;
+  border: 1px solid rgba(255,255,255,.30);
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  margin-bottom: 10px;
+  color: var(--cyan);
+  box-shadow: 0 0 16px rgba(0,229,255,.12);
+}
+
+.cy-menu__curve-grid path {
+  stroke: rgba(255,255,255,.08);
+  stroke-dasharray: 5 6;
+}
+
+@media (max-width: 1180px) {
+  .cy-menu__hero-art {
+    opacity: .55 !important;
+  }
+
+  .cy-menu__profile-layout--users {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+@media (max-width: 860px) {
+  .cy-menu__hero-art {
+    display: none !important;
+  }
+
+  .cy-menu__hero--home .cy-menu__status {
+    transform: none !important;
+  }
+
+  .cy-menu__user-switcher {
+    position: static !important;
+    width: 100% !important;
+    margin-top: 14px !important;
+  }
+}
+
+/* END CYBRAXIS MAIN MENU RECOVERY POLISH */
+
+
+/* CYBRAXIS WORDMARK CURSOR AURA POLISH */
+
+/* Wordmark logo where CYBRAXIS is part of the logo */
+.cy-menu__brand-lockup {
+  align-items: center !important;
+  gap: 0 !important;
+}
+
+.cy-menu__brand-lockup > span {
+  display: none !important;
+}
+
+.cy-menu__brand-lockup .cy-menu__logo-mark {
+  width: 310px !important;
+  height: 84px !important;
+  flex: 0 0 310px !important;
+  background: none !important;
+  filter:
+    drop-shadow(0 0 14px rgba(0, 229, 255, 0.22))
+    drop-shadow(0 0 10px rgba(255, 215, 64, 0.09))
+    drop-shadow(0 0 12px rgba(139, 92, 246, 0.08)) !important;
+}
+
+.cy-menu__logo-wordmark svg {
+  width: 100% !important;
+  height: 100% !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  overflow: visible !important;
+}
+
+.cy-wordmark-frame {
+  fill: rgba(0, 229, 255, 0.035);
+  stroke: rgba(0, 229, 255, 0.38);
+  stroke-width: 2.2;
+  stroke-linejoin: round;
+}
+
+.cy-wordmark-chevron,
+.cy-wordmark-x,
+.cy-wordmark-circuit {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.cy-wordmark-chevron--gold {
+  stroke: url(#wordGold);
+  stroke-width: 7;
+}
+
+.cy-wordmark-chevron--cyan {
+  stroke: url(#wordCyan);
+  stroke-width: 6;
+}
+
+.cy-wordmark-x--a {
+  stroke: url(#wordViolet);
+  stroke-width: 4.6;
+}
+
+.cy-wordmark-x--b {
+  stroke: url(#wordGold);
+  stroke-width: 3.8;
+}
+
+.cy-wordmark-circuit {
+  stroke: rgba(0, 229, 255, 0.38);
+  stroke-width: 2;
+}
+
+.cy-wordmark-text {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 28px;
+  letter-spacing: 8px;
+  fill: url(#wordCyan);
+}
+
+.cy-menu__logo-wordmark circle {
+  fill: var(--yellow);
+}
+
+/* Old shield restored, slightly bigger, with cursor-follow aura shadow */
+.cy-menu__hero--home {
+  --cy-cursor-x: 0px;
+  --cy-cursor-y: 0px;
+  position: relative !important;
+  overflow: visible !important;
+}
+
+.cy-menu__hero-art {
+  width: 535px !important;
+  height: 322px !important;
+  left: 61.4% !important;
+  top: -24px !important;
+  transform: translateX(-40%) !important;
+  opacity: 0.98 !important;
+  position: absolute !important;
+  overflow: visible !important;
+  background-image: url("data:image/svg+xml,%0A%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20560%20340%22%3E%0A%20%20%3Cdefs%3E%0A%20%20%20%20%3CradialGradient%20id%3D%22mainGlow%22%20cx%3D%2250%25%22%20cy%3D%2258%25%22%20r%3D%2260%25%22%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%220%22%20stop-color%3D%22%2300e5ff%22%20stop-opacity%3D%22.72%22%2F%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%22.32%22%20stop-color%3D%22%2300e5ff%22%20stop-opacity%3D%22.23%22%2F%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%22.70%22%20stop-color%3D%22%2300e5ff%22%20stop-opacity%3D%22.06%22%2F%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%221%22%20stop-color%3D%22%2300e5ff%22%20stop-opacity%3D%220%22%2F%3E%0A%20%20%20%20%3C%2FradialGradient%3E%0A%20%20%20%20%3Cfilter%20id%3D%22glow%22%20x%3D%22-80%25%22%20y%3D%22-80%25%22%20width%3D%22260%25%22%20height%3D%22260%25%22%3E%0A%20%20%20%20%20%20%3CfeGaussianBlur%20stdDeviation%3D%225.2%22%20result%3D%22blur%22%2F%3E%0A%20%20%20%20%20%20%3CfeMerge%3E%3CfeMergeNode%20in%3D%22blur%22%2F%3E%3CfeMergeNode%20in%3D%22SourceGraphic%22%2F%3E%3C%2FfeMerge%3E%0A%20%20%20%20%3C%2Ffilter%3E%0A%20%20%3C%2Fdefs%3E%0A%0A%20%20%3Cellipse%20cx%3D%22280%22%20cy%3D%22272%22%20rx%3D%22150%22%20ry%3D%2239%22%20fill%3D%22rgba(0%2C229%2C255%2C.08)%22%20stroke%3D%22rgba(0%2C229%2C255%2C.42)%22%20stroke-width%3D%222%22%2F%3E%0A%20%20%3Cellipse%20cx%3D%22280%22%20cy%3D%22272%22%20rx%3D%22112%22%20ry%3D%2228%22%20fill%3D%22none%22%20stroke%3D%22rgba(0%2C229%2C255%2C.66)%22%20stroke-width%3D%222%22%2F%3E%0A%20%20%3Cellipse%20cx%3D%22280%22%20cy%3D%22272%22%20rx%3D%2266%22%20ry%3D%2216%22%20fill%3D%22none%22%20stroke%3D%22rgba(255%2C215%2C64%2C.36)%22%20stroke-width%3D%221.5%22%2F%3E%0A%20%20%3Cellipse%20cx%3D%22280%22%20cy%3D%22272%22%20rx%3D%2252%22%20ry%3D%2212%22%20fill%3D%22%2300e5ff%22%20opacity%3D%22.76%22%20filter%3D%22url(%23glow)%22%2F%3E%0A%0A%20%20%3Cpath%20d%3D%22M214%20119%20L280%20267%20L346%20119%22%20fill%3D%22rgba(0%2C229%2C255%2C.07)%22%20stroke%3D%22rgba(0%2C229%2C255%2C.20)%22%20stroke-width%3D%222%22%2F%3E%0A%20%20%3Cpath%20d%3D%22M235%20132%20L280%20267%20L325%20132%22%20fill%3D%22none%22%20stroke%3D%22rgba(0%2C229%2C255%2C.38)%22%20stroke-width%3D%221.6%22%2F%3E%0A%0A%20%20%3Cellipse%20cx%3D%22280%22%20cy%3D%22113%22%20rx%3D%22196%22%20ry%3D%2255%22%20fill%3D%22none%22%20stroke%3D%22%2300e5ff%22%20stroke-width%3D%224.5%22%20opacity%3D%22.92%22%20transform%3D%22rotate(-16%20280%20113)%22%2F%3E%0A%20%20%3Cellipse%20cx%3D%22280%22%20cy%3D%22113%22%20rx%3D%22184%22%20ry%3D%2249%22%20fill%3D%22none%22%20stroke%3D%22%23ffd740%22%20stroke-width%3D%224.5%22%20opacity%3D%22.84%22%20transform%3D%22rotate(17%20280%20113)%22%2F%3E%0A%20%20%3Cellipse%20cx%3D%22280%22%20cy%3D%22113%22%20rx%3D%22250%22%20ry%3D%2294%22%20fill%3D%22none%22%20stroke%3D%22rgba(0%2C229%2C255%2C.25)%22%20stroke-width%3D%222.2%22%20transform%3D%22rotate(-3%20280%20113)%22%2F%3E%0A%0A%20%20%3Ccircle%20cx%3D%22280%22%20cy%3D%22113%22%20r%3D%22116%22%20fill%3D%22url(%23mainGlow)%22%20opacity%3D%22.9%22%2F%3E%0A%20%20%3Ccircle%20cx%3D%22280%22%20cy%3D%22113%22%20r%3D%2267%22%20fill%3D%22rgba(0%2C229%2C255%2C.08)%22%20stroke%3D%22rgba(0%2C229%2C255%2C.38)%22%20stroke-width%3D%222%22%2F%3E%0A%20%20%3Ccircle%20cx%3D%22280%22%20cy%3D%22113%22%20r%3D%2248%22%20fill%3D%22rgba(0%2C229%2C255%2C.08)%22%20stroke%3D%22rgba(255%2C215%2C64%2C.26)%22%20stroke-width%3D%221.7%22%2F%3E%0A%0A%20%20%3Cg%20filter%3D%22url(%23glow)%22%3E%0A%20%20%20%20%3Cpath%20d%3D%22M280%2050%20L327%2069%20V107%20C327%20141%20306%20166%20280%20181%20C254%20166%20233%20141%20233%20107%20V69%20Z%22%0A%20%20%20%20%20%20fill%3D%22rgba(0%2C229%2C255%2C.13)%22%20stroke%3D%22%237dfcff%22%20stroke-width%3D%225.5%22%20stroke-linejoin%3D%22round%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M280%2063%20V169%20M233%20107%20H327%20M247%2078%20L280%20107%20L313%2078%20M247%20146%20L280%20107%20L313%20146%22%0A%20%20%20%20%20%20fill%3D%22none%22%20stroke%3D%22rgba(125%2C252%2C255%2C.64)%22%20stroke-width%3D%222.8%22%20stroke-linecap%3D%22round%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M264%20111%20H296%20V142%20H264%20Z%20M271%20111%20V99%20C271%2086%20289%2086%20289%2099%20V111%22%0A%20%20%20%20%20%20fill%3D%22none%22%20stroke%3D%22%23ffd740%22%20stroke-width%3D%226.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%0A%20%20%3C%2Fg%3E%0A%0A%20%20%3Ccircle%20cx%3D%22104%22%20cy%3D%2279%22%20r%3D%225%22%20fill%3D%22%2300e5ff%22%20filter%3D%22url(%23glow)%22%2F%3E%0A%20%20%3Ccircle%20cx%3D%22424%22%20cy%3D%2282%22%20r%3D%226%22%20fill%3D%22%23ffd740%22%20filter%3D%22url(%23glow)%22%2F%3E%0A%20%20%3Ccircle%20cx%3D%22145%22%20cy%3D%22149%22%20r%3D%225%22%20fill%3D%22%2300e5ff%22%20filter%3D%22url(%23glow)%22%2F%3E%0A%20%20%3Ccircle%20cx%3D%22389%22%20cy%3D%22152%22%20r%3D%225%22%20fill%3D%22%2300e5ff%22%20filter%3D%22url(%23glow)%22%2F%3E%0A%3C%2Fsvg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-position: center !important;
+  background-size: contain !important;
+  filter:
+    drop-shadow(0 0 22px rgba(0, 229, 255, 0.24))
+    drop-shadow(0 0 14px rgba(255, 215, 64, 0.07)) !important;
+  animation: none !important;
+}
+
+.cy-menu__hero-art > * {
+  display: none !important;
+}
+
+.cy-menu__hero-art::before {
+  content: "" !important;
+  display: block !important;
+  position: absolute !important;
+  left: 50% !important;
+  top: 47% !important;
+  width: 390px !important;
+  height: 230px !important;
+  transform:
+    translate(
+      calc(-50% + var(--cy-cursor-x, 0px)),
+      calc(-50% + var(--cy-cursor-y, 0px))
+    )
+    scale(1) !important;
+  border-radius: 999px !important;
+  background:
+    radial-gradient(circle at center,
+      rgba(0, 229, 255, 0.24) 0%,
+      rgba(0, 229, 255, 0.14) 26%,
+      rgba(255, 215, 64, 0.075) 42%,
+      rgba(139, 92, 246, 0.055) 58%,
+      transparent 76%) !important;
+  filter: blur(20px) !important;
+  opacity: 0.78 !important;
+  mix-blend-mode: screen !important;
+  pointer-events: none !important;
+  transition:
+    transform 140ms ease-out,
+    opacity 220ms ease-out !important;
+}
+
+.cy-menu__hero-art::after {
+  content: "" !important;
+  display: block !important;
+  position: absolute !important;
+  left: 50% !important;
+  top: 48% !important;
+  width: 470px !important;
+  height: 260px !important;
+  transform:
+    translate(
+      calc(-50% + (var(--cy-cursor-x, 0px) * -0.35)),
+      calc(-50% + (var(--cy-cursor-y, 0px) * -0.35))
+    ) !important;
+  border-radius: 999px !important;
+  background:
+    radial-gradient(circle at center,
+      transparent 0%,
+      rgba(0, 229, 255, 0.055) 34%,
+      rgba(255, 215, 64, 0.04) 52%,
+      transparent 74%) !important;
+  filter: blur(14px) !important;
+  opacity: 0.70 !important;
+  pointer-events: none !important;
+  transition: transform 180ms ease-out !important;
+}
+
+/* Keep player tab clean */
+.cy-menu__status span {
+  font-size: 9.8px !important;
+}
+
+.cy-menu__status strong {
+  font-size: 20px !important;
+}
+
+/* Profile page user panel should never look like raw HTML */
+.cy-menu__profile-layout--users {
+  display: grid !important;
+  grid-template-columns: minmax(430px, 760px) minmax(340px, 1fr) !important;
+  gap: 24px !important;
+  align-items: start !important;
+}
+
+.cy-menu__user-panel {
+  border: 1px solid rgba(0, 229, 255, 0.28) !important;
+  border-radius: 16px !important;
+  background:
+    linear-gradient(180deg, rgba(14, 48, 70, 0.64), rgba(4, 18, 31, 0.86)) !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,0.025),
+    0 16px 38px rgba(0,0,0,0.25) !important;
+  padding: 20px !important;
+}
+
+.cy-menu__user-panel .cy-menu__button,
+.cy-menu__user-panel button {
+  appearance: none !important;
+}
+
+.cy-menu__user-row {
+  border: 1px solid rgba(0, 229, 255, 0.24) !important;
+  border-radius: 12px !important;
+  background: rgba(0, 229, 255, 0.045) !important;
+  color: #edfaff !important;
+}
+
+.cy-menu__user-row--active {
+  border-color: rgba(255, 215, 64, 0.58) !important;
+  background: rgba(255, 215, 64, 0.06) !important;
+}
+
+/* Fundamentals: make it feel like a learning library, not plain notes */
+.cy-menu__fundamentals-frame {
+  padding: 22px !important;
+  border-radius: 20px !important;
+  background:
+    radial-gradient(circle at 18% 12%, rgba(0, 229, 255, 0.09), transparent 34%),
+    linear-gradient(180deg, rgba(11, 43, 63, 0.62), rgba(3, 16, 28, 0.86)) !important;
+}
+
+.cy-menu__fundamentals-hero {
+  position: relative !important;
+  overflow: hidden !important;
+  padding: 26px 32px !important;
+  margin-bottom: 18px !important;
+  border-radius: 18px !important;
+  background:
+    linear-gradient(90deg, rgba(17, 55, 79, 0.84), rgba(8, 31, 50, 0.72)),
+    radial-gradient(circle at 82% 40%, rgba(0, 229, 255, 0.13), transparent 38%) !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,0.03),
+    0 14px 34px rgba(0,0,0,0.22) !important;
+}
+
+.cy-menu__fundamentals-hero::after {
+  content: "learning path";
+  position: absolute;
+  right: 26px;
+  top: 24px;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--yellow);
+  opacity: 0.82;
+}
+
+.cy-menu__fundamentals-hero h2 {
+  max-width: 760px !important;
+  font-size: 30px !important;
+  line-height: 1.16 !important;
+  letter-spacing: -0.4px !important;
+}
+
+.cy-menu__fundamentals-hero p {
+  max-width: 860px !important;
+  font-size: 16.5px !important;
+  line-height: 1.62 !important;
+  color: rgba(226, 244, 255, 0.90) !important;
+}
+
+.cy-menu__accordion {
+  display: grid !important;
+  gap: 12px !important;
+}
+
+.cy-menu__accordion-item {
+  position: relative !important;
+  overflow: hidden !important;
+  border-radius: 16px !important;
+  border: 1px solid rgba(0, 229, 255, 0.22) !important;
+  background:
+    linear-gradient(180deg, rgba(13, 46, 68, 0.78), rgba(5, 20, 34, 0.82)) !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,0.025),
+    0 10px 26px rgba(0,0,0,0.18) !important;
+}
+
+.cy-menu__accordion-item::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 4px;
+  background: linear-gradient(180deg, var(--cyan), rgba(255,215,64,.70));
+  opacity: 0.75;
+}
+
+.cy-menu__accordion-head {
+  min-height: 72px !important;
+  padding: 18px 24px 18px 28px !important;
+  background:
+    linear-gradient(90deg, rgba(0, 229, 255, 0.045), transparent 72%) !important;
+}
+
+.cy-menu__accordion-head strong {
+  font-size: 21px !important;
+  letter-spacing: 0 !important;
+}
+
+.cy-menu__accordion-head span {
+  min-width: 150px !important;
+  font-size: 9.5px !important;
+  letter-spacing: 1.6px !important;
+  color: var(--cyan) !important;
+}
+
+.cy-menu__accordion-body {
+  padding: 22px 32px 26px !important;
+  background:
+    linear-gradient(180deg, rgba(10, 34, 53, 0.70), rgba(4, 17, 29, 0.68)) !important;
+  border-top: 1px solid rgba(0, 229, 255, 0.16) !important;
+}
+
+.cy-menu__accordion-body p {
+  font-size: 16.5px !important;
+  line-height: 1.62 !important;
+  color: #edfaff !important;
+  margin-bottom: 12px !important;
+}
+
+.cy-menu__accordion-body ul {
+  display: grid !important;
+  gap: 7px !important;
+  margin-top: 10px !important;
+}
+
+.cy-menu__accordion-body li {
+  font-size: 15.8px !important;
+  line-height: 1.65 !important;
+  color: rgba(224, 244, 255, 0.91) !important;
+}
+
+.cy-menu__accordion-body li::marker {
+  color: var(--yellow);
+}
+
+@media (max-width: 1180px) {
+  .cy-menu__hero-art {
+    opacity: 0.58 !important;
+  }
+
+  .cy-menu__profile-layout--users {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+@media (max-width: 860px) {
+  .cy-menu__hero-art {
+    display: none !important;
+  }
+
+  .cy-menu__brand-lockup .cy-menu__logo-mark {
+    width: 230px !important;
+    flex-basis: 230px !important;
+  }
+}
+
+/* END CYBRAXIS WORDMARK CURSOR AURA POLISH */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* CYBRAXIS FINAL CLEAN AURA AND FUNDAMENTALS */
+
+/* Absolutely remove every failed egg/electron layer. */
+.cy-menu__shield-electrons-final,
+.cy-menu__shield-live-aura-v2,
+.cy-menu__electron,
+.cy-electron-final,
+.cy-menu__shield-electrons-final *,
+.cy-menu__shield-live-aura-v2 *,
+.cy-menu__electron *,
+.cy-electron-final * {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  animation: none !important;
+  content: none !important;
+}
+
+/* Restore approved shield position/size exactly. */
+.cy-menu__hero-art {
+  width: 585px !important;
+  height: 350px !important;
+  left: 61.6% !important;
+  top: 4px !important;
+  transform: translateX(-40%) !important;
+  position: absolute !important;
+  opacity: 0.98 !important;
+  overflow: visible !important;
+  animation: none !important;
+  filter:
+    drop-shadow(0 0 24px rgba(0, 229, 255, 0.25))
+    drop-shadow(0 0 14px rgba(255, 215, 64, 0.08)) !important;
+}
+
+.cy-menu__hero-art > * {
+  display: none !important;
+}
+
+/* Strong cursor-follow glow behind the shield. No egg. No orbit objects. */
+.cy-menu__hero--final-clean-glow,
+.cy-menu__hero--home {
+  overflow: visible !important;
+}
+
+.cy-menu__hero-art--final-clean-glow {
+  --cy-final-glow-x: 0px;
+  --cy-final-glow-y: 0px;
+  --cy-final-glow-opacity: 0.95;
+  z-index: 3 !important;
+}
+
+.cy-menu__hero-art--final-clean-glow::before {
+  content: "" !important;
+  display: block !important;
+  position: absolute !important;
+  left: 50% !important;
+  top: 51% !important;
+  width: 62% !important;
+  height: 46% !important;
+  transform:
+    translate(
+      calc(-50% + var(--cy-final-glow-x, 0px)),
+      calc(-50% + var(--cy-final-glow-y, 0px))
+    ) !important;
+  border-radius: 28% !important;
+  background:
+    radial-gradient(circle at 50% 50%,
+      rgba(0, 245, 255, 0.55) 0%,
+      rgba(0, 229, 255, 0.30) 26%,
+      rgba(255, 215, 64, 0.15) 46%,
+      transparent 76%) !important;
+  filter: blur(18px) !important;
+  opacity: var(--cy-final-glow-opacity) !important;
+  mix-blend-mode: screen !important;
+  pointer-events: none !important;
+  z-index: -1 !important;
+  transition:
+    transform 110ms ease-out,
+    opacity 150ms ease-out !important;
+}
+
+.cy-menu__hero-art--final-clean-glow::after {
+  content: "" !important;
+  display: block !important;
+  position: absolute !important;
+  left: 50% !important;
+  top: 51% !important;
+  width: 40% !important;
+  height: 30% !important;
+  transform:
+    translate(
+      calc(-50% + (var(--cy-final-glow-x, 0px) * -0.30)),
+      calc(-50% + (var(--cy-final-glow-y, 0px) * -0.30))
+    ) !important;
+  border-radius: 28% !important;
+  background:
+    radial-gradient(circle at 50% 50%,
+      rgba(0, 229, 255, 0.26) 0%,
+      rgba(0, 229, 255, 0.12) 46%,
+      transparent 74%) !important;
+  filter: blur(10px) !important;
+  opacity: 0.92 !important;
+  mix-blend-mode: screen !important;
+  pointer-events: none !important;
+  z-index: -1 !important;
+  transition: transform 150ms ease-out !important;
+}
+
+/* Restore the good fundamentals figure. */
+.cy-menu__fundamentals-hero::before {
+  content: "" !important;
+  display: block !important;
+  position: absolute !important;
+  right: 38px !important;
+  top: 50% !important;
+  width: 210px !important;
+  height: 145px !important;
+  transform: translateY(-50%) !important;
+  background-image: url("data:image/svg+xml,%0A%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20260%20170%22%3E%0A%20%20%3Cdefs%3E%0A%20%20%20%20%3ClinearGradient%20id%3D%22bookCyan%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%221%22%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%220%22%20stop-color%3D%22%2300e5ff%22%2F%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%221%22%20stop-color%3D%22%237ffcff%22%2F%3E%0A%20%20%20%20%3C%2FlinearGradient%3E%0A%20%20%20%20%3ClinearGradient%20id%3D%22bookGold%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%221%22%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%220%22%20stop-color%3D%22%23ffd740%22%2F%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23fff2a0%22%2F%3E%0A%20%20%20%20%3C%2FlinearGradient%3E%0A%20%20%20%20%3ClinearGradient%20id%3D%22bookViolet%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%221%22%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%220%22%20stop-color%3D%22%238b5cf6%22%2F%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%221%22%20stop-color%3D%22%2300e5ff%22%2F%3E%0A%20%20%20%20%3C%2FlinearGradient%3E%0A%20%20%20%20%3Cfilter%20id%3D%22bookGlow%22%20x%3D%22-70%25%22%20y%3D%22-70%25%22%20width%3D%22240%25%22%20height%3D%22240%25%22%3E%0A%20%20%20%20%20%20%3CfeGaussianBlur%20stdDeviation%3D%224%22%20result%3D%22blur%22%2F%3E%0A%20%20%20%20%20%20%3CfeMerge%3E%0A%20%20%20%20%20%20%20%20%3CfeMergeNode%20in%3D%22blur%22%2F%3E%0A%20%20%20%20%20%20%20%20%3CfeMergeNode%20in%3D%22SourceGraphic%22%2F%3E%0A%20%20%20%20%20%20%3C%2FfeMerge%3E%0A%20%20%20%20%3C%2Ffilter%3E%0A%20%20%3C%2Fdefs%3E%0A%0A%20%20%3Cg%20filter%3D%22url(%23bookGlow)%22%3E%0A%20%20%20%20%3Cellipse%20cx%3D%22130%22%20cy%3D%22140%22%20rx%3D%2270%22%20ry%3D%2216%22%20fill%3D%22%2300e5ff%22%20opacity%3D%22.42%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M42%2047%20C70%2034%20101%2039%20130%2063%20C159%2039%20190%2034%20218%2047%20V111%20C184%2099%20156%20106%20130%20132%20C104%20106%2076%2099%2042%20111%20Z%22%0A%20%20%20%20%20%20fill%3D%22rgba(0%2C229%2C255%2C.10)%22%20stroke%3D%22url(%23bookCyan)%22%20stroke-width%3D%226%22%20stroke-linejoin%3D%22round%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M130%2063%20V132%22%20stroke%3D%22%238ffcff%22%20stroke-width%3D%224%22%20stroke-linecap%3D%22round%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M58%2064%20H104%20M58%2079%20H100%20M156%2064%20H202%20M160%2079%20H198%22%0A%20%20%20%20%20%20stroke%3D%22rgba(225%2C250%2C255%2C.62)%22%20stroke-width%3D%222.5%22%20stroke-linecap%3D%22round%22%2F%3E%0A%0A%20%20%20%20%3Ccircle%20cx%3D%2242%22%20cy%3D%2247%22%20r%3D%228%22%20fill%3D%22%2300e5ff%22%2F%3E%0A%20%20%20%20%3Ccircle%20cx%3D%22218%22%20cy%3D%2247%22%20r%3D%228%22%20fill%3D%22%23ffd740%22%2F%3E%0A%20%20%20%20%3Ccircle%20cx%3D%22130%22%20cy%3D%2223%22%20r%3D%227%22%20fill%3D%22%238b5cf6%22%2F%3E%0A%20%20%20%20%3Ccircle%20cx%3D%22130%22%20cy%3D%22140%22%20r%3D%226%22%20fill%3D%22%2300e5ff%22%2F%3E%0A%0A%20%20%20%20%3Cpath%20d%3D%22M42%2047%20C72%2020%20102%2018%20130%2023%20C158%2018%20188%2020%20218%2047%22%0A%20%20%20%20%20%20fill%3D%22none%22%20stroke%3D%22url(%23bookCyan)%22%20stroke-width%3D%222.2%22%20opacity%3D%22.62%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M42%2047%20C70%2092%2096%20118%20130%20140%20C164%20118%20190%2092%20218%2047%22%0A%20%20%20%20%20%20fill%3D%22none%22%20stroke%3D%22url(%23bookGold)%22%20stroke-width%3D%222.2%22%20opacity%3D%22.50%22%2F%3E%0A%0A%20%20%20%20%3Cpath%20d%3D%22M104%2019%20L130%205%20L156%2019%20V48%20C156%2066%20145%2080%20130%2090%20C115%2080%20104%2066%20104%2048%20Z%22%0A%20%20%20%20%20%20fill%3D%22rgba(0%2C229%2C255%2C.12)%22%20stroke%3D%22url(%23bookViolet)%22%20stroke-width%3D%223.5%22%20stroke-linejoin%3D%22round%22%2F%3E%0A%20%20%3C%2Fg%3E%0A%3C%2Fsvg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-position: center !important;
+  background-size: contain !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  opacity: 0.96 !important;
+}
+
+.cy-menu__fundamentals-hero::after {
+  display: none !important;
+  content: none !important;
+}
+
+/* Force one scrollbar on fundamentals page. */
+.cy-menu__single-scroll-shell-final {
+  height: calc(100vh - 24px) !important;
+  max-height: calc(100vh - 24px) !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  scrollbar-width: thin !important;
+  scrollbar-color: rgba(0, 229, 255, 0.52) transparent !important;
+}
+
+.cy-menu__single-scroll-shell-final::-webkit-scrollbar {
+  width: 7px !important;
+}
+
+.cy-menu__single-scroll-shell-final::-webkit-scrollbar-track {
+  background: transparent !important;
+}
+
+.cy-menu__single-scroll-shell-final::-webkit-scrollbar-thumb {
+  background: rgba(0, 229, 255, 0.48) !important;
+  border-radius: 999px !important;
+}
+
+.cy-menu__kill-nested-scroll-final,
+.cy-menu__single-scroll-shell-final .cy-menu__content,
+.cy-menu__single-scroll-shell-final .cy-menu__body,
+.cy-menu__single-scroll-shell-final .cy-menu__page,
+.cy-menu__single-scroll-shell-final .cy-menu__page-body,
+.cy-menu__single-scroll-shell-final .cy-menu__fundamentals-frame,
+.cy-menu__single-scroll-shell-final .cy-menu__fundamentals-body,
+.cy-menu__single-scroll-shell-final .cy-menu__fundamentals-scroll,
+.cy-menu__single-scroll-shell-final .cy-menu__accordion,
+.cy-menu__single-scroll-shell-final .cy-menu__accordion-body,
+.cy-menu__single-scroll-shell-final .cy-menu__library-scroll,
+.cy-menu__single-scroll-shell-final .cy-menu__revision-scroll {
+  height: auto !important;
+  max-height: none !important;
+  overflow: visible !important;
+}
+
+.cy-menu__single-scroll-shell-final * {
+  scrollbar-width: none !important;
+}
+
+.cy-menu__single-scroll-shell-final *::-webkit-scrollbar {
+  width: 0 !important;
+  height: 0 !important;
+}
+
+/* Restore the one visible scrollbar on the shell itself. */
+.cy-menu__single-scroll-shell-final {
+  scrollbar-width: thin !important;
+}
+
+/* SOC/RISK/etc: soft colored shadow behind word, not sharp circles. */
+.cy-menu__accordion-item:nth-child(1) .cy-menu__accordion-head::before { content: "SOC" !important; }
+.cy-menu__accordion-item:nth-child(2) .cy-menu__accordion-head::before { content: "RISK" !important; }
+.cy-menu__accordion-item:nth-child(3) .cy-menu__accordion-head::before { content: "CTRL" !important; }
+.cy-menu__accordion-item:nth-child(4) .cy-menu__accordion-head::before { content: "ID" !important; }
+.cy-menu__accordion-item:nth-child(5) .cy-menu__accordion-head::before { content: "LOG" !important; }
+.cy-menu__accordion-item:nth-child(6) .cy-menu__accordion-head::before { content: "MAP" !important; }
+
+.cy-menu__accordion-head::before {
+  display: inline-grid !important;
+  place-items: center !important;
+  position: absolute !important;
+  left: 30px !important;
+  top: 50% !important;
+  width: auto !important;
+  height: auto !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  padding: 6px 12px !important;
+  transform: translateY(-50%) !important;
+  border: 0 !important;
+  border-radius: 999px !important;
+  background:
+    radial-gradient(circle at 36% 38%,
+      rgba(255, 255, 255, 0.22),
+      rgba(0, 229, 255, 0.22) 35%,
+      rgba(255, 215, 64, 0.13) 62%,
+      transparent 84%) !important;
+  box-shadow:
+    0 0 18px rgba(0, 229, 255, 0.20),
+    0 0 28px rgba(255, 215, 64, 0.10) !important;
+  color: rgba(236, 252, 255, 0.96) !important;
+  font-family: "Share Tech Mono", monospace !important;
+  font-size: 10px !important;
+  line-height: 1 !important;
+  letter-spacing: 0.14em !important;
+}
+
+.cy-menu__accordion-head {
+  padding-left: 118px !important;
+}
+
+/* User dropdown names smaller. */
+.cy-menu__user-option strong,
+.cy-menu__user-row strong,
+.cy-menu__user-card strong,
+.cy-menu__user-list button strong {
+  font-size: 13px !important;
+  line-height: 1.22 !important;
+}
+
+.cy-menu__user-switcher button,
+.cy-menu__user-option,
+.cy-menu__user-row,
+.cy-menu__user-card,
+.cy-menu__user-list button {
+  font-size: 12px !important;
+  line-height: 1.25 !important;
+}
+
+/* END CYBRAXIS FINAL CLEAN AURA AND FUNDAMENTALS */
+
+
+/* CYBRAXIS FUNDAMENTALS LABEL OVERLAP ONLY FIX */
+
+/*
+  Fix only the issue where SOC/RISK/CTRL soft labels appear inside
+  the expanded accordion content and overlap the bullet text.
+  Header labels stay visible.
+*/
+
+/* Hide any old injected topic badge inside expanded bodies. */
+.cy-menu__accordion-body .cy-menu__soft-topic-word,
+.cy-menu__accordion-body .cy-menu__fundamental-topic-mark,
+.cy-menu__accordion-body .cy-menu__fundamental-chip,
+.cy-menu__accordion-body .cy-menu__topic-orb,
+.cy-menu__accordion-body .cy-menu__library-orb,
+.cy-menu__accordion-body .cy-menu__revision-orb,
+.cy-menu__accordion-body .cy-menu__knowledge-orb,
+.cy-menu__accordion-body .cy-menu__fundamentals-orb,
+.cy-menu__accordion-body .cy-menu__topic-symbol {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* Remove possible pseudo-labels from the expanded body only. */
+.cy-menu__accordion-body::before,
+.cy-menu__accordion-body::after,
+.cy-menu__accordion-body li::before,
+.cy-menu__accordion-body li::after {
+  content: none !important;
+  display: none !important;
+}
+
+/* Restore clean bullets after removing old pseudo-label interference. */
+.cy-menu__accordion-body ul {
+  list-style: none !important;
+  padding-left: 0 !important;
+  margin-left: 0 !important;
+}
+
+.cy-menu__accordion-body li {
+  position: relative !important;
+  padding-left: 28px !important;
+}
+
+.cy-menu__accordion-body li::marker {
+  content: "" !important;
+}
+
+.cy-menu__accordion-body li > * {
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+.cy-menu__accordion-body li {
+  background-image:
+    radial-gradient(circle at 8px 0.82em, rgba(255, 215, 64, 0.95) 0 3px, transparent 4px) !important;
+  background-repeat: no-repeat !important;
+}
+
+/* Keep the soft topic word only in the accordion header. */
+.cy-menu__accordion-head > span:first-child {
+  display: inline-flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* END CYBRAXIS FUNDAMENTALS LABEL OVERLAP ONLY FIX */
+
+
+/* CYBRAXIS REMOVE FUNDAMENTALS TOPIC BADGES ONLY */
+
+/* Remove the broken SOC/RISK/CTRL floating badge words completely. */
+.cy-menu__remove-topic-badge-final,
+.cy-menu__accordion-body .cy-menu__soft-topic-word,
+.cy-menu__accordion-body .cy-menu__fundamental-topic-mark,
+.cy-menu__accordion-body .cy-menu__fundamental-chip,
+.cy-menu__accordion-body .cy-menu__topic-orb,
+.cy-menu__accordion-body .cy-menu__library-orb,
+.cy-menu__accordion-body .cy-menu__revision-orb,
+.cy-menu__accordion-body .cy-menu__knowledge-orb,
+.cy-menu__accordion-body .cy-menu__fundamentals-orb,
+.cy-menu__accordion-body .cy-menu__topic-symbol {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  width: 0 !important;
+  height: 0 !important;
+  max-width: 0 !important;
+  max-height: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  pointer-events: none !important;
+}
+
+/* Kill any remaining pseudo-badge inside expanded text only. */
+.cy-menu__accordion-body *,
+.cy-menu__accordion-body li,
+.cy-menu__accordion-body p {
+  background-position: initial !important;
+}
+
+.cy-menu__accordion-body *::before,
+.cy-menu__accordion-body *::after {
+  content: none !important;
+  display: none !important;
+}
+
+/* Restore clean readable bullet spacing. */
+.cy-menu__accordion-body ul {
+  list-style: none !important;
+  padding-left: 0 !important;
+  margin-left: 0 !important;
+}
+
+.cy-menu__accordion-body li {
+  position: relative !important;
+  padding-left: 30px !important;
+  margin: 12px 0 !important;
+  background: none !important;
+}
+
+.cy-menu__accordion-body li::marker {
+  content: "" !important;
+}
+
+.cy-menu__accordion-body li {
+  background-image:
+    radial-gradient(circle at 8px 0.88em, rgba(255, 215, 64, 0.96) 0 3px, transparent 4px) !important;
+  background-repeat: no-repeat !important;
+}
+
+/* Keep the real topic category labels, make them slightly clearer. */
+.cy-menu__accordion-head > span:first-child,
+.cy-menu__accordion-head span:first-child {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  background: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+  color: #00e5ff !important;
+  font-size: 11px !important;
+  letter-spacing: 0.22em !important;
+  font-weight: 800 !important;
+  text-transform: uppercase !important;
+  white-space: nowrap !important;
+}
+
+/* Remove old header pseudo label too; only CORE BEHAVIOR / THEORY BASE etc remain. */
+.cy-menu__accordion-head::before {
+  content: none !important;
+  display: none !important;
+}
+
+/* Make SHOW/HIDE look like an actual control, without changing layout. */
+.cy-menu__accordion-head > button,
+.cy-menu__accordion-head button,
+.cy-menu__accordion-head [role="button"],
+.cy-menu__accordion-head > span:last-child,
+.cy-menu__accordion-head span:last-child {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-width: 66px !important;
+  height: 30px !important;
+  padding: 0 14px !important;
+  border: 1px solid rgba(255, 215, 64, 0.42) !important;
+  border-radius: 999px !important;
+  background: rgba(255, 215, 64, 0.06) !important;
+  color: #ffd740 !important;
+  font-size: 10px !important;
+  letter-spacing: 0.18em !important;
+  font-weight: 800 !important;
+  text-transform: uppercase !important;
+  box-shadow:
+    0 0 14px rgba(255, 215, 64, 0.10),
+    inset 0 0 12px rgba(255, 215, 64, 0.04) !important;
+}
+
+/* END CYBRAXIS REMOVE FUNDAMENTALS TOPIC BADGES ONLY */
+
+
+/* CYBRAXIS FINAL ACCORDION LABEL BUTTON FIX */
+
+/* Move only the real category labels left to fill the empty space. */
+.cy-menu__accordion-category-final {
+  position: relative !important;
+  left: -82px !important;
+  transform: none !important;
+  color: #00e5ff !important;
+  font-size: 11.5px !important;
+  letter-spacing: 0.24em !important;
+  font-weight: 800 !important;
+  text-transform: uppercase !important;
+  white-space: nowrap !important;
+  background: none !important;
+  box-shadow: none !important;
+  border: 0 !important;
+  padding: 0 !important;
+}
+
+/* Make SHOW/HIDE visibly behave like a button. */
+.cy-menu__accordion-toggle-button-final {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-width: 72px !important;
+  height: 30px !important;
+  padding: 0 14px !important;
+  border: 1px solid rgba(255, 215, 64, 0.48) !important;
+  border-radius: 999px !important;
+  background:
+    linear-gradient(180deg, rgba(255, 215, 64, 0.10), rgba(255, 215, 64, 0.035)) !important;
+  color: #ffd740 !important;
+  font-size: 10px !important;
+  line-height: 1 !important;
+  letter-spacing: 0.17em !important;
+  font-weight: 900 !important;
+  text-transform: uppercase !important;
+  box-shadow:
+    0 0 14px rgba(255, 215, 64, 0.14),
+    inset 0 0 12px rgba(255, 215, 64, 0.045) !important;
+}
+
+/* Keep the button aligned at the right edge of the accordion header. */
+.cy-menu__accordion-head .cy-menu__accordion-toggle-button-final {
+  justify-self: end !important;
+}
+
+/* Do not allow old pseudo badges to return. */
+.cy-menu__accordion-head::before {
+  content: none !important;
+  display: none !important;
+}
+
+/* END CYBRAXIS FINAL ACCORDION LABEL BUTTON FIX */
+
+
+/* CYBRAXIS FORCE SHOW HIDE BUTTON ONLY */
+
+.cy-menu__forced-show-hide-button {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-width: 78px !important;
+  height: 32px !important;
+  padding: 0 16px !important;
+  border: 1px solid rgba(255, 215, 64, 0.62) !important;
+  border-radius: 999px !important;
+  background: linear-gradient(180deg, rgba(255, 215, 64, 0.16), rgba(255, 215, 64, 0.045)) !important;
+  color: #ffd740 !important;
+  font-size: 10px !important;
+  line-height: 1 !important;
+  letter-spacing: 0.18em !important;
+  font-weight: 900 !important;
+  text-transform: uppercase !important;
+  box-shadow:
+    0 0 16px rgba(255, 215, 64, 0.18),
+    inset 0 0 14px rgba(255, 215, 64, 0.055) !important;
+  cursor: pointer !important;
+  white-space: nowrap !important;
+}
+
+/* END CYBRAXIS FORCE SHOW HIDE BUTTON ONLY */
+
+
+/* CYBRAXIS FIX FUNDAMENTALS FIRST OPEN SCROLL AND LABEL */
+
+/* Prevent browser/body/root scrollbars while fundamentals page is active. */
+html.cy-menu__fundamentals-document-lock,
+body.cy-menu__fundamentals-document-lock,
+#root.cy-menu__fundamentals-document-lock {
+  height: 100% !important;
+  max-height: 100% !important;
+  overflow: hidden !important;
+  overflow-y: hidden !important;
+  overflow-x: hidden !important;
+}
+
+/* The fundamentals shell is the only visible scroll lane. */
+.cy-menu__fundamentals-single-scroll-locked {
+  height: calc(100vh - 24px) !important;
+  max-height: calc(100vh - 24px) !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  scrollbar-width: thin !important;
+  scrollbar-color: rgba(0, 229, 255, 0.52) transparent !important;
+}
+
+.cy-menu__fundamentals-single-scroll-locked::-webkit-scrollbar {
+  width: 7px !important;
+}
+
+.cy-menu__fundamentals-single-scroll-locked::-webkit-scrollbar-track {
+  background: transparent !important;
+}
+
+.cy-menu__fundamentals-single-scroll-locked::-webkit-scrollbar-thumb {
+  background: rgba(0, 229, 255, 0.48) !important;
+  border-radius: 999px !important;
+}
+
+/* Kill nested scrollbars inside the fundamentals page immediately, including first open. */
+.cy-menu__fundamentals-nested-scroll-removed,
+.cy-menu__fundamentals-single-scroll-locked .cy-menu__content,
+.cy-menu__fundamentals-single-scroll-locked .cy-menu__body,
+.cy-menu__fundamentals-single-scroll-locked .cy-menu__page,
+.cy-menu__fundamentals-single-scroll-locked .cy-menu__page-body,
+.cy-menu__fundamentals-single-scroll-locked .cy-menu__fundamentals-frame,
+.cy-menu__fundamentals-single-scroll-locked .cy-menu__fundamentals-body,
+.cy-menu__fundamentals-single-scroll-locked .cy-menu__fundamentals-scroll,
+.cy-menu__fundamentals-single-scroll-locked .cy-menu__accordion,
+.cy-menu__fundamentals-single-scroll-locked .cy-menu__accordion-body,
+.cy-menu__fundamentals-single-scroll-locked .cy-menu__library-scroll,
+.cy-menu__fundamentals-single-scroll-locked .cy-menu__revision-scroll {
+  height: auto !important;
+  max-height: none !important;
+  overflow: visible !important;
+  overflow-y: visible !important;
+  overflow-x: visible !important;
+}
+
+.cy-menu__fundamentals-single-scroll-locked * {
+  scrollbar-width: none !important;
+}
+
+.cy-menu__fundamentals-single-scroll-locked *::-webkit-scrollbar {
+  width: 0 !important;
+  height: 0 !important;
+  display: none !important;
+}
+
+/* Re-enable the one outer scrollbar after descendant scrollbar hiding. */
+.cy-menu__fundamentals-single-scroll-locked {
+  scrollbar-width: thin !important;
+}
+
+/* Align all real category labels, including SCENARIO LOGIC, to the same left position. */
+.cy-menu__accordion-category-left-locked {
+  position: relative !important;
+  left: -82px !important;
+  transform: none !important;
+  color: #00e5ff !important;
+  font-size: 11.5px !important;
+  letter-spacing: 0.24em !important;
+  font-weight: 800 !important;
+  text-transform: uppercase !important;
+  white-space: nowrap !important;
+  background: none !important;
+  box-shadow: none !important;
+  border: 0 !important;
+  padding: 0 !important;
+}
+
+/* Keep SHOW/HIDE as the already-working button style. */
+.cy-menu__forced-show-hide-button {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-width: 78px !important;
+  height: 32px !important;
+  padding: 0 16px !important;
+  border: 1px solid rgba(255, 215, 64, 0.62) !important;
+  border-radius: 999px !important;
+  background: linear-gradient(180deg, rgba(255, 215, 64, 0.16), rgba(255, 215, 64, 0.045)) !important;
+  color: #ffd740 !important;
+  font-size: 10px !important;
+  line-height: 1 !important;
+  letter-spacing: 0.18em !important;
+  font-weight: 900 !important;
+  text-transform: uppercase !important;
+  box-shadow:
+    0 0 16px rgba(255, 215, 64, 0.18),
+    inset 0 0 14px rgba(255, 215, 64, 0.055) !important;
+  cursor: pointer !important;
+  white-space: nowrap !important;
+}
+
+/* END CYBRAXIS FIX FUNDAMENTALS FIRST OPEN SCROLL AND LABEL */
+
+
+/* CYBRAXIS FORCE SAFE MAIN MENU CHANGES */
+
+/* Home title. This is forced by class + inline style. */
+.cy-force-home-title-safe {
+  font-size: 52px !important;
+  line-height: 1.02 !important;
+  letter-spacing: -0.045em !important;
+  max-width: 860px !important;
+}
+
+/* Shield: preserve original approved placement; only controlled scale. */
+.cy-force-shield-safe,
+.cy-menu__hero-art {
+  width: clamp(585px, 36vw, 690px) !important;
+  height: clamp(350px, 21.5vw, 414px) !important;
+  left: 61.6% !important;
+  top: 4px !important;
+  right: auto !important;
+  transform: translateX(-40%) !important;
+  transform-origin: center top !important;
+}
+
+/* User tab: no fixed position. Only safe stacking and tiny wide-screen scale. */
+.cy-force-current-player-safe {
+  z-index: 8 !important;
+  transform-origin: center center !important;
+}
+
+/* Dropdown: no forced fixed layout. Only place above cards visually. */
+.cy-force-user-dropdown-safe {
+  z-index: 9999 !important;
+  isolation: isolate !important;
+}
+
+/* Clean Profile delete button. */
+.cy-force-delete-user-safe {
+  width: 100% !important;
+  min-height: 44px !important;
+  margin: 0 0 12px 0 !important;
+  padding: 0 18px !important;
+  border: 1px solid rgba(255, 64, 96, 0.55) !important;
+  border-radius: 12px !important;
+  background:
+    linear-gradient(135deg, rgba(255, 64, 96, 0.105), rgba(4, 28, 45, 0.92)) !important;
+  color: #ff7a8f !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.16em !important;
+  font-size: 10px !important;
+  font-weight: 900 !important;
+  cursor: pointer !important;
+  box-shadow:
+    inset 0 0 16px rgba(255, 64, 96, 0.035),
+    0 0 10px rgba(255, 64, 96, 0.07) !important;
+}
+
+.cy-force-delete-user-safe:hover:not(:disabled) {
+  border-color: rgba(255, 64, 96, 0.86) !important;
+  background:
+    linear-gradient(135deg, rgba(255, 64, 96, 0.16), rgba(4, 28, 45, 0.95)) !important;
+}
+
+.cy-force-delete-user-safe:disabled {
+  opacity: 0.42 !important;
+  cursor: not-allowed !important;
+}
+
+/* Profile page: remove duplicate visible scrollbars. */
+.cy-force-profile-scroll-root-safe {
+  height: calc(100vh - 24px) !important;
+  max-height: calc(100vh - 24px) !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+}
+
+.cy-force-profile-no-inner-scroll-safe {
+  height: auto !important;
+  max-height: none !important;
+  overflow: visible !important;
+  overflow-y: visible !important;
+  overflow-x: visible !important;
+}
+
+/* Wide viewport / browser zoom-out compensation. Title stays the same size. */
+@media (min-width: 1800px) {
+  .cy-force-home-title-safe {
+    font-size: 52px !important;
+    max-width: 860px !important;
+  }
+
+  .cy-force-shield-safe,
+  .cy-menu__hero-art {
+    width: 650px !important;
+    height: 390px !important;
+    left: 61.6% !important;
+    top: 4px !important;
+    transform: translateX(-40%) !important;
+  }
+
+  .cy-force-current-player-safe {
+    transform: scale(1.04) !important;
+  }
+}
+
+@media (min-width: 2200px) {
+  .cy-force-home-title-safe {
+    font-size: 52px !important;
+    max-width: 860px !important;
+  }
+
+  .cy-force-shield-safe,
+  .cy-menu__hero-art {
+    width: 710px !important;
+    height: 425px !important;
+    left: 61.6% !important;
+    top: 4px !important;
+    transform: translateX(-40%) !important;
+  }
+
+  .cy-force-current-player-safe {
+    transform: scale(1.08) !important;
+  }
+}
+
+/* END CYBRAXIS FORCE SAFE MAIN MENU CHANGES */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* CYBRAXIS ROBUST SHIELD HOVER GLOW ONLY */
+
+/*
+  Robust cursor-triggered shield glow:
+  - soft default glow
+  - stronger hover glow
+  - continues working after dropdown/user-list open-close
+  - inner glow reacts first
+  - outer glow follows with slight delay
+  - no title, layout, user tab, dropdown, profile, delete, card, shield size, or shield position changes
+*/
+.cy-menu__hero-art,
+.cy-force-shield-safe,
+.cy-shield-robust-hover-glow {
+  isolation: isolate !important;
+  overflow: visible !important;
+}
+
+/* Inner/core glow: fast response. */
+.cy-menu__hero-art::after,
+.cy-force-shield-safe::after,
+.cy-shield-robust-hover-glow::after {
+  content: "" !important;
+  position: absolute !important;
+  left: 50% !important;
+  top: 47% !important;
+  width: 365px !important;
+  height: 305px !important;
+  transform:
+    translate(-50%, -50%)
+    scale(var(--cy-core-glow-scale, 1)) !important;
+  transform-origin: center center !important;
+
+  pointer-events: none !important;
+  z-index: 2 !important;
+  opacity: var(--cy-core-main-opacity, 0.50) !important;
+  border-radius: 999px !important;
+
+  background:
+    radial-gradient(
+      ellipse at 50% 50%,
+      rgba(0, 255, 255, 0.54) 0%,
+      rgba(0, 245, 255, 0.42) 12%,
+      rgba(0, 230, 255, 0.30) 24%,
+      rgba(255, 220, 72, 0.18) 36%,
+      rgba(0, 230, 255, 0.14) 49%,
+      rgba(0, 230, 255, 0.065) 63%,
+      rgba(0, 230, 255, 0.025) 74%,
+      transparent 88%
+    ),
+    radial-gradient(
+      ellipse at 50% 50%,
+      transparent 0%,
+      transparent 31%,
+      rgba(0, 245, 255, 0.18) 45%,
+      rgba(255, 220, 72, 0.09) 57%,
+      rgba(0, 245, 255, 0.075) 69%,
+      transparent 86%
+    ) !important;
+
+  filter:
+    blur(calc(23px + var(--cy-core-blur-boost, 0px)))
+    saturate(1.62)
+    brightness(1.18) !important;
+  mix-blend-mode: screen !important;
+
+  transition:
+    opacity 120ms ease-out,
+    transform 120ms ease-out,
+    filter 120ms ease-out !important;
+}
+
+/* Outer/large aura: delayed response. */
+.cy-menu__hero-art::before,
+.cy-force-shield-safe::before,
+.cy-shield-robust-hover-glow::before {
+  content: "" !important;
+  position: absolute !important;
+  left: 50% !important;
+  top: 47% !important;
+  width: 500px !important;
+  height: 382px !important;
+  transform:
+    translate(-50%, -50%)
+    scale(calc(var(--cy-core-glow-scale, 1) + 0.012)) !important;
+  transform-origin: center center !important;
+
+  pointer-events: none !important;
+  z-index: 1 !important;
+  opacity: var(--cy-core-outer-opacity, 0.38) !important;
+  border-radius: 999px !important;
+
+  background:
+    radial-gradient(
+      ellipse at 50% 50%,
+      transparent 0%,
+      transparent 24%,
+      rgba(0, 245, 255, 0.055) 36%,
+      rgba(0, 245, 255, 0.15) 50%,
+      rgba(255, 220, 72, 0.075) 62%,
+      rgba(0, 245, 255, 0.085) 73%,
+      rgba(0, 245, 255, 0.025) 82%,
+      transparent 94%
+    ) !important;
+
+  filter:
+    blur(calc(31px + var(--cy-core-blur-boost, 0px)))
+    saturate(1.48)
+    brightness(1.12) !important;
+  mix-blend-mode: screen !important;
+
+  transition:
+    opacity 230ms ease-out 70ms,
+    transform 230ms ease-out 70ms,
+    filter 230ms ease-out 70ms !important;
+}
+
+/* END CYBRAXIS ROBUST SHIELD HOVER GLOW ONLY */
+
+
+
+
+
+/* CYBRAXIS FIXED DEMO DASHBOARDS SAFE */
+
+.cy-fixed-dash__old-content-hidden {
+  display: none !important;
+}
+
+.cy-fixed-dashboard-page-safe {
+  overflow-x: hidden !important;
+}
+
+.cy-demo-dashboard-runtime-root,
+.cy-demo-dashboard-runtime-root * {
+  box-sizing: border-box;
+}
+
+.cy-demo-dashboard-runtime-root {
+  width: 100%;
+  margin-top: 20px;
+}
+
+.cy-fixed-dash {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  animation: cy-fixed-dash-in 0.22s ease;
+}
+
+@keyframes cy-fixed-dash-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.cy-fixed-dash__hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 280px;
+  gap: 18px;
+  align-items: stretch;
+}
+
+.cy-fixed-dash__hero-copy,
+.cy-fixed-dash__score-card,
+.cy-fixed-dash__panel,
+.cy-fixed-dash__recommendation {
+  border: 1px solid rgba(0, 229, 255, 0.18);
+  background:
+    radial-gradient(circle at top left, rgba(0, 229, 255, 0.08), transparent 36%),
+    linear-gradient(135deg, rgba(3, 16, 28, 0.94), rgba(2, 10, 18, 0.98));
+  box-shadow:
+    inset 0 0 20px rgba(0, 229, 255, 0.025),
+    0 18px 50px rgba(0, 0, 0, 0.26);
+  border-radius: 18px;
+}
+
+.cy-fixed-dash__hero-copy {
+  padding: 24px 26px;
+  min-height: 210px;
+}
+
+.cy-fixed-dash__kicker {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  padding: 0 10px;
+  border: 1px solid rgba(0, 229, 255, 0.28);
+  border-radius: 999px;
+  color: #00e5ff;
+  font-family: "Share Tech Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  background: rgba(0, 229, 255, 0.055);
+}
+
+.cy-fixed-dash__hero-copy h2 {
+  margin: 18px 0 12px;
+  color: #e8fbff;
+  font-size: 34px;
+  line-height: 1;
+  letter-spacing: -0.045em;
+}
+
+.cy-fixed-dash__hero-copy p {
+  max-width: 720px;
+  color: #83aac2;
+  line-height: 1.65;
+  font-size: 13px;
+}
+
+.cy-fixed-dash__score-card {
+  padding: 20px;
+  display: grid;
+  place-items: center;
+  text-align: center;
+}
+
+.cy-fixed-dash__score-ring {
+  --cy-score: 72;
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(circle at center, #061523 0 52%, transparent 53%),
+    conic-gradient(#00e5ff calc(var(--cy-score) * 1%), rgba(20, 61, 82, 0.72) 0);
+  box-shadow:
+    0 0 34px rgba(0, 229, 255, 0.18),
+    inset 0 0 18px rgba(0, 229, 255, 0.12);
+}
+
+.cy-fixed-dash__score-ring div {
+  width: 104px;
+  height: 104px;
+  border-radius: 50%;
+  background: rgba(2, 12, 21, 0.95);
+  border: 1px solid rgba(0, 229, 255, 0.16);
+  display: grid;
+  place-items: center;
+  align-content: center;
+}
+
+.cy-fixed-dash__score-ring strong {
+  color: #ffffff;
+  font-size: 34px;
+  line-height: 1;
+}
+
+.cy-fixed-dash__score-ring span {
+  color: #557c91;
+  font-family: "Share Tech Mono", monospace;
+  font-size: 10px;
+}
+
+.cy-fixed-dash__score-text {
+  margin-top: 14px;
+  display: grid;
+  gap: 5px;
+}
+
+.cy-fixed-dash__score-text span,
+.cy-fixed-dash__panel-head span,
+.cy-fixed-dash__recommendation span {
+  color: #3f6a82;
+  font-family: "Share Tech Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.cy-fixed-dash__score-text strong,
+.cy-fixed-dash__panel-head b,
+.cy-fixed-dash__recommendation strong {
+  color: #c8e8f8;
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.cy-fixed-dash__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+  gap: 18px;
+}
+
+.cy-fixed-dash__panel {
+  min-height: 240px;
+  padding: 18px;
+}
+
+.cy-fixed-dash__panel-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: baseline;
+  padding-bottom: 14px;
+  border-bottom: 1px solid rgba(0, 229, 255, 0.10);
+  margin-bottom: 16px;
+}
+
+.cy-fixed-dash__metrics {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.cy-fixed-dash__metric {
+  min-height: 74px;
+  border: 1px solid rgba(0, 229, 255, 0.10);
+  background: rgba(0, 229, 255, 0.035);
+  border-radius: 14px;
+  padding: 12px;
+  display: grid;
+  align-content: center;
+  gap: 8px;
+}
+
+.cy-fixed-dash__metric span {
+  color: #426a7e;
+  font-family: "Share Tech Mono", monospace;
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.cy-fixed-dash__metric strong {
+  color: #f2fbff;
+  font-size: 20px;
+  line-height: 1;
+}
+
+.cy-fixed-dash__skills {
+  display: grid;
+  gap: 14px;
+}
+
+.cy-fixed-dash__skill-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  color: #8ab8cf;
+  font-size: 12px;
+  margin-bottom: 7px;
+}
+
+.cy-fixed-dash__skill-top strong {
+  color: #d8f8ff;
+  font-family: "Share Tech Mono", monospace;
+  font-size: 10px;
+}
+
+.cy-fixed-dash__bar {
+  height: 9px;
+  border-radius: 999px;
+  background: rgba(20, 61, 82, 0.56);
+  overflow: hidden;
+}
+
+.cy-fixed-dash__bar i {
+  height: 100%;
+  display: block;
+  border-radius: inherit;
+  background:
+    linear-gradient(90deg, rgba(0, 229, 255, 0.68), rgba(255, 215, 64, 0.75));
+  box-shadow: 0 0 16px rgba(0, 229, 255, 0.28);
+}
+
+.cy-fixed-dash__skill-row--empty {
+  opacity: 0.55;
+}
+
+.cy-fixed-dash__trend {
+  height: 178px;
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 18px 8px 4px;
+}
+
+.cy-fixed-dash__trend-bar {
+  position: relative;
+  flex: 1;
+  min-height: 4px;
+  border-radius: 14px 14px 5px 5px;
+  background:
+    linear-gradient(180deg, rgba(0, 229, 255, 0.86), rgba(0, 95, 120, 0.32));
+  box-shadow: 0 0 18px rgba(0, 229, 255, 0.18);
+}
+
+.cy-fixed-dash__trend-bar b {
+  position: absolute;
+  left: 50%;
+  top: -18px;
+  transform: translateX(-50%);
+  color: #8ab8cf;
+  font-family: "Share Tech Mono", monospace;
+  font-size: 9px;
+  font-style: normal;
+}
+
+.cy-fixed-dash__trend-bar em {
+  position: absolute;
+  left: 50%;
+  bottom: -18px;
+  transform: translateX(-50%);
+  color: #416a7e;
+  font-family: "Share Tech Mono", monospace;
+  font-size: 8px;
+  font-style: normal;
+}
+
+.cy-fixed-dash__split-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.cy-fixed-dash__mini-title {
+  font-family: "Share Tech Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.cy-fixed-dash__mini-title--good {
+  color: #00ff88;
+}
+
+.cy-fixed-dash__mini-title--warn {
+  color: #ffd740;
+}
+
+.cy-fixed-dash__split-list ul {
+  list-style: none;
+  display: grid;
+  gap: 10px;
+}
+
+.cy-fixed-dash__split-list li {
+  position: relative;
+  padding-left: 17px;
+  color: #8ab8cf;
+  line-height: 1.55;
+  font-size: 12px;
+}
+
+.cy-fixed-dash__split-list li::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: #00e5ff;
+}
+
+.cy-fixed-dash__recommendation {
+  padding: 18px 20px;
+  display: grid;
+  gap: 7px;
+  border-color: rgba(255, 215, 64, 0.20);
+  background:
+    radial-gradient(circle at top left, rgba(255, 215, 64, 0.08), transparent 35%),
+    linear-gradient(135deg, rgba(3, 16, 28, 0.94), rgba(2, 10, 18, 0.98));
+}
+
+.cy-fixed-dash--fresh .cy-fixed-dash__score-ring {
+  filter: saturate(0.45);
+}
+
+.cy-fixed-dash--fresh .cy-fixed-dash__trend-bar {
+  opacity: 0.35;
+  background: rgba(20, 61, 82, 0.56);
+}
+
+.cy-fixed-dash--strong .cy-fixed-dash__score-ring {
+  box-shadow:
+    0 0 42px rgba(0, 255, 136, 0.20),
+    inset 0 0 20px rgba(0, 229, 255, 0.14);
+}
+
+.cy-fixed-dash--remediation .cy-fixed-dash__score-ring {
+  box-shadow:
+    0 0 42px rgba(255, 215, 64, 0.16),
+    inset 0 0 20px rgba(255, 215, 64, 0.08);
+}
+
+@media (max-width: 1120px) {
+  .cy-fixed-dash__hero,
+  .cy-fixed-dash__grid,
+  .cy-fixed-dash__split-list {
+    grid-template-columns: 1fr;
+  }
+
+  .cy-fixed-dash__score-card {
+    min-height: 220px;
+  }
+}
+
+/* END CYBRAXIS FIXED DEMO DASHBOARDS SAFE */
+
+
+/* CYBRAXIS DASHBOARD VISIBILITY POLISH ONLY */
+
+/*
+  Dashboard-only polish:
+  - lighter dashboard surfaces
+  - clearer text
+  - clearer progress labels
+  - graph axis/context labels
+  - recommendation moved visually near the top and emphasized
+  - no main menu, shield, user dropdown, profile, card, title, or runtime logic changes
+*/
+
+.cy-demo-dashboard-runtime-root {
+  padding: 2px 2px 28px !important;
+  background:
+    radial-gradient(circle at 18% 0%, rgba(0, 229, 255, 0.075), transparent 34%),
+    radial-gradient(circle at 88% 16%, rgba(255, 215, 64, 0.055), transparent 28%),
+    linear-gradient(180deg, rgba(4, 21, 34, 0.38), rgba(3, 14, 24, 0.12)) !important;
+  border-radius: 20px !important;
+}
+
+.cy-fixed-dash {
+  gap: 20px !important;
+}
+
+.cy-fixed-dash__hero {
+  order: 0 !important;
+}
+
+/* Move recommendation up directly below hero so it is not buried at the bottom. */
+.cy-fixed-dash__recommendation {
+  order: 1 !important;
+}
+
+.cy-fixed-dash__grid {
+  order: 2 !important;
+}
+
+/* Lighten page panels without changing layout. */
+.cy-fixed-dash__hero-copy,
+.cy-fixed-dash__score-card,
+.cy-fixed-dash__panel,
+.cy-fixed-dash__recommendation {
+  border-color: rgba(0, 229, 255, 0.28) !important;
+  background:
+    radial-gradient(circle at top left, rgba(0, 229, 255, 0.13), transparent 38%),
+    radial-gradient(circle at bottom right, rgba(255, 215, 64, 0.055), transparent 34%),
+    linear-gradient(135deg, rgba(7, 31, 47, 0.98), rgba(4, 19, 32, 0.98)) !important;
+  box-shadow:
+    inset 0 0 26px rgba(0, 229, 255, 0.045),
+    0 18px 50px rgba(0, 0, 0, 0.22) !important;
+}
+
+/* Make main explanation text more readable. */
+.cy-fixed-dash__hero-copy p {
+  color: #b7d5e3 !important;
+  font-size: 14px !important;
+  line-height: 1.7 !important;
+}
+
+/* Make recommendation impossible to miss. */
+.cy-fixed-dash__recommendation {
+  padding: 24px 26px !important;
+  border: 1px solid rgba(255, 215, 64, 0.58) !important;
+  background:
+    radial-gradient(circle at 8% 0%, rgba(255, 215, 64, 0.20), transparent 34%),
+    radial-gradient(circle at 92% 40%, rgba(0, 229, 255, 0.13), transparent 36%),
+    linear-gradient(135deg, rgba(28, 31, 18, 0.96), rgba(5, 24, 36, 0.98)) !important;
+  box-shadow:
+    0 0 0 1px rgba(255, 215, 64, 0.10),
+    0 0 34px rgba(255, 215, 64, 0.13),
+    0 18px 50px rgba(0, 0, 0, 0.24) !important;
+}
+
+.cy-fixed-dash__recommendation span {
+  color: #ffd740 !important;
+  font-size: 12px !important;
+  letter-spacing: 0.20em !important;
+}
+
+.cy-fixed-dash__recommendation strong {
+  color: #fff8d7 !important;
+  font-size: 18px !important;
+  line-height: 1.55 !important;
+  font-weight: 800 !important;
+  max-width: 1180px !important;
+}
+
+/* Improve metric readability. */
+.cy-fixed-dash__metric {
+  background: rgba(0, 229, 255, 0.065) !important;
+  border-color: rgba(0, 229, 255, 0.18) !important;
+}
+
+.cy-fixed-dash__metric span {
+  color: #89b8ca !important;
+}
+
+.cy-fixed-dash__metric strong {
+  color: #ffffff !important;
+}
+
+/* Make progress bar titles and values clearer. */
+.cy-fixed-dash__skill-top span {
+  color: #d4edf7 !important;
+  font-size: 13px !important;
+  font-weight: 800 !important;
+}
+
+.cy-fixed-dash__skill-top strong {
+  color: #ffffff !important;
+  font-size: 11px !important;
+}
+
+.cy-fixed-dash__bar {
+  height: 11px !important;
+  background: rgba(78, 126, 150, 0.40) !important;
+  box-shadow: inset 0 0 0 1px rgba(150, 213, 230, 0.07) !important;
+}
+
+.cy-fixed-dash__bar i {
+  background:
+    linear-gradient(90deg, rgba(0, 229, 255, 0.88), rgba(255, 215, 64, 0.88)) !important;
+  box-shadow:
+    0 0 16px rgba(0, 229, 255, 0.42),
+    0 0 24px rgba(255, 215, 64, 0.12) !important;
+}
+
+/* Strengths and weaknesses text clarity. */
+.cy-fixed-dash__mini-title {
+  font-size: 11px !important;
+  margin-bottom: 14px !important;
+}
+
+.cy-fixed-dash__split-list li {
+  color: #d2edf8 !important;
+  font-size: 13px !important;
+  line-height: 1.65 !important;
+}
+
+.cy-fixed-dash__split-list li::before {
+  color: #00e5ff !important;
+  font-size: 16px !important;
+  top: -1px !important;
+}
+
+.cy-fixed-dash__mini-title--good {
+  color: #4cffaa !important;
+}
+
+.cy-fixed-dash__mini-title--warn {
+  color: #ffe174 !important;
+}
+
+/* Make graph understandable: visible axis area, score label, and checkpoint labels. */
+.cy-fixed-dash__panel--trend {
+  min-height: 270px !important;
+}
+
+.cy-fixed-dash__panel--trend .cy-fixed-dash__panel-head span {
+  color: #9fc9d8 !important;
+}
+
+.cy-fixed-dash__panel--trend .cy-fixed-dash__panel-head b {
+  color: #f2fbff !important;
+}
+
+.cy-fixed-dash__trend {
+  position: relative !important;
+  height: 205px !important;
+  padding: 38px 14px 36px 54px !important;
+  align-items: end !important;
+  gap: 16px !important;
+  border-left: 1px solid rgba(140, 214, 235, 0.22) !important;
+  border-bottom: 1px solid rgba(140, 214, 235, 0.22) !important;
+  background:
+    linear-gradient(180deg, rgba(0, 229, 255, 0.045), transparent 38%),
+    repeating-linear-gradient(
+      0deg,
+      rgba(140, 214, 235, 0.055) 0,
+      rgba(140, 214, 235, 0.055) 1px,
+      transparent 1px,
+      transparent 42px
+    ) !important;
+  border-radius: 12px !important;
+}
+
+.cy-fixed-dash__trend::before {
+  content: "Score / 100" !important;
+  position: absolute !important;
+  left: 10px !important;
+  top: 50% !important;
+  transform: translateY(-50%) rotate(-90deg) !important;
+  transform-origin: center !important;
+  color: #9fc9d8 !important;
+  font-family: "Share Tech Mono", monospace !important;
+  font-size: 10px !important;
+  letter-spacing: 0.14em !important;
+  text-transform: uppercase !important;
+  white-space: nowrap !important;
+}
+
+.cy-fixed-dash__trend::after {
+  content: "Training checkpoints →" !important;
+  position: absolute !important;
+  right: 14px !important;
+  bottom: 9px !important;
+  color: #9fc9d8 !important;
+  font-family: "Share Tech Mono", monospace !important;
+  font-size: 10px !important;
+  letter-spacing: 0.12em !important;
+  text-transform: uppercase !important;
+}
+
+.cy-fixed-dash__trend-bar {
+  min-height: 5px !important;
+  background:
+    linear-gradient(180deg, rgba(0, 229, 255, 0.95), rgba(0, 155, 190, 0.58)) !important;
+  box-shadow:
+    0 0 18px rgba(0, 229, 255, 0.26),
+    inset 0 0 10px rgba(255, 255, 255, 0.07) !important;
+}
+
+.cy-fixed-dash__trend-bar b {
+  color: #ffffff !important;
+  font-size: 10px !important;
+  top: -22px !important;
+}
+
+.cy-fixed-dash__trend-bar em {
+  color: transparent !important;
+  font-size: 0 !important;
+  bottom: -25px !important;
+  white-space: nowrap !important;
+}
+
+.cy-fixed-dash__trend-bar em::after {
+  color: #d2edf8 !important;
+  font-family: "Share Tech Mono", monospace !important;
+  font-size: 9px !important;
+  letter-spacing: 0.06em !important;
+}
+
+/* Replace vague C1/C2/C3 labels with meaningful checkpoint labels. */
+.cy-fixed-dash__trend-bar:nth-child(1) em::after {
+  content: "Start" !important;
+}
+
+.cy-fixed-dash__trend-bar:nth-child(2) em::after {
+  content: "Recon" !important;
+}
+
+.cy-fixed-dash__trend-bar:nth-child(3) em::after {
+  content: "Access" !important;
+}
+
+.cy-fixed-dash__trend-bar:nth-child(4) em::after {
+  content: "Lateral" !important;
+}
+
+.cy-fixed-dash__trend-bar:nth-child(5) em::after {
+  content: "Final" !important;
+}
+
+/* Fresh learner graph should clearly read as no data, not broken data. */
+.cy-fixed-dash--fresh .cy-fixed-dash__trend::after {
+  content: "No scenario data yet" !important;
+}
+
+.cy-fixed-dash--fresh .cy-fixed-dash__trend-bar {
+  background: rgba(92, 128, 145, 0.38) !important;
+  box-shadow: none !important;
+}
+
+.cy-fixed-dash--fresh .cy-fixed-dash__trend-bar b {
+  color: #8aa9b7 !important;
+}
+
+/* END CYBRAXIS DASHBOARD VISIBILITY POLISH ONLY */
+
+
+/* CYBRAXIS DASHBOARD CLARITY REFINEMENT ONLY */
+
+/* dashboard container spacing only */
+.cy-demo-dashboard-runtime-root {
+  padding: 12px 12px 30px !important;
+}
+
+.cy-fixed-dash {
+  gap: 22px !important;
+}
+
+.cy-fixed-dash__grid {
+  gap: 24px !important;
+  align-items: start !important;
+}
+
+/* soften panel outline feeling and visually separate panels from page outline */
+.cy-fixed-dash__panel,
+.cy-fixed-dash__hero-copy,
+.cy-fixed-dash__score-card,
+.cy-fixed-dash__recommendation {
+  border-color: rgba(0, 229, 255, 0.18) !important;
+  border-width: 1px !important;
+  border-style: solid !important;
+  box-shadow:
+    0 12px 30px rgba(0, 0, 0, 0.18),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.015) !important;
+  background-clip: padding-box !important;
+}
+
+.cy-fixed-dash__panel {
+  padding: 22px 24px 24px !important;
+  border-radius: 22px !important;
+  overflow: hidden !important;
+}
+
+.cy-fixed-dash__panel-head {
+  margin-bottom: 18px !important;
+  padding-bottom: 14px !important;
+  border-bottom: 1px solid rgba(0, 229, 255, 0.10) !important;
+}
+
+.cy-fixed-dash__panel-head span {
+  color: #85b6c9 !important;
+  font-size: 12px !important;
+  letter-spacing: 0.16em !important;
+}
+
+.cy-fixed-dash__panel-head b {
+  color: #eefaff !important;
+  font-size: 16px !important;
+  font-weight: 800 !important;
+}
+
+/* strengths / weaknesses headings */
+.cy-fixed-dash__split {
+  gap: 34px !important;
+}
+
+.cy-fixed-dash__mini-title,
+.cy-fixed-dash__mini-title--good,
+.cy-fixed-dash__mini-title--warn {
+  font-size: 13px !important;
+  letter-spacing: 0.18em !important;
+  font-weight: 800 !important;
+  margin-bottom: 16px !important;
+}
+
+.cy-fixed-dash__mini-title--good {
+  color: #67ffd2 !important;
+  text-shadow: 0 0 10px rgba(0, 229, 255, 0.12) !important;
+}
+
+.cy-fixed-dash__mini-title--warn {
+  color: #ffe47d !important;
+  text-shadow: 0 0 10px rgba(255, 215, 64, 0.12) !important;
+}
+
+/* strengths / weaknesses text clarity */
+.cy-fixed-dash__split-list {
+  gap: 10px !important;
+}
+
+.cy-fixed-dash__split-list li {
+  color: #eef8fc !important;
+  font-size: 15px !important;
+  line-height: 1.72 !important;
+  font-weight: 500 !important;
+  text-wrap: pretty !important;
+}
+
+.cy-fixed-dash__split-list li::before {
+  color: #11e3ff !important;
+  font-size: 16px !important;
+  top: 0 !important;
+}
+
+/* graph panel spacing */
+.cy-fixed-dash__panel--trend {
+  min-height: 340px !important;
+}
+
+.cy-fixed-dash__trend {
+  position: relative !important;
+  min-height: 255px !important;
+  height: 255px !important;
+  padding: 54px 24px 58px 72px !important;
+  gap: 18px !important;
+  align-items: end !important;
+  border-left: 1px solid rgba(140, 214, 235, 0.18) !important;
+  border-bottom: 1px solid rgba(140, 214, 235, 0.18) !important;
+  border-radius: 14px !important;
+  background:
+    linear-gradient(180deg, rgba(0, 229, 255, 0.04), transparent 38%),
+    repeating-linear-gradient(
+      0deg,
+      rgba(140, 214, 235, 0.045) 0,
+      rgba(140, 214, 235, 0.045) 1px,
+      transparent 1px,
+      transparent 42px
+    ) !important;
+}
+
+/* y-axis label */
+.cy-fixed-dash__trend::before {
+  content: "Score / 100" !important;
+  position: absolute !important;
+  left: 18px !important;
+  top: 50% !important;
+  transform: translateY(-50%) rotate(-90deg) !important;
+  transform-origin: center !important;
+  color: #9fc9d8 !important;
+  font-family: "Share Tech Mono", monospace !important;
+  font-size: 10px !important;
+  letter-spacing: 0.14em !important;
+  text-transform: uppercase !important;
+  white-space: nowrap !important;
+}
+
+/* x-axis title moved away from the bottom labels so it no longer overlaps */
+.cy-fixed-dash__trend::after {
+  content: "Training checkpoints" !important;
+  position: absolute !important;
+  top: 12px !important;
+  right: 18px !important;
+  bottom: auto !important;
+  color: #9fc9d8 !important;
+  font-family: "Share Tech Mono", monospace !important;
+  font-size: 10px !important;
+  letter-spacing: 0.12em !important;
+  text-transform: uppercase !important;
+  white-space: nowrap !important;
+}
+
+/* bar labels */
+.cy-fixed-dash__trend-bar {
+  min-height: 6px !important;
+  align-self: end !important;
+}
+
+.cy-fixed-dash__trend-bar b {
+  top: -24px !important;
+  font-size: 11px !important;
+  color: #ffffff !important;
+}
+
+.cy-fixed-dash__trend-bar em {
+  bottom: -34px !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  width: max-content !important;
+  color: transparent !important;
+  font-size: 0 !important;
+}
+
+.cy-fixed-dash__trend-bar em::after {
+  color: #d8edf6 !important;
+  font-family: "Share Tech Mono", monospace !important;
+  font-size: 11px !important;
+  letter-spacing: 0.04em !important;
+  white-space: nowrap !important;
+}
+
+/* keep checkpoint labels meaningful and clean */
+.cy-fixed-dash__trend-bar:nth-child(1) em::after {
+  content: "Start" !important;
+}
+
+.cy-fixed-dash__trend-bar:nth-child(2) em::after {
+  content: "Recon" !important;
+}
+
+.cy-fixed-dash__trend-bar:nth-child(3) em::after {
+  content: "Access" !important;
+}
+
+.cy-fixed-dash__trend-bar:nth-child(4) em::after {
+  content: "Lateral" !important;
+}
+
+.cy-fixed-dash__trend-bar:nth-child(5) em::after {
+  content: "Final" !important;
+}
+
+/* END CYBRAXIS DASHBOARD CLARITY REFINEMENT ONLY */
+
+
+/* CYBRAXIS DASHBOARD STRENGTH TEXT WEIGHT ONLY */
+
+/*
+  Only changes Strengths / Weaknesses item text weight.
+  No layout, graph, colors, headings, cards, users, shield, dropdown, or main menu changes.
+*/
+.cy-fixed-dash__split-list li {
+  font-weight: 400 !important;
+}
+
+.cy-fixed-dash__split-list li strong,
+.cy-fixed-dash__split-list li b {
+  font-weight: 400 !important;
+}
+
+/* END CYBRAXIS DASHBOARD STRENGTH TEXT WEIGHT ONLY */
+
+
+/* CYBRAXIS DASHBOARD STRENGTH WEAKNESS TEXT SIZE ONLY */
+
+/*
+  Only changes Strengths / Weaknesses item text size and calmness.
+  No layout, graph, colors, headings, cards, users, shield, dropdown, or main menu changes.
+*/
+.cy-fixed-dash__split-list li {
+  font-size: 13.5px !important;
+  line-height: 1.62 !important;
+  font-weight: 400 !important;
+  color: #d8edf6 !important;
+}
+
+.cy-fixed-dash__split-list li strong,
+.cy-fixed-dash__split-list li b {
+  font-size: 13.5px !important;
+  font-weight: 400 !important;
+}
+
+/* END CYBRAXIS DASHBOARD STRENGTH WEAKNESS TEXT SIZE ONLY */
+
+
+
+
+/* CYBRAXIS_CLEAN_CUMULATIVE_DASHBOARD */
+.cy-menu__dashboard-clean {
+  display: grid;
+  gap: 18px;
+}
+
+.cy-menu__dashboard-clean-hero,
+.cy-menu__dashboard-ai-panel,
+.cy-menu__dashboard-recommendation {
+  border: 1px solid rgba(0, 229, 255, 0.34);
+  border-radius: 16px;
+  background:
+    radial-gradient(circle at top left, rgba(0, 229, 255, 0.11), transparent 34%),
+    rgba(4, 20, 33, 0.78);
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.24);
+}
+
+.cy-menu__dashboard-clean-hero {
+  display: grid;
+  grid-template-columns: 150px 1fr;
+  align-items: center;
+  min-height: 128px;
+  padding: 22px 28px;
+}
+
+.cy-menu__dashboard-clean-hero h2,
+.cy-menu__dashboard-ai-panel h2,
+.cy-menu__dashboard-recommendation h2 {
+  margin: 6px 0 8px;
+  font-size: clamp(1.25rem, 2vw, 1.85rem);
+}
+
+.cy-menu__dashboard-clean-hero p,
+.cy-menu__dashboard-ai-panel p,
+.cy-menu__dashboard-recommendation p {
+  margin: 0;
+  max-width: 820px;
+  color: rgba(235, 250, 255, 0.84);
+  line-height: 1.55;
+}
+
+.cy-menu__dashboard-clean-metrics {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.cy-menu__dashboard-ai-panel {
+  display: grid;
+  grid-template-columns: 1fr minmax(220px, 320px);
+  gap: 24px;
+  padding: 22px 26px;
+  border-color: rgba(0, 255, 170, 0.38);
+  background:
+    linear-gradient(135deg, rgba(0, 255, 170, 0.12), rgba(0, 229, 255, 0.05)),
+    rgba(4, 20, 33, 0.84);
+}
+
+.cy-menu__dashboard-ai-meta {
+  display: grid;
+  gap: 6px;
+  align-content: center;
+  padding: 16px;
+  border-radius: 14px;
+  background: rgba(1, 10, 20, 0.48);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.cy-menu__dashboard-ai-meta strong {
+  color: #00e5ff;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+.cy-menu__dashboard-ai-meta span {
+  color: rgba(255, 255, 255, 0.88);
+  font-weight: 700;
+}
+
+.cy-menu__dashboard-recommendation {
+  padding: 22px 26px;
+  border-color: rgba(255, 216, 80, 0.34);
+}
+
+@media (max-width: 1050px) {
+  .cy-menu__dashboard-clean-hero,
+  .cy-menu__dashboard-ai-panel {
+    grid-template-columns: 1fr;
+  }
+
+  .cy-menu__dashboard-clean-metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+
+/* CYBRAXIS_DASHBOARD_FINAL_VISUAL_PASS */
+body.cy-dashboard-single-scroll-mode {
+  overflow-y: auto !important;
+}
+
+body.cy-dashboard-single-scroll-mode .cy-menu,
+body.cy-dashboard-single-scroll-mode .cy-menu__shell,
+body.cy-dashboard-single-scroll-mode .cy-menu__shell-body,
+body.cy-dashboard-single-scroll-mode .cy-menu__content,
+body.cy-dashboard-single-scroll-mode .cy-menu__dashboard-clean {
+  max-height: none !important;
+  height: auto !important;
+  overflow: visible !important;
+}
+
+.cy-menu__dashboard-clean--final {
+  display: grid;
+  gap: 15px;
+}
+
+.cy-menu__dashboard-clean--final .cy-menu__dashboard-clean-hero,
+.cy-menu__dashboard-clean--final .cy-menu__dashboard-ai-panel,
+.cy-menu__dashboard-clean--final .cy-menu__dashboard-recommendation {
+  position: relative;
+  overflow: hidden;
+  border-radius: 18px;
+  border: 1px solid rgba(0, 229, 255, 0.36);
+  background:
+    radial-gradient(circle at top left, rgba(0, 229, 255, 0.13), transparent 32%),
+    linear-gradient(135deg, rgba(4, 23, 38, 0.95), rgba(2, 10, 20, 0.88));
+  box-shadow: 0 18px 55px rgba(0, 0, 0, 0.25);
+  transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
+}
+
+.cy-menu__dashboard-clean--final .cy-menu__dashboard-clean-hero:hover,
+.cy-menu__dashboard-clean--final .cy-menu__dashboard-ai-panel:hover,
+.cy-menu__dashboard-clean--final .cy-menu__dashboard-recommendation:hover {
+  transform: translateY(-1px);
+  border-color: rgba(0, 229, 255, 0.62);
+  box-shadow: 0 22px 60px rgba(0, 229, 255, 0.08);
+}
+
+.cy-menu__dashboard-clean--final .cy-menu__dashboard-clean-hero {
+  display: grid;
+  grid-template-columns: 150px 1fr;
+  align-items: center;
+  padding: 20px 26px;
+  min-height: 124px;
+}
+
+.cy-menu__dashboard-clean--final .cy-menu__dashboard-clean-metrics {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.cy-menu__dashboard-clean--final .cy-menu__dashboard-ai-panel {
+  display: grid;
+  grid-template-columns: 1fr minmax(230px, 320px);
+  gap: 22px;
+  padding: 22px 26px;
+  border-color: rgba(0, 255, 170, 0.34);
+}
+
+.cy-menu__dashboard-clean--final .cy-menu__dashboard-ai-panel h2,
+.cy-menu__dashboard-clean--final .cy-menu__dashboard-recommendation h2,
+.cy-menu__dashboard-clean--final .cy-menu__dashboard-clean-hero h2 {
+  margin: 4px 0 8px;
+}
+
+.cy-menu__dashboard-ai-meta {
+  display: grid;
+  gap: 7px;
+  align-content: center;
+  padding: 14px;
+  border-radius: 14px;
+  background: rgba(1, 10, 20, 0.52);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.cy-menu__dashboard-ai-meta strong {
+  color: #00e5ff;
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.cy-menu__dashboard-ai-meta span {
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 800;
+}
+
+.cy-menu__dashboard-split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.cy-menu__dashboard-recommendation {
+  padding: 20px 26px;
+  border-color: rgba(255, 216, 80, 0.34) !important;
+}
+
+.cy-menu__dashboard-recommendation small {
+  display: block;
+  margin-top: 10px;
+  color: rgba(235, 250, 255, 0.56);
+}
+
+@media (max-width: 1050px) {
+  .cy-menu__dashboard-clean--final .cy-menu__dashboard-clean-hero,
+  .cy-menu__dashboard-clean--final .cy-menu__dashboard-ai-panel {
+    grid-template-columns: 1fr;
+  }
+
+  .cy-menu__dashboard-clean--final .cy-menu__dashboard-clean-metrics,
+  .cy-menu__dashboard-split {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+
+/* CYBRAXIS_DASHBOARD_FINAL_V2 */
+body.cy-dashboard-single-scroll-mode,
+body.cy-dashboard-single-scroll-mode html {
+  overflow-y: auto !important;
+}
+
+body.cy-dashboard-single-scroll-mode .cy-menu,
+body.cy-dashboard-single-scroll-mode .cy-menu__shell,
+body.cy-dashboard-single-scroll-mode .cy-menu__shell-body,
+body.cy-dashboard-single-scroll-mode .cy-menu__content,
+body.cy-dashboard-single-scroll-mode .cy-menu__dashboard-clean,
+body.cy-dashboard-single-scroll-mode .cy-menu__dashboard-clean--final-v2 {
+  max-height: none !important;
+  height: auto !important;
+  overflow: visible !important;
+}
+
+body.cy-dashboard-single-scroll-mode * {
+  scrollbar-width: auto;
+}
+
+body.cy-dashboard-single-scroll-mode .cy-menu__shell::-webkit-scrollbar,
+body.cy-dashboard-single-scroll-mode .cy-menu__shell-body::-webkit-scrollbar,
+body.cy-dashboard-single-scroll-mode .cy-menu__content::-webkit-scrollbar,
+body.cy-dashboard-single-scroll-mode .cy-menu__dashboard-clean::-webkit-scrollbar {
+  display: none !important;
+}
+
+.cy-menu__dashboard-clean--final-v2 {
+  display: grid;
+  gap: 16px;
+}
+
+.cy-menu__dashboard-clean--final-v2 .cy-menu__dashboard-clean-hero,
+.cy-menu__dashboard-clean--final-v2 .cy-menu__dashboard-ai-panel,
+.cy-menu__dashboard-clean--final-v2 .cy-menu__dashboard-recommendation,
+.cy-menu__dashboard-progression {
+  position: relative;
+  overflow: hidden;
+  border-radius: 18px;
+  border: 1px solid rgba(0, 229, 255, 0.34);
+  background:
+    radial-gradient(circle at 8% 0%, rgba(0, 229, 255, 0.16), transparent 30%),
+    radial-gradient(circle at 90% 20%, rgba(124, 92, 255, 0.12), transparent 35%),
+    linear-gradient(135deg, rgba(4, 23, 38, 0.96), rgba(2, 10, 20, 0.9));
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.24);
+}
+
+.cy-menu__dashboard-clean--final-v2 .cy-menu__dashboard-clean-hero:hover,
+.cy-menu__dashboard-clean--final-v2 .cy-menu__dashboard-ai-panel:hover,
+.cy-menu__dashboard-clean--final-v2 .cy-menu__dashboard-recommendation:hover,
+.cy-menu__dashboard-progression:hover {
+  transform: none !important;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.24) !important;
+}
+
+.cy-menu__dashboard-clean--final-v2 .cy-menu__dashboard-clean-hero {
+  display: grid;
+  grid-template-columns: 150px 1fr;
+  align-items: center;
+  min-height: 124px;
+  padding: 20px 26px;
+}
+
+.cy-menu__dashboard-clean--final-v2 .cy-menu__dashboard-clean-metrics {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.cy-menu__dashboard-clean--final-v2 .cy-menu__dashboard-clean-metrics > *:nth-child(1) {
+  border-color: rgba(0, 229, 255, 0.45) !important;
+  background: linear-gradient(135deg, rgba(0, 229, 255, 0.13), rgba(4, 23, 38, 0.8)) !important;
+}
+
+.cy-menu__dashboard-clean--final-v2 .cy-menu__dashboard-clean-metrics > *:nth-child(2) {
+  border-color: rgba(0, 255, 170, 0.45) !important;
+  background: linear-gradient(135deg, rgba(0, 255, 170, 0.12), rgba(4, 23, 38, 0.8)) !important;
+}
+
+.cy-menu__dashboard-clean--final-v2 .cy-menu__dashboard-clean-metrics > *:nth-child(3) {
+  border-color: rgba(255, 111, 111, 0.42) !important;
+  background: linear-gradient(135deg, rgba(255, 111, 111, 0.1), rgba(4, 23, 38, 0.82)) !important;
+}
+
+.cy-menu__dashboard-clean--final-v2 .cy-menu__dashboard-clean-metrics > *:nth-child(4) {
+  border-color: rgba(255, 216, 80, 0.44) !important;
+  background: linear-gradient(135deg, rgba(255, 216, 80, 0.1), rgba(4, 23, 38, 0.82)) !important;
+}
+
+.cy-menu__dashboard-progression {
+  padding: 20px 24px;
+}
+
+.cy-menu__dashboard-section-head h2 {
+  margin: 5px 0 14px;
+}
+
+.cy-menu__dashboard-progression-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.cy-menu__dashboard-progression-card {
+  display: grid;
+  gap: 10px;
+  padding: 14px;
+  border-radius: 14px;
+  border: 1px solid rgba(0, 229, 255, 0.22);
+  background: rgba(1, 10, 20, 0.44);
+}
+
+.cy-menu__dashboard-progression-card strong {
+  display: block;
+  color: rgba(255, 255, 255, 0.94);
+}
+
+.cy-menu__dashboard-progression-card span,
+.cy-menu__dashboard-progression-card small {
+  color: rgba(235, 250, 255, 0.7);
+}
+
+.cy-menu__dashboard-progress-track {
+  height: 8px;
+  overflow: hidden;
+  border-radius: 99px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.cy-menu__dashboard-progress-track i {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #00e5ff, #00ffaa, #ffd850);
+}
+
+.cy-menu__dashboard-clean--final-v2 .cy-menu__dashboard-ai-panel {
+  display: grid;
+  grid-template-columns: 1fr minmax(230px, 320px);
+  gap: 22px;
+  padding: 22px 26px;
+  border-color: rgba(0, 255, 170, 0.36);
+}
+
+.cy-menu__dashboard-ai-meta {
+  display: grid;
+  gap: 7px;
+  align-content: center;
+  padding: 14px;
+  border-radius: 14px;
+  background: rgba(1, 10, 20, 0.52);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.cy-menu__dashboard-ai-meta strong {
+  color: #00e5ff;
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.cy-menu__dashboard-ai-meta span {
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 800;
+}
+
+.cy-menu__dashboard-split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.cy-menu__dashboard-recommendation {
+  padding: 20px 26px;
+  border-color: rgba(255, 216, 80, 0.34) !important;
+}
+
+.cy-menu__dashboard-recommendation small {
+  display: block;
+  margin-top: 10px;
+  color: rgba(235, 250, 255, 0.56);
+}
+
+@media (max-width: 1050px) {
+  .cy-menu__dashboard-clean--final-v2 .cy-menu__dashboard-clean-hero,
+  .cy-menu__dashboard-clean--final-v2 .cy-menu__dashboard-ai-panel {
+    grid-template-columns: 1fr;
+  }
+
+  .cy-menu__dashboard-clean--final-v2 .cy-menu__dashboard-clean-metrics,
+  .cy-menu__dashboard-progression-grid,
+  .cy-menu__dashboard-split {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+
+/* CYBRAXIS_PROFILE_ACCOUNT_UI_START */
+.cy-menu__profile-layout--account {
+  display: flex;
+  justify-content: center;
+  padding: 12px 0 24px;
+}
+
+.cy-menu__profile-card--account {
+  width: min(860px, 100%);
+  gap: 22px;
+  padding: 28px;
+}
+
+.cy-menu__profile-account-head {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.cy-menu__avatar--account {
+  flex: 0 0 auto;
+}
+
+.cy-menu__profile-account-head h2 {
+  margin: 4px 0 6px;
+  font-size: 28px;
+}
+
+.cy-menu__profile-account-head p {
+  margin: 0;
+  color: rgba(218, 241, 255, 0.72);
+}
+
+.cy-menu__profile-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  width: 100%;
+}
+
+.cy-menu__profile-grid label,
+.cy-menu__profile-password-panel label {
+  display: grid;
+  gap: 8px;
+}
+
+.cy-menu__profile-grid input,
+.cy-menu__profile-grid select,
+.cy-menu__profile-password-panel input {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid rgba(148, 230, 255, 0.22);
+  border-radius: 14px;
+  padding: 13px 14px;
+  color: #f8fcff;
+  background: rgba(5, 18, 34, 0.58);
+  outline: none;
+}
+
+.cy-menu__profile-grid input:focus,
+.cy-menu__profile-grid select:focus,
+.cy-menu__profile-password-panel input:focus {
+  border-color: rgba(34, 211, 238, 0.65);
+  box-shadow: 0 0 0 3px rgba(34, 211, 238, 0.12);
+}
+
+.cy-menu__profile-facts--account {
+  width: 100%;
+}
+
+.cy-menu__profile-password-panel {
+  width: 100%;
+  display: grid;
+  gap: 12px;
+  padding: 18px;
+  border: 1px solid rgba(148, 230, 255, 0.16);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.cy-menu__profile-password-panel h3 {
+  margin: 4px 0 0;
+}
+
+.cy-menu__profile-message {
+  width: 100%;
+  box-sizing: border-box;
+  border-radius: 14px;
+  padding: 12px 14px;
+  text-align: center;
+}
+
+.cy-menu__profile-message--error {
+  color: #ffb4b4;
+  background: rgba(255, 80, 110, 0.12);
+  border: 1px solid rgba(255, 130, 150, 0.24);
+}
+
+.cy-menu__profile-message--success {
+  color: #b7ffe0;
+  background: rgba(34, 197, 94, 0.12);
+  border: 1px solid rgba(74, 222, 128, 0.24);
+}
+
+.cy-menu__profile-actions {
+  width: 100%;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.cy-menu__button--ghost {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.cy-menu__button--danger {
+  background: rgba(239, 68, 68, 0.15);
+  color: #ffd0d0;
+  border-color: rgba(248, 113, 113, 0.34);
+}
+
+.cy-menu__button--danger:hover {
+  background: rgba(239, 68, 68, 0.22);
+}
+
+@media (max-width: 760px) {
+  .cy-menu__profile-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .cy-menu__profile-account-head {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+/* CYBRAXIS_PROFILE_ACCOUNT_UI_END */
+
+
+/* CYBRAXIS_PROFILE_FINAL_POLISH */
+
+.cy-menu__profile-layout--account{
+  align-items:flex-start;
+  padding-bottom:40px;
+}
+
+
+.cy-menu__profile-card--account{
+
+  background:
+  linear-gradient(
+    145deg,
+    rgba(12,48,72,.92),
+    rgba(15,25,45,.92)
+  );
+
+  border:
+  1px solid rgba(0,229,255,.25);
+
+  box-shadow:
+  0 0 45px rgba(0,229,255,.12);
+
+}
+
+
+.cy-menu__profile-grid{
+
+  gap:18px;
+
+}
+
+
+.cy-menu__profile-card--account input,
+.cy-menu__profile-card--account select{
+
+  background:
+  rgba(255,255,255,.07);
+
+  border:
+  1px solid rgba(0,229,255,.18);
+
+  color:white;
+
+}
+
+
+.cy-menu__profile-card--account input:focus,
+.cy-menu__profile-card--account select:focus{
+
+  border-color:#22d3ee;
+
+  box-shadow:
+  0 0 18px rgba(34,211,238,.25);
+
+}
+
+
+.cy-menu__profile-password-panel{
+
+  background:
+  rgba(255,255,255,.035);
+
+  border:
+  1px solid rgba(255,255,255,.12);
+
+  border-radius:18px;
+
+}
+
+
+.cy-menu__profile-layout--account{
+
+  overflow:visible;
+
+}
+
+
+
+
+
+/* CYBRAXIS_PROFILE_SCROLL_COLOR_FIX */
+
+
+/* Remove nested profile scrolling */
+.cy-menu__profile-layout--account,
+.cy-menu__profile-card--account {
+
+  overflow: visible !important;
+
+}
+
+
+.cy-menu__profile-layout--account {
+
+  min-height: auto !important;
+  height: auto !important;
+  padding-bottom: 24px;
+
+}
+
+
+/* Brighter professional profile theme */
+
+.cy-menu__profile-card--account {
+
+  background:
+  linear-gradient(
+    145deg,
+    rgba(22,67,92,.95),
+    rgba(20,42,70,.95)
+  );
+
+
+  border:
+  1px solid rgba(0,229,255,.35);
+
+
+  box-shadow:
+
+  0 0 30px rgba(0,229,255,.18),
+  0 0 70px rgba(139,92,246,.12);
+
+
+}
+
+
+/* Slightly brighter input surfaces */
+
+.cy-menu__profile-card--account input,
+.cy-menu__profile-card--account select {
+
+
+  background:
+  rgba(255,255,255,.10);
+
+
+  border:
+  1px solid rgba(0,229,255,.28);
+
+
+  color:
+  #f4fbff;
+
+
+}
+
+
+/* Better readability */
+
+.cy-menu__profile-card--account label {
+
+  color:
+  #8eeeff;
+
+}
+
+
+.cy-menu__profile-facts--account {
+
+  background:
+  rgba(255,255,255,.035);
+
+
+  border:
+  1px solid rgba(255,255,255,.12);
+
+
+  border-radius:
+  18px;
+
+
+  padding:
+  18px;
+
+}
+
+
+/* Reduce excessive vertical space */
+
+.cy-menu__profile-card--account {
+
+  gap:
+  14px;
+
+}
+
+
+
+
+
+/* CYBRAXIS_PROFILE_FINAL_COLOR_SCROLL_FIX */
+
+
+/*
+   Final profile polish:
+   - remove remaining nested scrolling
+   - increase Cybraxis color saturation
+*/
+
+
+/* Kill profile inner scrolling */
+
+.cy-menu__profile-layout--account,
+.cy-menu__profile-card--account,
+.cy-menu__profile-card--account * {
+
+  scrollbar-width:none;
+
+}
+
+
+.cy-menu__profile-layout--account::-webkit-scrollbar,
+.cy-menu__profile-card--account::-webkit-scrollbar {
+
+  display:none;
+
+}
+
+
+.cy-menu__profile-layout--account {
+
+  overflow:visible !important;
+  max-height:none !important;
+
+}
+
+
+/*
+   More saturated Cybraxis palette
+*/
+
+
+.cy-menu__profile-card--account {
+
+background:
+
+linear-gradient(
+135deg,
+rgba(0,120,150,.72),
+rgba(60,40,140,.68)
+);
+
+
+border:
+
+1px solid rgba(0,229,255,.55);
+
+
+box-shadow:
+
+0 0 35px rgba(0,229,255,.25),
+0 0 70px rgba(139,92,246,.22);
+
+
+}
+
+
+/* Facts panel */
+
+.cy-menu__profile-facts--account {
+
+
+background:
+
+linear-gradient(
+135deg,
+rgba(0,229,255,.12),
+rgba(139,92,246,.12)
+);
+
+
+border:
+
+1px solid rgba(0,229,255,.30);
+
+
+box-shadow:
+
+inset 0 0 25px rgba(0,229,255,.08);
+
+
+}
+
+
+/* Password panel */
+
+.cy-menu__profile-password-panel {
+
+
+background:
+
+linear-gradient(
+135deg,
+rgba(0,229,255,.10),
+rgba(139,92,246,.14)
+);
+
+
+border:
+
+1px solid rgba(139,92,246,.35);
+
+
+box-shadow:
+
+0 0 25px rgba(139,92,246,.15);
+
+
+}
+
+
+/* Inputs */
+
+.cy-menu__profile-card--account input {
+
+
+background:
+
+rgba(5,20,45,.55);
+
+
+border:
+
+1px solid rgba(0,229,255,.45);
+
+
+color:white;
+
+
+}
+
+
+.cy-menu__profile-card--account input:focus {
+
+
+border-color:#00e5ff;
+
+
+box-shadow:
+
+0 0 18px rgba(0,229,255,.45);
+
+
+}
+
+
+/* Buttons */
+
+.cy-menu__profile-actions button {
+
+
+box-shadow:
+
+0 0 18px rgba(0,229,255,.18);
+
+
+}
+
+

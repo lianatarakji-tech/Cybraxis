@@ -1,0 +1,1100 @@
+{
+  "scenario_id": "silent_beacon_1",
+  "gameplay_name": "Silent Beacon",
+  "name": "Silent Beacon",
+  "description": "A normal-difficulty SOC investigation scenario focused on detecting DNS beaconing from a compromised internal workstation, tracing internal reconnaissance, identifying data staging on a file server, and applying coordinated containment before full exfiltration occurs.",
+  "version": "1.0-dev",
+  "timing_profile": "development",
+  "difficulty": "normal",
+  "global_design_notes": {
+    "investigation_model": [
+      "identity",
+      "connectivity",
+      "controls",
+      "activity",
+      "interpretation"
+    ],
+    "scenario_focus": "Network-focused SOC investigation of DNS beaconing, workstation persistence, LDAP-style internal reconnaissance, SMB/data staging, and final containment.",
+    "controlled_variation_note": "Future variants may swap the compromised workstation, C2 domain, target share, decoy node, and timing profile while keeping scoring and correctness deterministic.",
+    "ai_support_note": "Future AI support may rewrite alerts, logs, hints, mentor notifications, and report feedback, but deterministic scenario logic controls correctness, scoring, progression, and approved variants.",
+    "scoring_note": "Final scoring should consider base action score, investigation coverage, sequence quality, time efficiency, wrong action penalties, timeout/escalation penalty, premature containment penalty, response quality, and wrong abstraction-level action penalties."
+  },
+  "variant_design": {
+    "status": "planned_not_active",
+    "seeded_variant_required_later": true,
+    "pools": {
+      "compromised_workstation": [
+        "workstationSales",
+        "workstationDecoy"
+      ],
+      "c2_domain": [
+        "update-check.ddns.net",
+        "telemetry-sync.ddns.net",
+        "asset-healthcheck.net"
+      ],
+      "target_share": [
+        "HR$",
+        "Payroll$",
+        "Contracts$"
+      ],
+      "beacon_interval_seconds": [
+        45,
+        60,
+        90
+      ]
+    }
+  },
+  "stages": [
+    {
+      "id": "dns_beaconing",
+      "stage_type": "detection",
+      "name": "Suspicious DNS Beaconing",
+      "difficulty": "easy",
+      "learning_objective": "Validate the DNS beaconing path by correlating DNS-SRV, the suspicious external C2 domain, and the source workstation before applying a DNS/perimeter block.",
+      "time_pressure": {
+        "time_limit_seconds": 60,
+        "warning_threshold": 0.7,
+        "timeout_behavior": "escalate_stage",
+        "timeout_penalty": 5,
+        "lock_stage_on_timeout": true,
+        "lock_stage_on_success": true,
+        "auto_advance_delay_ms": 2500,
+        "timeout_warning": "Time pressure is increasing. The DNS beacon pattern is still active and may continue receiving commands.",
+        "timeout_mentor_feedback": "Delayed DNS investigation allowed the beacon to keep communicating with the suspicious domain.",
+        "timeout_log_message": "TIMEOUT: DNS beaconing continued long enough for the attacker to prepare internal reconnaissance.",
+        "next_stage_modifier": {
+          "escalation_level": 1,
+          "risk_state": "elevated",
+          "extra_logs": [
+            {
+              "id": "workstation-escalated-log-1",
+              "type": "log",
+              "time": "09:19:40",
+              "message": "DNS: Continued TXT queries from WS-SALES-01 preceded suspicious scheduled task activity.",
+              "severity": "high"
+            }
+          ],
+          "node_status_changes": {
+            "workstationSales": "suspicious"
+          },
+          "mentor_context": "Because the DNS beacon was not triaged quickly, the workstation activity stage begins with elevated attacker momentum."
+        }
+      },
+      "suspicious_nodes": [
+        "dnsServer",
+        "externalDns"
+      ],
+      "primary_targets": [
+        "dnsServer",
+        "externalDns"
+      ],
+      "required_investigation": {
+        "target_scope": "required_targets",
+        "target_ids": [
+          "dnsServer",
+          "externalDns"
+        ],
+        "dimensions": [
+          "connectivity",
+          "activity",
+          "interpretation"
+        ],
+        "minimum_target_coverage": "all",
+        "required_before_response": true
+      },
+      "events": [
+        {
+          "id": "dns-log-1",
+          "type": "log",
+          "time": "09:12:08",
+          "message": "DNS: WS-SALES-01 issued repeated TXT queries to random subdomains of update-check.ddns.net at near-regular intervals",
+          "severity": "high"
+        },
+        {
+          "id": "dns-log-2",
+          "type": "log",
+          "time": "09:13:02",
+          "message": "FIREWALL: Outbound traffic from WS-SALES-01 is almost entirely DNS while query volume exceeds workstation baseline",
+          "severity": "medium"
+        },
+        {
+          "id": "dns-alert-1",
+          "type": "alert",
+          "message": "Possible DNS beaconing path detected through DNS-SRV toward update-check.ddns.net",
+          "severity": "high",
+          "relatedNode": "dnsServer",
+          "relatedLog": "dns-log-1",
+          "source": "10.0.1.5",
+          "timestamp": "09:13:15"
+        }
+      ],
+      "expected_actions": [
+        "investigate IP",
+        "block IP"
+      ],
+      "wrong_actions": [
+        "ignore",
+        "isolate machine"
+      ],
+      "preferred_action_order": [
+        "investigate IP",
+        "block IP"
+      ],
+      "minimum_actions_to_pass": 2,
+      "mentor_hint": "Start with DNS-SRV and the external C2 domain. This stage is about validating and disrupting the DNS path, not host isolation.",
+      "mentor": {
+        "stage_hint": "Select DNS-SRV first, review the DNS query pattern, then validate the suspicious external domain and source workstation before blocking.",
+        "coverage_incomplete": "The DNS path is not fully validated yet. Inspect DNS-SRV, the external C2 domain, and WS-SALES-01 before response.",
+        "wrong_order": "Blocking before validating the DNS path may stop traffic but weakens the investigation record.",
+        "premature_response": "A DNS block is useful only after confirming that the queries behave like beaconing rather than normal resolution.",
+        "correct_sequence": "Good sequence. You validated the DNS source, path, and suspicious domain before disrupting the beacon path.",
+        "timeout_warning": "Time pressure is increasing. The beacon may continue receiving commands through DNS.",
+        "timeout_feedback": "The delay allowed DNS beaconing to persist and increased the likelihood of internal activity."
+      },
+      "scoring": {
+        "correct_action_score": 5,
+        "wrong_action_penalty": 5,
+        "pass_score": 10,
+        "max_score": 10
+      },
+      "consequences": {
+        "correct": {
+          "mentor_feedback": "The suspicious DNS path was investigated and disrupted before the beacon could continue unnoticed.",
+          "node_effect": "stable",
+          "log_message": "DNS-SRV and external C2 path validated; suspicious DNS beacon path blocked."
+        },
+        "wrong": {
+          "mentor_feedback": "Unresolved DNS beaconing allows the attacker to continue command-and-control communication using an allowed protocol.",
+          "node_effect": "suspicious",
+          "log_message": "DNS beaconing remains active from WS-SALES-01."
+        }
+      },
+      "ai_metadata": {
+        "stage_objective": "Validate the DNS beaconing path by correlating DNS-SRV, the suspicious external C2 domain, and the source workstation before applying a DNS/perimeter block.",
+        "hint_triggers": [
+          "premature_response",
+          "wrong_target",
+          "insufficient_evidence",
+          "time_pressure",
+          "repeated_mistake",
+          "general_guidance"
+        ],
+        "evidence_categories": [
+          "dns_beaconing_pattern",
+          "external_destination_validation",
+          "ioc_validation",
+          "containment_readiness"
+        ],
+        "facts": [
+          {
+            "id": "dns-f1",
+            "label": "Repeated DNS TXT-style queries suggest a beaconing pattern.",
+            "category": "dns_beaconing_pattern",
+            "safe_for_hint": true
+          },
+          {
+            "id": "dns-f2",
+            "label": "The suspicious external domain must be validated before blocking.",
+            "category": "external_destination_validation",
+            "safe_for_hint": true
+          },
+          {
+            "id": "dns-f3",
+            "label": "The DNS control point is part of the containment path.",
+            "category": "containment_readiness",
+            "safe_for_hint": true
+          }
+        ],
+        "action_evaluation": {
+          "correct_actions": [
+            "investigate IP",
+            "block IP"
+          ],
+          "acceptable_actions": [],
+          "premature_actions": [
+            "block IP"
+          ],
+          "wrong_target_actions": [
+            "isolate machine"
+          ],
+          "dangerous_actions": [],
+          "irrelevant_actions": [
+            "ignore"
+          ]
+        },
+        "weakness_codes": {
+          "premature_response": "premature_containment",
+          "wrong_target": "ioc_validation",
+          "insufficient_evidence": "dns_beaconing_analysis",
+          "time_pressure": "time_pressure_management",
+          "repeated_mistake": "response_action_order",
+          "general_guidance": "log_correlation"
+        },
+        "remedy_mapping": {
+          "premature_containment": "remedy_premature_containment_01",
+          "host_pivot_accuracy": "remedy_host_pivot_01",
+          "evidence_completion": "remedy_evidence_completion_01",
+          "log_correlation": "remedy_log_correlation_01",
+          "scope_confirmation": "remedy_scope_confirmation_01",
+          "time_pressure_management": "remedy_time_pressure_01",
+          "response_action_order": "remedy_response_order_01",
+          "ioc_validation": "remedy_ioc_validation_01",
+          "dns_beaconing_analysis": "remedy_dns_beaconing_01",
+          "internal_recon_tracking": "remedy_internal_recon_01",
+          "data_staging_validation": "remedy_data_staging_01",
+          "coordinated_containment": "remedy_coordinated_containment_01",
+          "overreliance_on_single_node": "remedy_multi_asset_correlation_01"
+        },
+        "hint_policy": {
+          "default_support_level": "light",
+          "increase_after_wrong_attempts": 2,
+          "allow_exact_guidance_after_attempts": 3,
+          "allow_exact_guidance": false
+        },
+        "fact_pack_rules": {
+          "max_facts_to_expose": 3,
+          "allow_raw_logs": false,
+          "require_grounded_fact_ids": true
+        }
+      }
+    },
+    {
+      "id": "workstation_activity",
+      "stage_type": "foothold",
+      "name": "Compromised Workstation Activity",
+      "difficulty": "easy",
+      "learning_objective": "Confirm workstation compromise by reviewing WS-SALES-01 user context, scheduled task creation, and encoded PowerShell activity before host containment.",
+      "time_pressure": {
+        "time_limit_seconds": 65,
+        "warning_threshold": 0.7,
+        "timeout_behavior": "escalate_stage",
+        "timeout_penalty": 6,
+        "lock_stage_on_timeout": true,
+        "lock_stage_on_success": true,
+        "auto_advance_delay_ms": 2500,
+        "timeout_warning": "Time pressure is increasing. Persistence activity may allow the beacon to survive simple disruption.",
+        "timeout_mentor_feedback": "Delayed host investigation allowed the suspicious scheduled task to remain active.",
+        "timeout_log_message": "TIMEOUT: Scheduled task persistence remained active on WS-SALES-01.",
+        "next_stage_modifier": {
+          "escalation_level": 1,
+          "risk_state": "elevated",
+          "extra_logs": [
+            {
+              "id": "recon-escalated-log-1",
+              "type": "log",
+              "time": "09:34:11",
+              "message": "LDAP: Suspicious domain enumeration began after unresolved scheduled task activity on WS-SALES-01.",
+              "severity": "high"
+            }
+          ],
+          "node_status_changes": {
+            "workstationSales": "compromised"
+          },
+          "mentor_context": "Because workstation persistence was not contained quickly, internal reconnaissance begins with stronger compromise evidence."
+        }
+      },
+      "suspicious_nodes": [
+        "workstationSales"
+      ],
+      "primary_targets": [
+        "workstationSales"
+      ],
+      "required_investigation": {
+        "target_scope": "required_targets",
+        "target_ids": [
+          "workstationSales"
+        ],
+        "dimensions": [
+          "identity",
+          "activity",
+          "interpretation"
+        ],
+        "minimum_target_coverage": "all",
+        "required_before_response": true
+      },
+      "events": [
+        {
+          "id": "host-log-1",
+          "type": "log",
+          "time": "09:21:19",
+          "message": "WINDOWS: Event 4698 scheduled task SoftwareUpdateTask created by CORP\\jsmith on WS-SALES-01",
+          "severity": "high"
+        },
+        {
+          "id": "host-log-2",
+          "type": "log",
+          "time": "09:22:04",
+          "message": "PROCESS: powershell.exe launched with encoded command by Task Scheduler on WS-SALES-01",
+          "severity": "high"
+        },
+        {
+          "id": "host-alert-1",
+          "type": "alert",
+          "message": "Suspicious scheduled task and encoded PowerShell activity detected on WS-SALES-01",
+          "severity": "high",
+          "relatedNode": "workstationSales",
+          "relatedLog": "host-log-1",
+          "source": "WS-SALES-01",
+          "timestamp": "09:22:18"
+        }
+      ],
+      "expected_actions": [
+        "investigate user",
+        "isolate machine"
+      ],
+      "wrong_actions": [
+        "ignore",
+        "block IP"
+      ],
+      "preferred_action_order": [
+        "investigate user",
+        "isolate machine"
+      ],
+      "minimum_actions_to_pass": 2,
+      "mentor_hint": "This is the host-compromise stage. Focus on WS-SALES-01 user/process evidence before isolation.",
+      "mentor": {
+        "stage_hint": "Select WS-SALES-01 and inspect scheduled task, encoded PowerShell, and user context before isolating the host.",
+        "coverage_incomplete": "Host compromise is not fully validated yet. Review identity, activity, and interpretation evidence on the workstation.",
+        "wrong_order": "Isolating before reviewing host activity can stop the machine but leave persistence and user context unexplained.",
+        "premature_response": "Containment should follow after you understand what task or process created the suspicious activity.",
+        "correct_sequence": "Good sequence. You reviewed user and host activity before containing the compromised workstation.",
+        "timeout_warning": "Time pressure is increasing. Persistence may continue to run if the host is not contained.",
+        "timeout_feedback": "The delay allowed the scheduled task to keep supporting attacker activity."
+      },
+      "scoring": {
+        "correct_action_score": 5,
+        "wrong_action_penalty": 5,
+        "pass_score": 10,
+        "max_score": 10
+      },
+      "consequences": {
+        "correct": {
+          "mentor_feedback": "The suspicious scheduled task and encoded PowerShell activity were investigated before workstation containment.",
+          "node_effect": "isolated",
+          "log_message": "WS-SALES-01 isolated after host compromise validation."
+        },
+        "wrong": {
+          "mentor_feedback": "Failure to validate and contain the workstation lets persistence continue and supports internal reconnaissance.",
+          "node_effect": "compromised",
+          "log_message": "Scheduled task persistence remains active on WS-SALES-01."
+        }
+      },
+      "ai_metadata": {
+        "stage_objective": "Confirm workstation compromise by reviewing WS-SALES-01 user context, scheduled task creation, and encoded PowerShell activity before host containment.",
+        "hint_triggers": [
+          "premature_response",
+          "wrong_target",
+          "insufficient_evidence",
+          "time_pressure",
+          "repeated_mistake",
+          "general_guidance"
+        ],
+        "evidence_categories": [
+          "host_scope_confirmation",
+          "endpoint_execution_confirmation",
+          "credential_use_anomaly",
+          "containment_readiness"
+        ],
+        "facts": [
+          {
+            "id": "workstation-f1",
+            "label": "The workstation activity needs confirmation before host containment.",
+            "category": "host_scope_confirmation",
+            "safe_for_hint": true
+          },
+          {
+            "id": "workstation-f2",
+            "label": "Suspicious execution-style activity supports workstation compromise.",
+            "category": "endpoint_execution_confirmation",
+            "safe_for_hint": true
+          },
+          {
+            "id": "workstation-f3",
+            "label": "Containment should target the confirmed compromised workstation, not a decoy asset.",
+            "category": "containment_readiness",
+            "safe_for_hint": true
+          }
+        ],
+        "action_evaluation": {
+          "correct_actions": [
+            "investigate user",
+            "isolate machine"
+          ],
+          "acceptable_actions": [],
+          "premature_actions": [
+            "isolate machine"
+          ],
+          "wrong_target_actions": [
+            "block IP"
+          ],
+          "dangerous_actions": [],
+          "irrelevant_actions": [
+            "ignore"
+          ]
+        },
+        "weakness_codes": {
+          "premature_response": "premature_containment",
+          "wrong_target": "host_pivot_accuracy",
+          "insufficient_evidence": "scope_confirmation",
+          "time_pressure": "time_pressure_management",
+          "repeated_mistake": "response_action_order",
+          "general_guidance": "log_correlation"
+        },
+        "remedy_mapping": {
+          "premature_containment": "remedy_premature_containment_01",
+          "host_pivot_accuracy": "remedy_host_pivot_01",
+          "evidence_completion": "remedy_evidence_completion_01",
+          "log_correlation": "remedy_log_correlation_01",
+          "scope_confirmation": "remedy_scope_confirmation_01",
+          "time_pressure_management": "remedy_time_pressure_01",
+          "response_action_order": "remedy_response_order_01",
+          "ioc_validation": "remedy_ioc_validation_01",
+          "dns_beaconing_analysis": "remedy_dns_beaconing_01",
+          "internal_recon_tracking": "remedy_internal_recon_01",
+          "data_staging_validation": "remedy_data_staging_01",
+          "coordinated_containment": "remedy_coordinated_containment_01",
+          "overreliance_on_single_node": "remedy_multi_asset_correlation_01"
+        },
+        "hint_policy": {
+          "default_support_level": "light",
+          "increase_after_wrong_attempts": 2,
+          "allow_exact_guidance_after_attempts": 3,
+          "allow_exact_guidance": false
+        },
+        "fact_pack_rules": {
+          "max_facts_to_expose": 3,
+          "allow_raw_logs": false,
+          "require_grounded_fact_ids": true
+        }
+      }
+    },
+    {
+      "id": "internal_recon",
+      "stage_type": "recon",
+      "name": "Internal Reconnaissance",
+      "difficulty": "medium",
+      "learning_objective": "Investigate DC-01 as the target of internal reconnaissance and confirm the workstation-to-domain-controller query path before containment.",
+      "time_pressure": {
+        "time_limit_seconds": 70,
+        "warning_threshold": 0.7,
+        "timeout_behavior": "escalate_stage",
+        "timeout_penalty": 7,
+        "lock_stage_on_timeout": true,
+        "lock_stage_on_success": true,
+        "auto_advance_delay_ms": 2500,
+        "timeout_warning": "Time pressure is increasing. The attacker may use internal reconnaissance results to select a data target.",
+        "timeout_mentor_feedback": "Delayed internal reconnaissance response allowed the attacker to map domain resources.",
+        "timeout_log_message": "TIMEOUT: Internal enumeration completed and attacker knowledge of file-server access increased.",
+        "next_stage_modifier": {
+          "escalation_level": 1,
+          "risk_state": "elevated",
+          "extra_logs": [
+            {
+              "id": "staging-escalated-log-1",
+              "type": "log",
+              "time": "09:52:46",
+              "message": "SMB: HR share access followed unresolved internal reconnaissance from WS-SALES-01.",
+              "severity": "critical"
+            }
+          ],
+          "node_status_changes": {
+            "domainController": "suspicious",
+            "fileServer": "suspicious"
+          },
+          "mentor_context": "Because internal reconnaissance was not investigated quickly, data staging begins with higher risk."
+        }
+      },
+      "suspicious_nodes": [
+        "domainController"
+      ],
+      "primary_targets": [
+        "domainController"
+      ],
+      "required_investigation": {
+        "target_scope": "required_targets",
+        "target_ids": [
+          "domainController",
+          "workstationSales"
+        ],
+        "dimensions": [
+          "connectivity",
+          "activity",
+          "interpretation"
+        ],
+        "minimum_target_coverage": "all",
+        "required_before_response": true
+      },
+      "events": [
+        {
+          "id": "recon2-log-1",
+          "type": "log",
+          "time": "09:38:09",
+          "message": "DIRECTORY: WS-SALES-01 generated high-volume LDAP-style queries for users, groups, and service accounts against DC-01",
+          "severity": "high"
+        },
+        {
+          "id": "recon2-log-2",
+          "type": "log",
+          "time": "09:39:02",
+          "message": "DNS: TXT beacon query from WS-SALES-01 preceded internal enumeration activity by less than one minute",
+          "severity": "medium"
+        },
+        {
+          "id": "recon2-alert-1",
+          "type": "alert",
+          "message": "Possible automated internal reconnaissance detected against DC-01 from WS-SALES-01",
+          "severity": "high",
+          "relatedNode": "domainController",
+          "relatedLog": "recon2-log-1",
+          "source": "10.0.1.10",
+          "timestamp": "09:39:18"
+        }
+      ],
+      "expected_actions": [
+        "investigate IP",
+        "isolate machine"
+      ],
+      "wrong_actions": [
+        "ignore",
+        "block IP"
+      ],
+      "preferred_action_order": [
+        "investigate IP",
+        "isolate machine"
+      ],
+      "minimum_actions_to_pass": 2,
+      "mentor_hint": "This stage is about DC-01 being queried abnormally. Focus on the domain controller and directory-query evidence before disrupting the reconnaissance path.",
+      "mentor": {
+        "stage_hint": "Select DC-01 first and inspect activity/connectivity evidence. Then confirm WS-SALES-01 as the source of enumeration.",
+        "coverage_incomplete": "Internal reconnaissance is not fully validated yet. Review connectivity, activity, and interpretation for DC-01 and WS-SALES-01.",
+        "wrong_order": "Containment before tracing the internal query path may hide how the attacker selected later targets.",
+        "premature_response": "Blocking internal traffic too early can disrupt investigation and normal domain services.",
+        "correct_sequence": "Good sequence. You traced the internal reconnaissance path before containment.",
+        "timeout_warning": "Time pressure is increasing. Reconnaissance data may help the attacker choose a file server target.",
+        "timeout_feedback": "The delay allowed domain enumeration to complete and increased data-staging risk."
+      },
+      "scoring": {
+        "correct_action_score": 5,
+        "wrong_action_penalty": 6,
+        "pass_score": 10,
+        "max_score": 10
+      },
+      "consequences": {
+        "correct": {
+          "mentor_feedback": "The domain-controller reconnaissance activity was investigated and disrupted before it could fully support staging.",
+          "node_effect": "stable",
+          "log_message": "DC-01 reconnaissance evidence validated; suspicious directory-query activity disrupted."
+        },
+        "wrong": {
+          "mentor_feedback": "Missed internal reconnaissance allows the attacker to map accounts, groups, and likely data locations.",
+          "node_effect": "compromised",
+          "log_message": "Domain enumeration from WS-SALES-01 continues toward DC-01."
+        }
+      },
+      "ai_metadata": {
+        "stage_objective": "Investigate DC-01 as the target of internal reconnaissance and confirm the workstation-to-domain-controller query path before containment.",
+        "hint_triggers": [
+          "premature_response",
+          "wrong_target",
+          "insufficient_evidence",
+          "time_pressure",
+          "repeated_mistake",
+          "general_guidance"
+        ],
+        "evidence_categories": [
+          "lateral_movement_path",
+          "internal_recon_indicator",
+          "scope_confirmation",
+          "containment_readiness"
+        ],
+        "facts": [
+          {
+            "id": "recon2-f1",
+            "label": "Internal query activity suggests reconnaissance toward a sensitive internal service.",
+            "category": "internal_recon_indicator",
+            "safe_for_hint": true
+          },
+          {
+            "id": "recon2-f2",
+            "label": "The path between the workstation and domain controller should be validated.",
+            "category": "lateral_movement_path",
+            "safe_for_hint": true
+          },
+          {
+            "id": "recon2-f3",
+            "label": "Response should follow confirmation of the internal reconnaissance target.",
+            "category": "containment_readiness",
+            "safe_for_hint": true
+          }
+        ],
+        "action_evaluation": {
+          "correct_actions": [
+            "investigate IP",
+            "isolate machine"
+          ],
+          "acceptable_actions": [],
+          "premature_actions": [
+            "isolate machine"
+          ],
+          "wrong_target_actions": [
+            "block IP"
+          ],
+          "dangerous_actions": [],
+          "irrelevant_actions": [
+            "ignore"
+          ]
+        },
+        "weakness_codes": {
+          "premature_response": "premature_containment",
+          "wrong_target": "internal_recon_tracking",
+          "insufficient_evidence": "internal_recon_tracking",
+          "time_pressure": "time_pressure_management",
+          "repeated_mistake": "response_action_order",
+          "general_guidance": "log_correlation"
+        },
+        "remedy_mapping": {
+          "premature_containment": "remedy_premature_containment_01",
+          "host_pivot_accuracy": "remedy_host_pivot_01",
+          "evidence_completion": "remedy_evidence_completion_01",
+          "log_correlation": "remedy_log_correlation_01",
+          "scope_confirmation": "remedy_scope_confirmation_01",
+          "time_pressure_management": "remedy_time_pressure_01",
+          "response_action_order": "remedy_response_order_01",
+          "ioc_validation": "remedy_ioc_validation_01",
+          "dns_beaconing_analysis": "remedy_dns_beaconing_01",
+          "internal_recon_tracking": "remedy_internal_recon_01",
+          "data_staging_validation": "remedy_data_staging_01",
+          "coordinated_containment": "remedy_coordinated_containment_01",
+          "overreliance_on_single_node": "remedy_multi_asset_correlation_01"
+        },
+        "hint_policy": {
+          "default_support_level": "light",
+          "increase_after_wrong_attempts": 2,
+          "allow_exact_guidance_after_attempts": 3,
+          "allow_exact_guidance": false
+        },
+        "fact_pack_rules": {
+          "max_facts_to_expose": 3,
+          "allow_raw_logs": false,
+          "require_grounded_fact_ids": true
+        }
+      }
+    },
+    {
+      "id": "data_staging",
+      "stage_type": "staging",
+      "name": "File Server Data Staging",
+      "difficulty": "medium",
+      "learning_objective": "Investigate FS-01 as the sensitive data source and confirm suspicious HR share access plus archive staging before containment.",
+      "time_pressure": {
+        "time_limit_seconds": 75,
+        "warning_threshold": 0.7,
+        "timeout_behavior": "escalate_stage",
+        "timeout_penalty": 8,
+        "lock_stage_on_timeout": true,
+        "lock_stage_on_success": true,
+        "auto_advance_delay_ms": 2500,
+        "timeout_warning": "Time pressure is increasing. Staged data may be prepared for outbound transfer.",
+        "timeout_mentor_feedback": "Delayed staging response allowed sensitive files to be collected into an archive.",
+        "timeout_log_message": "TIMEOUT: Staged archive remained available to the attacker and exfiltration risk increased.",
+        "next_stage_modifier": {
+          "escalation_level": 1,
+          "risk_state": "critical",
+          "extra_logs": [
+            {
+              "id": "contain-escalated-log-1",
+              "type": "log",
+              "time": "10:07:21",
+              "message": "NETWORK: Staged archive on WS-SALES-01 is ready for outbound transfer through the active beacon channel.",
+              "severity": "critical"
+            }
+          ],
+          "node_status_changes": {
+            "fileServer": "suspicious",
+            "workstationSales": "compromised"
+          },
+          "mentor_context": "Because data staging was not contained quickly, the final containment stage begins with elevated exfiltration risk."
+        }
+      },
+      "suspicious_nodes": [
+        "fileServer"
+      ],
+      "primary_targets": [
+        "fileServer"
+      ],
+      "required_investigation": {
+        "target_scope": "required_targets",
+        "target_ids": [
+          "fileServer"
+        ],
+        "dimensions": [
+          "identity",
+          "activity",
+          "interpretation"
+        ],
+        "minimum_target_coverage": "all",
+        "required_before_response": true
+      },
+      "events": [
+        {
+          "id": "stage-log-1",
+          "type": "log",
+          "time": "09:55:32",
+          "message": "SMB: CORP\\jsmith accessed \\\\FS-01\\HR$ from WS-SALES-01 outside normal business activity",
+          "severity": "critical"
+        },
+        {
+          "id": "stage-log-2",
+          "type": "log",
+          "time": "09:56:14",
+          "message": "PROCESS: 7z.exe created HR_Backup_Q2.zip on WS-SALES-01 after HR share access",
+          "severity": "critical"
+        },
+        {
+          "id": "stage-alert-1",
+          "type": "alert",
+          "message": "Possible sensitive data staging detected on FS-01 from WS-SALES-01 activity",
+          "severity": "critical",
+          "relatedNode": "fileServer",
+          "relatedLog": "stage-log-1",
+          "source": "10.0.1.20",
+          "timestamp": "09:56:35"
+        }
+      ],
+      "expected_actions": [
+        "investigate user",
+        "isolate machine"
+      ],
+      "wrong_actions": [
+        "ignore",
+        "block IP"
+      ],
+      "preferred_action_order": [
+        "investigate user",
+        "isolate machine"
+      ],
+      "minimum_actions_to_pass": 2,
+      "mentor_hint": "This stage is about staged data on the file server. Focus on file access and archive creation before containment.",
+      "mentor": {
+        "stage_hint": "Select FS-01 first and inspect file-share activity. Then confirm WS-SALES-01 as the staging host.",
+        "coverage_incomplete": "Data staging is not fully validated yet. Review identity, activity, and interpretation evidence for FS-01 and WS-SALES-01.",
+        "wrong_order": "Containment before staging validation can stop the host but leave data exposure scope unclear.",
+        "premature_response": "Isolating too early may protect the network but weakens evidence about which files were accessed.",
+        "correct_sequence": "Good sequence. You validated file access and archive creation before containment.",
+        "timeout_warning": "Time pressure is increasing. Staged data may be exfiltrated if the beacon remains active.",
+        "timeout_feedback": "The delay allowed staged data to remain available for outbound transfer."
+      },
+      "scoring": {
+        "correct_action_score": 5,
+        "wrong_action_penalty": 7,
+        "pass_score": 10,
+        "max_score": 10
+      },
+      "consequences": {
+        "correct": {
+          "mentor_feedback": "Sensitive file access and archive creation on the file server were investigated before containment.",
+          "node_effect": "isolated",
+          "log_message": "FS-01 sensitive share access validated; staged archive path interrupted."
+        },
+        "wrong": {
+          "mentor_feedback": "Failure to validate data staging leaves the organization unsure which files were accessed and whether exfiltration is imminent.",
+          "node_effect": "compromised",
+          "log_message": "Staged archive remains on the compromised workstation."
+        }
+      },
+      "ai_metadata": {
+        "stage_objective": "Investigate FS-01 as the sensitive data source and confirm suspicious HR share access plus archive staging before containment.",
+        "hint_triggers": [
+          "premature_response",
+          "wrong_target",
+          "insufficient_evidence",
+          "time_pressure",
+          "repeated_mistake",
+          "general_guidance"
+        ],
+        "evidence_categories": [
+          "data_staging_indicator",
+          "exfiltration_volume_indicator",
+          "scope_confirmation",
+          "containment_readiness"
+        ],
+        "facts": [
+          {
+            "id": "staging-f1",
+            "label": "Suspicious access to a sensitive share suggests possible data staging.",
+            "category": "data_staging_indicator",
+            "safe_for_hint": true
+          },
+          {
+            "id": "staging-f2",
+            "label": "Archive or volume indicators should be validated before containment.",
+            "category": "exfiltration_volume_indicator",
+            "safe_for_hint": true
+          },
+          {
+            "id": "staging-f3",
+            "label": "The data source and staging location should both be confirmed.",
+            "category": "scope_confirmation",
+            "safe_for_hint": true
+          }
+        ],
+        "action_evaluation": {
+          "correct_actions": [
+            "investigate user",
+            "isolate machine"
+          ],
+          "acceptable_actions": [],
+          "premature_actions": [
+            "isolate machine"
+          ],
+          "wrong_target_actions": [
+            "block IP"
+          ],
+          "dangerous_actions": [],
+          "irrelevant_actions": [
+            "ignore"
+          ]
+        },
+        "weakness_codes": {
+          "premature_response": "premature_containment",
+          "wrong_target": "data_staging_validation",
+          "insufficient_evidence": "data_staging_validation",
+          "time_pressure": "time_pressure_management",
+          "repeated_mistake": "response_action_order",
+          "general_guidance": "log_correlation"
+        },
+        "remedy_mapping": {
+          "premature_containment": "remedy_premature_containment_01",
+          "host_pivot_accuracy": "remedy_host_pivot_01",
+          "evidence_completion": "remedy_evidence_completion_01",
+          "log_correlation": "remedy_log_correlation_01",
+          "scope_confirmation": "remedy_scope_confirmation_01",
+          "time_pressure_management": "remedy_time_pressure_01",
+          "response_action_order": "remedy_response_order_01",
+          "ioc_validation": "remedy_ioc_validation_01",
+          "dns_beaconing_analysis": "remedy_dns_beaconing_01",
+          "internal_recon_tracking": "remedy_internal_recon_01",
+          "data_staging_validation": "remedy_data_staging_01",
+          "coordinated_containment": "remedy_coordinated_containment_01",
+          "overreliance_on_single_node": "remedy_multi_asset_correlation_01"
+        },
+        "hint_policy": {
+          "default_support_level": "light",
+          "increase_after_wrong_attempts": 2,
+          "allow_exact_guidance_after_attempts": 3,
+          "allow_exact_guidance": false
+        },
+        "fact_pack_rules": {
+          "max_facts_to_expose": 3,
+          "allow_raw_logs": false,
+          "require_grounded_fact_ids": true
+        }
+      }
+    },
+    {
+      "id": "containment",
+      "stage_type": "containment",
+      "name": "C2 Blocking and Host Containment",
+      "difficulty": "hard",
+      "learning_objective": "Apply coordinated containment by validating the external C2 domain, DNS control point, compromised workstation, and staged data risk before blocking the malicious DNS path.",
+      "time_pressure": {
+        "time_limit_seconds": 80,
+        "warning_threshold": 0.7,
+        "timeout_behavior": "complete_degraded",
+        "timeout_penalty": 10,
+        "lock_stage_on_timeout": true,
+        "lock_stage_on_success": true,
+        "auto_advance_delay_ms": 2500,
+        "timeout_warning": "Time pressure is critical. If containment is delayed, staged data may leave the network.",
+        "timeout_mentor_feedback": "Delayed containment allowed exfiltration risk to increase and produced a degraded scenario outcome.",
+        "timeout_log_message": "TIMEOUT: C2 remained active long enough for probable data-loss exposure.",
+        "final_outcome_modifier": {
+          "result": "contained_late",
+          "risk_state": "degraded",
+          "mentor_context": "The campaign ended with degraded containment because C2 blocking and host containment were not completed in time."
+        }
+      },
+      "suspicious_nodes": [
+        "dnsServer",
+        "externalDns",
+        "fileServer"
+      ],
+      "primary_targets": [
+        "dnsServer",
+        "externalDns",
+        "fileServer"
+      ],
+      "required_investigation": {
+        "target_scope": "required_targets",
+        "target_ids": [
+          "dnsServer",
+          "externalDns",
+          "fileServer"
+        ],
+        "dimensions": [
+          "connectivity",
+          "controls",
+          "interpretation"
+        ],
+        "minimum_target_coverage": "all",
+        "required_before_response": true
+      },
+      "events": [
+        {
+          "id": "contain-log-1",
+          "type": "log",
+          "time": "10:08:15",
+          "message": "DNS: Beacon from WS-SALES-01 remains active and is requesting transfer instructions from update-check.ddns.net",
+          "severity": "critical"
+        },
+        {
+          "id": "contain-log-2",
+          "type": "log",
+          "time": "10:09:44",
+          "message": "DLP: Staged archive HR_Backup_Q2.zip is present on WS-SALES-01 but no confirmed outbound archive transfer has completed yet",
+          "severity": "critical"
+        },
+        {
+          "id": "contain-alert-1",
+          "type": "alert",
+          "message": "Critical containment window: validate external C2, DNS-SRV, WS-SALES-01, and FS-01 before final block",
+          "severity": "critical",
+          "relatedNode": "externalDns",
+          "relatedLog": "contain-log-1",
+          "source": "update-check.ddns.net",
+          "timestamp": "10:10:02"
+        }
+      ],
+      "expected_actions": [
+        "investigate IP",
+        "block IP"
+      ],
+      "wrong_actions": [
+        "ignore",
+        "isolate machine"
+      ],
+      "preferred_action_order": [
+        "investigate IP",
+        "block IP"
+      ],
+      "minimum_actions_to_pass": 2,
+      "mentor_hint": "This final stage is about validating the active DNS C2 path and staged data exposure before containment. Focus on DNS-SRV, the external domain, and FS-01.",
+      "mentor": {
+        "stage_hint": "Select the external C2 domain first, validate DNS-SRV as the control point, then confirm the compromised host and staged data risk.",
+        "coverage_incomplete": "Final containment is not ready yet. Validate external C2, DNS-SRV, WS-SALES-01, and FS-01 before response.",
+        "wrong_order": "Blocking before confirming the active C2 path and staged data risk weakens the final report.",
+        "premature_response": "A final block should follow evidence that the domain path is part of the active campaign.",
+        "correct_sequence": "Good sequence. You validated the active C2 path and staged data risk before blocking the malicious domain.",
+        "timeout_warning": "Time pressure is critical. Delayed containment may allow staged data exfiltration.",
+        "timeout_feedback": "The delay increased data-loss exposure and degraded the final scenario outcome."
+      },
+      "scoring": {
+        "correct_action_score": 5,
+        "wrong_action_penalty": 8,
+        "pass_score": 10,
+        "max_score": 10
+      },
+      "consequences": {
+        "correct": {
+          "mentor_feedback": "The DNS C2 path was validated and blocked before staged data could leave the network.",
+          "node_effect": "stable",
+          "log_message": "External C2 domain and DNS control point blocked after coordinated containment validation."
+        },
+        "wrong": {
+          "mentor_feedback": "Failure to block the active C2 channel leaves staged data at risk of outbound transfer.",
+          "node_effect": "compromised",
+          "log_message": "DNS C2 channel remains active and exfiltration risk persists."
+        }
+      },
+      "ai_metadata": {
+        "stage_objective": "Apply coordinated containment by validating the external C2 domain, DNS control point, compromised workstation, and staged data risk before blocking the malicious DNS path.",
+        "hint_triggers": [
+          "premature_response",
+          "wrong_target",
+          "insufficient_evidence",
+          "time_pressure",
+          "repeated_mistake",
+          "general_guidance"
+        ],
+        "evidence_categories": [
+          "dns_beaconing_pattern",
+          "external_destination_validation",
+          "host_scope_confirmation",
+          "data_staging_indicator",
+          "coordinated_containment"
+        ],
+        "facts": [
+          {
+            "id": "containment-f1",
+            "label": "The external C2 path should be validated before blocking.",
+            "category": "external_destination_validation",
+            "safe_for_hint": true
+          },
+          {
+            "id": "containment-f2",
+            "label": "The compromised workstation should be confirmed before final containment.",
+            "category": "host_scope_confirmation",
+            "safe_for_hint": true
+          },
+          {
+            "id": "containment-f3",
+            "label": "Final response should coordinate DNS/path blocking with host and data-risk awareness.",
+            "category": "coordinated_containment",
+            "safe_for_hint": true
+          }
+        ],
+        "action_evaluation": {
+          "correct_actions": [
+            "investigate IP",
+            "block IP"
+          ],
+          "acceptable_actions": [],
+          "premature_actions": [
+            "block IP"
+          ],
+          "wrong_target_actions": [
+            "isolate machine"
+          ],
+          "dangerous_actions": [],
+          "irrelevant_actions": [
+            "ignore"
+          ]
+        },
+        "weakness_codes": {
+          "premature_response": "coordinated_containment",
+          "wrong_target": "overreliance_on_single_node",
+          "insufficient_evidence": "coordinated_containment",
+          "time_pressure": "time_pressure_management",
+          "repeated_mistake": "response_action_order",
+          "general_guidance": "log_correlation"
+        },
+        "remedy_mapping": {
+          "premature_containment": "remedy_premature_containment_01",
+          "host_pivot_accuracy": "remedy_host_pivot_01",
+          "evidence_completion": "remedy_evidence_completion_01",
+          "log_correlation": "remedy_log_correlation_01",
+          "scope_confirmation": "remedy_scope_confirmation_01",
+          "time_pressure_management": "remedy_time_pressure_01",
+          "response_action_order": "remedy_response_order_01",
+          "ioc_validation": "remedy_ioc_validation_01",
+          "dns_beaconing_analysis": "remedy_dns_beaconing_01",
+          "internal_recon_tracking": "remedy_internal_recon_01",
+          "data_staging_validation": "remedy_data_staging_01",
+          "coordinated_containment": "remedy_coordinated_containment_01",
+          "overreliance_on_single_node": "remedy_multi_asset_correlation_01"
+        },
+        "hint_policy": {
+          "default_support_level": "light",
+          "increase_after_wrong_attempts": 2,
+          "allow_exact_guidance_after_attempts": 3,
+          "allow_exact_guidance": false
+        },
+        "fact_pack_rules": {
+          "max_facts_to_expose": 3,
+          "allow_raw_logs": false,
+          "require_grounded_fact_ids": true
+        }
+      }
+    }
+  ]
+}

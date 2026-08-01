@@ -1,0 +1,604 @@
+{
+  "scenario_id": "remedy_host_pivot_01",
+  "gameplay_name": "Follow the Evidence Trail",
+  "name": "Host Pivot Accuracy Remedy - Follow the Evidence Trail",
+  "description": "A short remedial SOC investigation module focused on correcting wrong-target behavior. The learner practices comparing decoy signals with the real evidence path before selecting a containment target.",
+  "version": "1.0-dev",
+  "timing_profile": "development",
+  "difficulty": "remedy",
+  "scenario_type": "remedy",
+  "primary_weakness": "host_pivot_accuracy",
+  "remedy_focus": "evidence_trail_target_selection",
+  "source_failed_scenario_types": [
+    "external_recon_to_exfiltration_1",
+    "silent_beacon_1"
+  ],
+  "recommended_replay_target": "failed_scenario_or_equivalent_variant",
+  "global_design_notes": {
+    "network_only_boundary": "This remedy uses network/security-monitoring evidence only: DNS logs, firewall logs, IDS alerts, authentication summaries, network flow summaries, and SOC-facing endpoint status summaries.",
+    "remedy_rule": "This remedy does not replace the failed scenario. After completion, the learner should replay the failed scenario or an equivalent controlled variant.",
+    "ai_support_note": "AI may explain backend-approved facts but cannot decide correctness, score, pass/fail, progression, or remedy selection.",
+    "scoring_note": "Scoring should emphasize correct target selection, evidence-path reasoning, and avoiding decoy assets."
+  },
+  "variant_design": {
+    "status": "planned_not_active",
+    "seeded_variant_required_later": true,
+    "variant_family": "remedy_host_pivot",
+    "pools": {
+      "true_affected_asset": [
+        "workstation4",
+        "financeLaptop",
+        "dnsServer"
+      ],
+      "decoy_asset": [
+        "hrLaptop",
+        "workstationDecoy",
+        "fileServer"
+      ],
+      "external_indicator": [
+        "203.0.113.61",
+        "198.51.100.88",
+        "sync-check.example.net"
+      ]
+    }
+  },
+  "stages": [
+    {
+      "id": "decoy_vs_real_path",
+      "stage_type": "remedy_practice",
+      "name": "Decoy Alert vs Real Path",
+      "difficulty": "remedy_easy",
+      "learning_objective": "Compare the visible alert with the actual network path before selecting a target.",
+      "time_pressure": {
+        "time_limit_seconds": 100,
+        "warning_threshold": 0.75,
+        "timeout_behavior": "continue_with_guidance",
+        "timeout_penalty": 3,
+        "lock_stage_on_timeout": false,
+        "lock_stage_on_success": true,
+        "auto_advance_delay_ms": 2500,
+        "timeout_warning": "Slow down and compare the alert source with the actual connection path.",
+        "timeout_mentor_feedback": "The target choice needs stronger path validation.",
+        "timeout_log_message": "REMEDY TIMEOUT: Target selection evidence remained incomplete."
+      },
+      "suspicious_nodes": [
+        "router",
+        "hrLaptop",
+        "workstation4"
+      ],
+      "primary_targets": [
+        "router",
+        "workstation4"
+      ],
+      "required_investigation": {
+        "target_scope": "required_targets",
+        "target_ids": [
+          "router",
+          "workstation4"
+        ],
+        "dimensions": [
+          "connectivity",
+          "activity"
+        ],
+        "minimum_target_coverage": "all",
+        "required_before_response": true
+      },
+      "events": [
+        {
+          "id": "hp-log-1",
+          "type": "log",
+          "time": "10:05:11",
+          "message": "IDS: Alert references HR-LAPTOP-07, but related flow records show the repeated external path terminates at WS-04",
+          "severity": "medium"
+        },
+        {
+          "id": "hp-log-2",
+          "type": "log",
+          "time": "10:06:04",
+          "message": "NETFLOW: WS-04 exchanged repeated short sessions with 203.0.113.61 through the perimeter router",
+          "severity": "medium"
+        },
+        {
+          "id": "hp-alert-1",
+          "type": "alert",
+          "message": "Possible wrong-target risk: validate the network path before selecting containment target",
+          "severity": "medium",
+          "relatedNode": "router",
+          "relatedLog": "hp-log-2",
+          "source": "203.0.113.61",
+          "timestamp": "10:06:20"
+        }
+      ],
+      "expected_actions": [
+        "investigate IP",
+        "isolate machine"
+      ],
+      "wrong_actions": [
+        "ignore",
+        "block IP"
+      ],
+      "preferred_action_order": [
+        "investigate IP",
+        "isolate machine"
+      ],
+      "minimum_actions_to_pass": 2,
+      "mentor_hint": "Do not act on the loudest alert alone. Follow the connection path and confirm the affected asset.",
+      "mentor": {
+        "stage_hint": "Compare the alert with flow evidence before choosing the host to contain.",
+        "coverage_incomplete": "The target is not confirmed yet. Validate the path before acting.",
+        "wrong_order": "Containment before target validation risks acting on the wrong asset.",
+        "premature_response": "The response is too early until the real affected asset is confirmed.",
+        "correct_sequence": "Good. You followed the evidence path before containment.",
+        "timeout_warning": "Focus on the path: source, router, affected workstation.",
+        "timeout_feedback": "The stage continued so you can practice target validation."
+      },
+      "scoring": {
+        "correct_action_score": 5,
+        "wrong_action_penalty": 3,
+        "pass_score": 10,
+        "max_score": 10
+      },
+      "consequences": {
+        "correct": {
+          "mentor_feedback": "The containment target was selected after validating the evidence path.",
+          "node_effect": "stable",
+          "log_message": "Correct target selected after path validation."
+        },
+        "wrong": {
+          "mentor_feedback": "The response focused on the wrong or unconfirmed target.",
+          "node_effect": "suspicious",
+          "log_message": "Wrong-target attempt recorded for remedial feedback."
+        }
+      },
+      "ai_metadata": {
+        "stage_objective": "Compare the visible alert with the actual network path before selecting a target.",
+        "hint_triggers": [
+          "premature_response",
+          "wrong_target",
+          "insufficient_evidence",
+          "time_pressure",
+          "repeated_mistake",
+          "general_guidance"
+        ],
+        "evidence_categories": [
+          "ioc_validation",
+          "connectivity",
+          "host_scope_confirmation"
+        ],
+        "facts": [
+          {
+            "id": "hp1-f1",
+            "label": "The visible alert may point to a decoy rather than the confirmed affected asset.",
+            "category": "ioc_validation",
+            "safe_for_hint": true
+          },
+          {
+            "id": "hp1-f2",
+            "label": "Network flow evidence should guide target selection.",
+            "category": "connectivity",
+            "safe_for_hint": true
+          },
+          {
+            "id": "hp1-f3",
+            "label": "The affected host must be confirmed before containment.",
+            "category": "host_scope_confirmation",
+            "safe_for_hint": true
+          }
+        ],
+        "action_evaluation": {
+          "correct_actions": [
+            "investigate IP",
+            "isolate machine"
+          ],
+          "acceptable_actions": [],
+          "premature_actions": [
+            "isolate machine"
+          ],
+          "wrong_target_actions": [
+            "block IP"
+          ],
+          "dangerous_actions": [],
+          "irrelevant_actions": [
+            "ignore"
+          ]
+        },
+        "weakness_codes": {
+          "premature_response": "premature_containment",
+          "wrong_target": "host_pivot_accuracy",
+          "insufficient_evidence": "scope_confirmation",
+          "time_pressure": "time_pressure_management",
+          "repeated_mistake": "overreliance_on_single_node",
+          "general_guidance": "log_correlation"
+        },
+        "remedy_mapping": {
+          "premature_containment": "remedy_premature_containment_01",
+          "host_pivot_accuracy": "remedy_host_pivot_01",
+          "scope_confirmation": "remedy_scope_confirmation_01",
+          "overreliance_on_single_node": "remedy_multi_asset_correlation_01"
+        },
+        "hint_policy": {
+          "default_support_level": "medium",
+          "increase_after_wrong_attempts": 1,
+          "allow_exact_guidance_after_attempts": 3,
+          "allow_exact_guidance": false
+        },
+        "fact_pack_rules": {
+          "max_facts_to_expose": 3,
+          "allow_raw_logs": false,
+          "require_grounded_fact_ids": true
+        }
+      }
+    },
+    {
+      "id": "follow_connection_trail",
+      "stage_type": "remedy_practice",
+      "name": "Follow the Connection Trail",
+      "difficulty": "remedy_easy",
+      "learning_objective": "Identify which internal asset is actually communicating with the suspicious endpoint.",
+      "time_pressure": {
+        "time_limit_seconds": 105,
+        "warning_threshold": 0.75,
+        "timeout_behavior": "continue_with_guidance",
+        "timeout_penalty": 3,
+        "lock_stage_on_timeout": false,
+        "lock_stage_on_success": true,
+        "auto_advance_delay_ms": 2500,
+        "timeout_warning": "Trace the connection trail before selecting the asset.",
+        "timeout_mentor_feedback": "The communication path was not fully traced.",
+        "timeout_log_message": "REMEDY TIMEOUT: Connection-trail validation remained incomplete."
+      },
+      "suspicious_nodes": [
+        "dnsServer",
+        "workstation4",
+        "fileServer"
+      ],
+      "primary_targets": [
+        "dnsServer",
+        "workstation4"
+      ],
+      "required_investigation": {
+        "target_scope": "required_targets",
+        "target_ids": [
+          "dnsServer",
+          "workstation4"
+        ],
+        "dimensions": [
+          "connectivity",
+          "activity",
+          "interpretation"
+        ],
+        "minimum_target_coverage": "all",
+        "required_before_response": true
+      },
+      "events": [
+        {
+          "id": "ct-log-1",
+          "type": "log",
+          "time": "10:18:12",
+          "message": "DNS: WS-04 repeatedly resolves sync-check.example.net through DNS-SRV while FILE-SRV traffic remains baseline",
+          "severity": "medium"
+        },
+        {
+          "id": "ct-log-2",
+          "type": "log",
+          "time": "10:19:05",
+          "message": "FIREWALL: Outbound sessions associated with WS-04 align with the suspicious DNS resolution window",
+          "severity": "medium"
+        },
+        {
+          "id": "ct-alert-1",
+          "type": "alert",
+          "message": "Suspicious endpoint communication trail requires DNS and workstation correlation",
+          "severity": "medium",
+          "relatedNode": "dnsServer",
+          "relatedLog": "ct-log-1",
+          "source": "sync-check.example.net",
+          "timestamp": "10:19:18"
+        }
+      ],
+      "expected_actions": [
+        "investigate IP",
+        "isolate machine"
+      ],
+      "wrong_actions": [
+        "ignore",
+        "block IP"
+      ],
+      "preferred_action_order": [
+        "investigate IP",
+        "isolate machine"
+      ],
+      "minimum_actions_to_pass": 2,
+      "mentor_hint": "Trace DNS and flow evidence together before choosing which asset to contain.",
+      "mentor": {
+        "stage_hint": "Use DNS and firewall evidence together to identify the communicating asset.",
+        "coverage_incomplete": "You still need to correlate DNS and flow activity.",
+        "wrong_order": "Containment should follow connection-trail confirmation.",
+        "premature_response": "The response is too early until the communicating asset is confirmed.",
+        "correct_sequence": "Good. You traced the connection trail before containment.",
+        "timeout_warning": "Check DNS first, then confirm the matching outbound flow.",
+        "timeout_feedback": "The stage continued to reinforce connection-trail reasoning."
+      },
+      "scoring": {
+        "correct_action_score": 5,
+        "wrong_action_penalty": 3,
+        "pass_score": 10,
+        "max_score": 10
+      },
+      "consequences": {
+        "correct": {
+          "mentor_feedback": "The suspicious communication trail was correctly traced before containment.",
+          "node_effect": "stable",
+          "log_message": "Connection trail confirmed and affected asset contained."
+        },
+        "wrong": {
+          "mentor_feedback": "The target was selected before the connection trail was complete.",
+          "node_effect": "suspicious",
+          "log_message": "Incomplete target-tracing attempt recorded."
+        }
+      },
+      "ai_metadata": {
+        "stage_objective": "Identify which internal asset is actually communicating with the suspicious endpoint.",
+        "hint_triggers": [
+          "premature_response",
+          "wrong_target",
+          "insufficient_evidence",
+          "time_pressure",
+          "repeated_mistake",
+          "general_guidance"
+        ],
+        "evidence_categories": [
+          "connectivity",
+          "network_flow_anomaly",
+          "scope_confirmation"
+        ],
+        "facts": [
+          {
+            "id": "hp2-f1",
+            "label": "DNS activity and flow timing should be correlated before selecting a target.",
+            "category": "connectivity",
+            "safe_for_hint": true
+          },
+          {
+            "id": "hp2-f2",
+            "label": "The affected asset is the one that matches the suspicious communication trail.",
+            "category": "network_flow_anomaly",
+            "safe_for_hint": true
+          },
+          {
+            "id": "hp2-f3",
+            "label": "Unrelated baseline traffic should not become the containment target.",
+            "category": "scope_confirmation",
+            "safe_for_hint": true
+          }
+        ],
+        "action_evaluation": {
+          "correct_actions": [
+            "investigate IP",
+            "isolate machine"
+          ],
+          "acceptable_actions": [],
+          "premature_actions": [
+            "isolate machine"
+          ],
+          "wrong_target_actions": [
+            "block IP"
+          ],
+          "dangerous_actions": [],
+          "irrelevant_actions": [
+            "ignore"
+          ]
+        },
+        "weakness_codes": {
+          "premature_response": "premature_containment",
+          "wrong_target": "host_pivot_accuracy",
+          "insufficient_evidence": "scope_confirmation",
+          "time_pressure": "time_pressure_management",
+          "repeated_mistake": "overreliance_on_single_node",
+          "general_guidance": "log_correlation"
+        },
+        "remedy_mapping": {
+          "premature_containment": "remedy_premature_containment_01",
+          "host_pivot_accuracy": "remedy_host_pivot_01",
+          "scope_confirmation": "remedy_scope_confirmation_01",
+          "overreliance_on_single_node": "remedy_multi_asset_correlation_01"
+        },
+        "hint_policy": {
+          "default_support_level": "medium",
+          "increase_after_wrong_attempts": 1,
+          "allow_exact_guidance_after_attempts": 3,
+          "allow_exact_guidance": false
+        },
+        "fact_pack_rules": {
+          "max_facts_to_expose": 3,
+          "allow_raw_logs": false,
+          "require_grounded_fact_ids": true
+        }
+      }
+    },
+    {
+      "id": "confirm_containment_target",
+      "stage_type": "remedy_practice",
+      "name": "Confirm Correct Containment Target",
+      "difficulty": "remedy_easy",
+      "learning_objective": "Apply containment only to the confirmed affected asset or control point.",
+      "time_pressure": {
+        "time_limit_seconds": 110,
+        "warning_threshold": 0.75,
+        "timeout_behavior": "continue_with_guidance",
+        "timeout_penalty": 3,
+        "lock_stage_on_timeout": false,
+        "lock_stage_on_success": true,
+        "auto_advance_delay_ms": 2500,
+        "timeout_warning": "Confirm the containment target before taking action.",
+        "timeout_mentor_feedback": "Containment target validation was incomplete.",
+        "timeout_log_message": "REMEDY TIMEOUT: Correct containment target was not fully confirmed."
+      },
+      "suspicious_nodes": [
+        "router",
+        "workstation4",
+        "hrLaptop"
+      ],
+      "primary_targets": [
+        "workstation4"
+      ],
+      "required_investigation": {
+        "target_scope": "required_targets",
+        "target_ids": [
+          "workstation4"
+        ],
+        "dimensions": [
+          "activity",
+          "interpretation"
+        ],
+        "minimum_target_coverage": "all",
+        "required_before_response": true
+      },
+      "events": [
+        {
+          "id": "tc-log-1",
+          "type": "log",
+          "time": "10:31:40",
+          "message": "SOC SUMMARY: WS-04 is linked to suspicious DNS and outbound flow evidence; HR-LAPTOP-07 remains a decoy alert source",
+          "severity": "medium"
+        },
+        {
+          "id": "tc-log-2",
+          "type": "log",
+          "time": "10:32:15",
+          "message": "CONTROL: Host isolation is appropriate only after the affected workstation is confirmed",
+          "severity": "medium"
+        },
+        {
+          "id": "tc-alert-1",
+          "type": "alert",
+          "message": "Containment target decision required: confirm affected asset before isolation",
+          "severity": "medium",
+          "relatedNode": "workstation4",
+          "relatedLog": "tc-log-1",
+          "source": "WS-04",
+          "timestamp": "10:32:30"
+        }
+      ],
+      "expected_actions": [
+        "investigate user",
+        "isolate machine"
+      ],
+      "wrong_actions": [
+        "ignore",
+        "block IP"
+      ],
+      "preferred_action_order": [
+        "investigate user",
+        "isolate machine"
+      ],
+      "minimum_actions_to_pass": 2,
+      "mentor_hint": "Contain only the asset supported by the evidence trail.",
+      "mentor": {
+        "stage_hint": "Confirm the affected workstation before isolation.",
+        "coverage_incomplete": "The containment target is not fully confirmed.",
+        "wrong_order": "Isolation before target confirmation can disrupt the wrong asset.",
+        "premature_response": "The response is too early until target confirmation is complete.",
+        "correct_sequence": "Good. You confirmed the target before containment.",
+        "timeout_warning": "Compare the confirmed evidence trail against the decoy alert source.",
+        "timeout_feedback": "The stage continued to reinforce containment target accuracy."
+      },
+      "scoring": {
+        "correct_action_score": 5,
+        "wrong_action_penalty": 3,
+        "pass_score": 10,
+        "max_score": 10
+      },
+      "consequences": {
+        "correct": {
+          "mentor_feedback": "The confirmed affected asset was selected for containment.",
+          "node_effect": "stable",
+          "log_message": "Correct host isolated after target confirmation."
+        },
+        "wrong": {
+          "mentor_feedback": "The containment action did not match the confirmed target evidence.",
+          "node_effect": "suspicious",
+          "log_message": "Wrong containment target attempt recorded."
+        }
+      },
+      "ai_metadata": {
+        "stage_objective": "Apply containment only to the confirmed affected asset or control point.",
+        "hint_triggers": [
+          "premature_response",
+          "wrong_target",
+          "insufficient_evidence",
+          "time_pressure",
+          "repeated_mistake",
+          "general_guidance"
+        ],
+        "evidence_categories": [
+          "containment_readiness",
+          "host_scope_confirmation",
+          "ioc_validation"
+        ],
+        "facts": [
+          {
+            "id": "hp3-f1",
+            "label": "Containment should match the confirmed affected asset.",
+            "category": "containment_readiness",
+            "safe_for_hint": true
+          },
+          {
+            "id": "hp3-f2",
+            "label": "The confirmed host is supported by the strongest evidence trail.",
+            "category": "host_scope_confirmation",
+            "safe_for_hint": true
+          },
+          {
+            "id": "hp3-f3",
+            "label": "A decoy alert source should not override stronger correlated evidence.",
+            "category": "ioc_validation",
+            "safe_for_hint": true
+          }
+        ],
+        "action_evaluation": {
+          "correct_actions": [
+            "investigate user",
+            "isolate machine"
+          ],
+          "acceptable_actions": [],
+          "premature_actions": [
+            "isolate machine"
+          ],
+          "wrong_target_actions": [
+            "block IP"
+          ],
+          "dangerous_actions": [],
+          "irrelevant_actions": [
+            "ignore"
+          ]
+        },
+        "weakness_codes": {
+          "premature_response": "premature_containment",
+          "wrong_target": "host_pivot_accuracy",
+          "insufficient_evidence": "scope_confirmation",
+          "time_pressure": "time_pressure_management",
+          "repeated_mistake": "overreliance_on_single_node",
+          "general_guidance": "log_correlation"
+        },
+        "remedy_mapping": {
+          "premature_containment": "remedy_premature_containment_01",
+          "host_pivot_accuracy": "remedy_host_pivot_01",
+          "scope_confirmation": "remedy_scope_confirmation_01",
+          "overreliance_on_single_node": "remedy_multi_asset_correlation_01"
+        },
+        "hint_policy": {
+          "default_support_level": "medium",
+          "increase_after_wrong_attempts": 1,
+          "allow_exact_guidance_after_attempts": 3,
+          "allow_exact_guidance": false
+        },
+        "fact_pack_rules": {
+          "max_facts_to_expose": 3,
+          "allow_raw_logs": false,
+          "require_grounded_fact_ids": true
+        }
+      }
+    }
+  ]
+}
